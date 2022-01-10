@@ -1,0 +1,3 @@
+[submodule "lbm-sdk"]
+	path = lbm-sdk
+	url = https://github.com/line/lbm-sdk.git

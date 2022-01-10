@@ -1,0 +1,34 @@
+{
+  "name": "lbmjs-types",
+  "version": "0.43.1",
+  "main": "index.js",
+  "description": "JS and TS types relating to Protocol Buffers used by LBM-SDK",
+  "contributors": [
+    "zemyblue <zemyblue@users.noreply.github.com>"
+  ],
+  "license": "Apache-2.0",
+  "files": [
+    "config/",
+    "cosmos_proto",
+    "gogoproto",
+    "google",
+    "ibc",
+    "lbm",
+    "ostracon",
+    "*.md"
+  ],
+  "scripts": {
+    "codegen": "./scripts/codegen.sh",
+    "build": "rm -rf ./build && tsc && ./scripts/prepare.sh"
+  },
+  "dependencies": {
+    "long": "^4.0.0",
+    "protobufjs": "~6.11.2"
+  },
+  "devDependencies": {
+    "@types/long": "^4.0.1",
+    "@types/node": "^15.6.2",
+    "ts-proto": "^1.92.1",
+    "typescript": "~4.2"
+  }
+}
