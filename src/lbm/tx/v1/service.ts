@@ -10,6 +10,48 @@ import { Tx } from "../../../lbm/tx/v1/tx";
 
 export const protobufPackage = "lbm.tx.v1";
 
+/** OrderBy defines the sorting order */
+export enum OrderBy {
+  /** ORDER_BY_UNSPECIFIED - ORDER_BY_UNSPECIFIED specifies an unknown sorting order. OrderBy defaults to ASC in this case. */
+  ORDER_BY_UNSPECIFIED = 0,
+  /** ORDER_BY_ASC - ORDER_BY_ASC defines ascending order */
+  ORDER_BY_ASC = 1,
+  /** ORDER_BY_DESC - ORDER_BY_DESC defines descending order */
+  ORDER_BY_DESC = 2,
+  UNRECOGNIZED = -1,
+}
+
+export function orderByFromJSON(object: any): OrderBy {
+  switch (object) {
+    case 0:
+    case "ORDER_BY_UNSPECIFIED":
+      return OrderBy.ORDER_BY_UNSPECIFIED;
+    case 1:
+    case "ORDER_BY_ASC":
+      return OrderBy.ORDER_BY_ASC;
+    case 2:
+    case "ORDER_BY_DESC":
+      return OrderBy.ORDER_BY_DESC;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return OrderBy.UNRECOGNIZED;
+  }
+}
+
+export function orderByToJSON(object: OrderBy): string {
+  switch (object) {
+    case OrderBy.ORDER_BY_UNSPECIFIED:
+      return "ORDER_BY_UNSPECIFIED";
+    case OrderBy.ORDER_BY_ASC:
+      return "ORDER_BY_ASC";
+    case OrderBy.ORDER_BY_DESC:
+      return "ORDER_BY_DESC";
+    default:
+      return "UNKNOWN";
+  }
+}
+
 /** BroadcastMode specifies the broadcast mode for the TxService.Broadcast RPC method. */
 export enum BroadcastMode {
   /** BROADCAST_MODE_UNSPECIFIED - zero-value for mode ordering */
@@ -79,6 +121,7 @@ export interface GetTxsEventRequest {
   prove: boolean;
   /** pagination defines an pagination for the request. */
   pagination?: PageRequest;
+  orderBy: OrderBy;
 }
 
 /**
@@ -151,7 +194,7 @@ export interface GetTxResponse {
 }
 
 function createBaseGetTxsEventRequest(): GetTxsEventRequest {
-  return { events: [], prove: false, pagination: undefined };
+  return { events: [], prove: false, pagination: undefined, orderBy: 0 };
 }
 
 export const GetTxsEventRequest = {
@@ -167,6 +210,9 @@ export const GetTxsEventRequest = {
     }
     if (message.pagination !== undefined) {
       PageRequest.encode(message.pagination, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.orderBy !== 0) {
+      writer.uint32(32).int32(message.orderBy);
     }
     return writer;
   },
@@ -187,6 +233,9 @@ export const GetTxsEventRequest = {
         case 3:
           message.pagination = PageRequest.decode(reader, reader.uint32());
           break;
+        case 4:
+          message.orderBy = reader.int32() as any;
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -204,6 +253,7 @@ export const GetTxsEventRequest = {
       pagination: isSet(object.pagination)
         ? PageRequest.fromJSON(object.pagination)
         : undefined,
+      orderBy: isSet(object.orderBy) ? orderByFromJSON(object.orderBy) : 0,
     };
   },
 
@@ -219,6 +269,8 @@ export const GetTxsEventRequest = {
       (obj.pagination = message.pagination
         ? PageRequest.toJSON(message.pagination)
         : undefined);
+    message.orderBy !== undefined &&
+      (obj.orderBy = orderByToJSON(message.orderBy));
     return obj;
   },
 
@@ -232,6 +284,7 @@ export const GetTxsEventRequest = {
       object.pagination !== undefined && object.pagination !== null
         ? PageRequest.fromPartial(object.pagination)
         : undefined;
+    message.orderBy = object.orderBy ?? 0;
     return message;
   },
 };

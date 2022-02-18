@@ -73,6 +73,8 @@ export interface SignDoc {
    * attacker
    */
   chainId: string;
+  /** account_number is the account number of the account in state */
+  accountNumber: Long;
 }
 
 /** TxBody is the body of a transaction that all signers sign over. */
@@ -127,11 +129,6 @@ export interface AuthInfo {
    * of the signers. This can be estimated via simulation.
    */
   fee?: Fee;
-  /**
-   * sig block height is available between current block height and current block height - `VALID_SIG_BLOCK_PERIOD`
-   * this is used for distinguish signatures instead of account number. this is mandatory.
-   */
-  sigBlockHeight: Long;
 }
 
 /**
@@ -397,6 +394,7 @@ function createBaseSignDoc(): SignDoc {
     bodyBytes: new Uint8Array(),
     authInfoBytes: new Uint8Array(),
     chainId: "",
+    accountNumber: Long.UZERO,
   };
 }
 
@@ -413,6 +411,9 @@ export const SignDoc = {
     }
     if (message.chainId !== "") {
       writer.uint32(26).string(message.chainId);
+    }
+    if (!message.accountNumber.isZero()) {
+      writer.uint32(32).uint64(message.accountNumber);
     }
     return writer;
   },
@@ -433,6 +434,9 @@ export const SignDoc = {
         case 3:
           message.chainId = reader.string();
           break;
+        case 4:
+          message.accountNumber = reader.uint64() as Long;
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -450,6 +454,9 @@ export const SignDoc = {
         ? bytesFromBase64(object.authInfoBytes)
         : new Uint8Array(),
       chainId: isSet(object.chainId) ? String(object.chainId) : "",
+      accountNumber: isSet(object.accountNumber)
+        ? Long.fromString(object.accountNumber)
+        : Long.UZERO,
     };
   },
 
@@ -466,6 +473,8 @@ export const SignDoc = {
           : new Uint8Array()
       ));
     message.chainId !== undefined && (obj.chainId = message.chainId);
+    message.accountNumber !== undefined &&
+      (obj.accountNumber = (message.accountNumber || Long.UZERO).toString());
     return obj;
   },
 
@@ -474,6 +483,10 @@ export const SignDoc = {
     message.bodyBytes = object.bodyBytes ?? new Uint8Array();
     message.authInfoBytes = object.authInfoBytes ?? new Uint8Array();
     message.chainId = object.chainId ?? "";
+    message.accountNumber =
+      object.accountNumber !== undefined && object.accountNumber !== null
+        ? Long.fromValue(object.accountNumber)
+        : Long.UZERO;
     return message;
   },
 };
@@ -609,7 +622,7 @@ export const TxBody = {
 };
 
 function createBaseAuthInfo(): AuthInfo {
-  return { signerInfos: [], fee: undefined, sigBlockHeight: Long.UZERO };
+  return { signerInfos: [], fee: undefined };
 }
 
 export const AuthInfo = {
@@ -622,9 +635,6 @@ export const AuthInfo = {
     }
     if (message.fee !== undefined) {
       Fee.encode(message.fee, writer.uint32(18).fork()).ldelim();
-    }
-    if (!message.sigBlockHeight.isZero()) {
-      writer.uint32(24).uint64(message.sigBlockHeight);
     }
     return writer;
   },
@@ -642,9 +652,6 @@ export const AuthInfo = {
         case 2:
           message.fee = Fee.decode(reader, reader.uint32());
           break;
-        case 3:
-          message.sigBlockHeight = reader.uint64() as Long;
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -659,9 +666,6 @@ export const AuthInfo = {
         ? object.signerInfos.map((e: any) => SignerInfo.fromJSON(e))
         : [],
       fee: isSet(object.fee) ? Fee.fromJSON(object.fee) : undefined,
-      sigBlockHeight: isSet(object.sigBlockHeight)
-        ? Long.fromString(object.sigBlockHeight)
-        : Long.UZERO,
     };
   },
 
@@ -676,8 +680,6 @@ export const AuthInfo = {
     }
     message.fee !== undefined &&
       (obj.fee = message.fee ? Fee.toJSON(message.fee) : undefined);
-    message.sigBlockHeight !== undefined &&
-      (obj.sigBlockHeight = (message.sigBlockHeight || Long.UZERO).toString());
     return obj;
   },
 
@@ -689,10 +691,6 @@ export const AuthInfo = {
       object.fee !== undefined && object.fee !== null
         ? Fee.fromPartial(object.fee)
         : undefined;
-    message.sigBlockHeight =
-      object.sigBlockHeight !== undefined && object.sigBlockHeight !== null
-        ? Long.fromValue(object.sigBlockHeight)
-        : Long.UZERO;
     return message;
   },
 };

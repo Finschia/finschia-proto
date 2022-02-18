@@ -17,6 +17,7 @@ export interface BaseAccount {
   ed25519PubKey?: PubKey;
   secp256k1PubKey?: PubKey1;
   multisigPubKey?: LegacyAminoPubKey;
+  accountNumber: Long;
   sequence: Long;
 }
 
@@ -34,7 +35,6 @@ export interface Params {
   txSizeCostPerByte: Long;
   sigVerifyCostEd25519: Long;
   sigVerifyCostSecp256k1: Long;
-  validSigBlockPeriod: Long;
 }
 
 function createBaseBaseAccount(): BaseAccount {
@@ -43,6 +43,7 @@ function createBaseBaseAccount(): BaseAccount {
     ed25519PubKey: undefined,
     secp256k1PubKey: undefined,
     multisigPubKey: undefined,
+    accountNumber: Long.UZERO,
     sequence: Long.UZERO,
   };
 }
@@ -70,8 +71,11 @@ export const BaseAccount = {
         writer.uint32(34).fork()
       ).ldelim();
     }
+    if (!message.accountNumber.isZero()) {
+      writer.uint32(40).uint64(message.accountNumber);
+    }
     if (!message.sequence.isZero()) {
-      writer.uint32(40).uint64(message.sequence);
+      writer.uint32(48).uint64(message.sequence);
     }
     return writer;
   },
@@ -99,6 +103,9 @@ export const BaseAccount = {
           );
           break;
         case 5:
+          message.accountNumber = reader.uint64() as Long;
+          break;
+        case 6:
           message.sequence = reader.uint64() as Long;
           break;
         default:
@@ -121,6 +128,9 @@ export const BaseAccount = {
       multisigPubKey: isSet(object.multisigPubKey)
         ? LegacyAminoPubKey.fromJSON(object.multisigPubKey)
         : undefined,
+      accountNumber: isSet(object.accountNumber)
+        ? Long.fromString(object.accountNumber)
+        : Long.UZERO,
       sequence: isSet(object.sequence)
         ? Long.fromString(object.sequence)
         : Long.UZERO,
@@ -142,6 +152,8 @@ export const BaseAccount = {
       (obj.multisigPubKey = message.multisigPubKey
         ? LegacyAminoPubKey.toJSON(message.multisigPubKey)
         : undefined);
+    message.accountNumber !== undefined &&
+      (obj.accountNumber = (message.accountNumber || Long.UZERO).toString());
     message.sequence !== undefined &&
       (obj.sequence = (message.sequence || Long.UZERO).toString());
     return obj;
@@ -164,6 +176,10 @@ export const BaseAccount = {
       object.multisigPubKey !== undefined && object.multisigPubKey !== null
         ? LegacyAminoPubKey.fromPartial(object.multisigPubKey)
         : undefined;
+    message.accountNumber =
+      object.accountNumber !== undefined && object.accountNumber !== null
+        ? Long.fromValue(object.accountNumber)
+        : Long.UZERO;
     message.sequence =
       object.sequence !== undefined && object.sequence !== null
         ? Long.fromValue(object.sequence)
@@ -268,7 +284,6 @@ function createBaseParams(): Params {
     txSizeCostPerByte: Long.UZERO,
     sigVerifyCostEd25519: Long.UZERO,
     sigVerifyCostSecp256k1: Long.UZERO,
-    validSigBlockPeriod: Long.UZERO,
   };
 }
 
@@ -291,9 +306,6 @@ export const Params = {
     }
     if (!message.sigVerifyCostSecp256k1.isZero()) {
       writer.uint32(40).uint64(message.sigVerifyCostSecp256k1);
-    }
-    if (!message.validSigBlockPeriod.isZero()) {
-      writer.uint32(48).uint64(message.validSigBlockPeriod);
     }
     return writer;
   },
@@ -320,9 +332,6 @@ export const Params = {
         case 5:
           message.sigVerifyCostSecp256k1 = reader.uint64() as Long;
           break;
-        case 6:
-          message.validSigBlockPeriod = reader.uint64() as Long;
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -348,9 +357,6 @@ export const Params = {
       sigVerifyCostSecp256k1: isSet(object.sigVerifyCostSecp256k1)
         ? Long.fromString(object.sigVerifyCostSecp256k1)
         : Long.UZERO,
-      validSigBlockPeriod: isSet(object.validSigBlockPeriod)
-        ? Long.fromString(object.validSigBlockPeriod)
-        : Long.UZERO,
     };
   },
 
@@ -373,10 +379,6 @@ export const Params = {
     message.sigVerifyCostSecp256k1 !== undefined &&
       (obj.sigVerifyCostSecp256k1 = (
         message.sigVerifyCostSecp256k1 || Long.UZERO
-      ).toString());
-    message.validSigBlockPeriod !== undefined &&
-      (obj.validSigBlockPeriod = (
-        message.validSigBlockPeriod || Long.UZERO
       ).toString());
     return obj;
   },
@@ -406,11 +408,6 @@ export const Params = {
       object.sigVerifyCostSecp256k1 !== undefined &&
       object.sigVerifyCostSecp256k1 !== null
         ? Long.fromValue(object.sigVerifyCostSecp256k1)
-        : Long.UZERO;
-    message.validSigBlockPeriod =
-      object.validSigBlockPeriod !== undefined &&
-      object.validSigBlockPeriod !== null
-        ? Long.fromValue(object.validSigBlockPeriod)
         : Long.UZERO;
     return message;
   },

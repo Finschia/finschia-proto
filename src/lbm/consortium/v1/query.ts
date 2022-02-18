@@ -18,6 +18,23 @@ export interface QueryParamsResponse {
 }
 
 /**
+ * QueryValidatorAuthRequest is the request type for the
+ * Query/ValidatorAuth RPC method.
+ */
+export interface QueryValidatorAuthRequest {
+  /** validator_address defines the validator address to query for. */
+  validatorAddress: string;
+}
+
+/**
+ * QueryValidatorAuthResponse is the request type for the
+ * Query/ValidatorAuth RPC method.
+ */
+export interface QueryValidatorAuthResponse {
+  auth?: ValidatorAuth;
+}
+
+/**
  * QueryValidatorAuthsRequest is the request type for the
  * Query/ValidatorAuths RPC method.
  */
@@ -34,23 +51,6 @@ export interface QueryValidatorAuthsResponse {
   auths: ValidatorAuth[];
   /** pagination defines the pagination in the response. */
   pagination?: PageResponse;
-}
-
-/**
- * QueryValidatorAuthRequest is the request type for the
- * Query/ValidatorAuth RPC method.
- */
-export interface QueryValidatorAuthRequest {
-  /** validator_address defines the validator address to query for. */
-  validatorAddress: string;
-}
-
-/**
- * QueryValidatorAuthResponse is the request type for the
- * Query/ValidatorAuth RPC method.
- */
-export interface QueryValidatorAuthResponse {
-  auth?: ValidatorAuth;
 }
 
 function createBaseQueryParamsRequest(): QueryParamsRequest {
@@ -150,6 +150,131 @@ export const QueryParamsResponse = {
     message.params =
       object.params !== undefined && object.params !== null
         ? Params.fromPartial(object.params)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryValidatorAuthRequest(): QueryValidatorAuthRequest {
+  return { validatorAddress: "" };
+}
+
+export const QueryValidatorAuthRequest = {
+  encode(
+    message: QueryValidatorAuthRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.validatorAddress !== "") {
+      writer.uint32(10).string(message.validatorAddress);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryValidatorAuthRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryValidatorAuthRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.validatorAddress = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryValidatorAuthRequest {
+    return {
+      validatorAddress: isSet(object.validatorAddress)
+        ? String(object.validatorAddress)
+        : "",
+    };
+  },
+
+  toJSON(message: QueryValidatorAuthRequest): unknown {
+    const obj: any = {};
+    message.validatorAddress !== undefined &&
+      (obj.validatorAddress = message.validatorAddress);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryValidatorAuthRequest>, I>>(
+    object: I
+  ): QueryValidatorAuthRequest {
+    const message = createBaseQueryValidatorAuthRequest();
+    message.validatorAddress = object.validatorAddress ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryValidatorAuthResponse(): QueryValidatorAuthResponse {
+  return { auth: undefined };
+}
+
+export const QueryValidatorAuthResponse = {
+  encode(
+    message: QueryValidatorAuthResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.auth !== undefined) {
+      ValidatorAuth.encode(message.auth, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryValidatorAuthResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryValidatorAuthResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.auth = ValidatorAuth.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryValidatorAuthResponse {
+    return {
+      auth: isSet(object.auth)
+        ? ValidatorAuth.fromJSON(object.auth)
+        : undefined,
+    };
+  },
+
+  toJSON(message: QueryValidatorAuthResponse): unknown {
+    const obj: any = {};
+    message.auth !== undefined &&
+      (obj.auth = message.auth
+        ? ValidatorAuth.toJSON(message.auth)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryValidatorAuthResponse>, I>>(
+    object: I
+  ): QueryValidatorAuthResponse {
+    const message = createBaseQueryValidatorAuthResponse();
+    message.auth =
+      object.auth !== undefined && object.auth !== null
+        ? ValidatorAuth.fromPartial(object.auth)
         : undefined;
     return message;
   },
@@ -306,143 +431,18 @@ export const QueryValidatorAuthsResponse = {
   },
 };
 
-function createBaseQueryValidatorAuthRequest(): QueryValidatorAuthRequest {
-  return { validatorAddress: "" };
-}
-
-export const QueryValidatorAuthRequest = {
-  encode(
-    message: QueryValidatorAuthRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.validatorAddress !== "") {
-      writer.uint32(10).string(message.validatorAddress);
-    }
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): QueryValidatorAuthRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryValidatorAuthRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.validatorAddress = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): QueryValidatorAuthRequest {
-    return {
-      validatorAddress: isSet(object.validatorAddress)
-        ? String(object.validatorAddress)
-        : "",
-    };
-  },
-
-  toJSON(message: QueryValidatorAuthRequest): unknown {
-    const obj: any = {};
-    message.validatorAddress !== undefined &&
-      (obj.validatorAddress = message.validatorAddress);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<QueryValidatorAuthRequest>, I>>(
-    object: I
-  ): QueryValidatorAuthRequest {
-    const message = createBaseQueryValidatorAuthRequest();
-    message.validatorAddress = object.validatorAddress ?? "";
-    return message;
-  },
-};
-
-function createBaseQueryValidatorAuthResponse(): QueryValidatorAuthResponse {
-  return { auth: undefined };
-}
-
-export const QueryValidatorAuthResponse = {
-  encode(
-    message: QueryValidatorAuthResponse,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.auth !== undefined) {
-      ValidatorAuth.encode(message.auth, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): QueryValidatorAuthResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryValidatorAuthResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.auth = ValidatorAuth.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): QueryValidatorAuthResponse {
-    return {
-      auth: isSet(object.auth)
-        ? ValidatorAuth.fromJSON(object.auth)
-        : undefined,
-    };
-  },
-
-  toJSON(message: QueryValidatorAuthResponse): unknown {
-    const obj: any = {};
-    message.auth !== undefined &&
-      (obj.auth = message.auth
-        ? ValidatorAuth.toJSON(message.auth)
-        : undefined);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<QueryValidatorAuthResponse>, I>>(
-    object: I
-  ): QueryValidatorAuthResponse {
-    const message = createBaseQueryValidatorAuthResponse();
-    message.auth =
-      object.auth !== undefined && object.auth !== null
-        ? ValidatorAuth.fromPartial(object.auth)
-        : undefined;
-    return message;
-  },
-};
-
 /** Query defines the gRPC querier service for consortium module. */
 export interface Query {
   /** Params queries the module params. */
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse>;
-  /** ValidatorAuths queries authorization infos of validators. */
-  ValidatorAuths(
-    request: QueryValidatorAuthsRequest
-  ): Promise<QueryValidatorAuthsResponse>;
   /** ValidatorAuth queries authorization info of a validator. */
   ValidatorAuth(
     request: QueryValidatorAuthRequest
   ): Promise<QueryValidatorAuthResponse>;
+  /** ValidatorAuths queries authorization infos of validators. */
+  ValidatorAuths(
+    request: QueryValidatorAuthsRequest
+  ): Promise<QueryValidatorAuthsResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -450,28 +450,14 @@ export class QueryClientImpl implements Query {
   constructor(rpc: Rpc) {
     this.rpc = rpc;
     this.Params = this.Params.bind(this);
-    this.ValidatorAuths = this.ValidatorAuths.bind(this);
     this.ValidatorAuth = this.ValidatorAuth.bind(this);
+    this.ValidatorAuths = this.ValidatorAuths.bind(this);
   }
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
     const promise = this.rpc.request("lbm.consortium.v1.Query", "Params", data);
     return promise.then((data) =>
       QueryParamsResponse.decode(new _m0.Reader(data))
-    );
-  }
-
-  ValidatorAuths(
-    request: QueryValidatorAuthsRequest
-  ): Promise<QueryValidatorAuthsResponse> {
-    const data = QueryValidatorAuthsRequest.encode(request).finish();
-    const promise = this.rpc.request(
-      "lbm.consortium.v1.Query",
-      "ValidatorAuths",
-      data
-    );
-    return promise.then((data) =>
-      QueryValidatorAuthsResponse.decode(new _m0.Reader(data))
     );
   }
 
@@ -486,6 +472,20 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryValidatorAuthResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  ValidatorAuths(
+    request: QueryValidatorAuthsRequest
+  ): Promise<QueryValidatorAuthsResponse> {
+    const data = QueryValidatorAuthsRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "lbm.consortium.v1.Query",
+      "ValidatorAuths",
+      data
+    );
+    return promise.then((data) =>
+      QueryValidatorAuthsResponse.decode(new _m0.Reader(data))
     );
   }
 }

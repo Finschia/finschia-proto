@@ -124,6 +124,7 @@ export interface VersionInfo {
   buildTags: string;
   goVersion: string;
   buildDeps: Module[];
+  lbmSdkVersion: string;
 }
 
 /** Module is the type for VersionInfo */
@@ -1425,6 +1426,7 @@ function createBaseVersionInfo(): VersionInfo {
     buildTags: "",
     goVersion: "",
     buildDeps: [],
+    lbmSdkVersion: "",
   };
 }
 
@@ -1453,6 +1455,9 @@ export const VersionInfo = {
     }
     for (const v of message.buildDeps) {
       Module.encode(v!, writer.uint32(58).fork()).ldelim();
+    }
+    if (message.lbmSdkVersion !== "") {
+      writer.uint32(66).string(message.lbmSdkVersion);
     }
     return writer;
   },
@@ -1485,6 +1490,9 @@ export const VersionInfo = {
         case 7:
           message.buildDeps.push(Module.decode(reader, reader.uint32()));
           break;
+        case 8:
+          message.lbmSdkVersion = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1504,6 +1512,9 @@ export const VersionInfo = {
       buildDeps: Array.isArray(object?.buildDeps)
         ? object.buildDeps.map((e: any) => Module.fromJSON(e))
         : [],
+      lbmSdkVersion: isSet(object.lbmSdkVersion)
+        ? String(object.lbmSdkVersion)
+        : "",
     };
   },
 
@@ -1522,6 +1533,8 @@ export const VersionInfo = {
     } else {
       obj.buildDeps = [];
     }
+    message.lbmSdkVersion !== undefined &&
+      (obj.lbmSdkVersion = message.lbmSdkVersion);
     return obj;
   },
 
@@ -1537,6 +1550,7 @@ export const VersionInfo = {
     message.goVersion = object.goVersion ?? "";
     message.buildDeps =
       object.buildDeps?.map((e) => Module.fromPartial(e)) || [];
+    message.lbmSdkVersion = object.lbmSdkVersion ?? "";
     return message;
   },
 };

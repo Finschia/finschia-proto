@@ -4,7 +4,9 @@ command -v shellcheck >/dev/null && shellcheck "$0"
 
 
 OUT_DIR="./src"
-PROTOC_GEN_TS_PROTO_PATH="./node_modules/.bin/protoc-gen-ts_proto"
+#PROTOC_GEN_TS_PROTO_PATH="./node_modules/.bin/protoc-gen-ts_proto"
+# On mac, install coreutils to use realpath. `brew install coretuils`
+PLUGIN_PATH="$(realpath ./bin)/protoc-gen-ts_proto_yarn_2"
 
 TS_PROTO_OPTS="esModuleInterop=true,forceLong=long,useOptionals=true,useDate=false"
 
@@ -16,10 +18,12 @@ LBMSDK_DIR="./lbm-sdk/proto"
 LBMSDK_THIRD_PARTY_DIR="./lbm-sdk/third_party/proto"
 
 # shellcheck disable=SC2046
+# --plugin="protoc-gen-ts_proto=${PROTOC_GEN_TS_PROTO_PATH}" \
 protoc \
- --plugin="protoc-gen-ts_proto=${PROTOC_GEN_TS_PROTO_PATH}" \
- --ts_proto_out="${OUT_DIR}" \
- --ts_proto_opt="${TS_PROTO_OPTS}" \
+ --plugin="$PLUGIN_PATH" \
+ --ts_proto_yarn_2_out="${OUT_DIR}" \
  --proto_path="$LBMSDK_DIR" \
  --proto_path="$LBMSDK_THIRD_PARTY_DIR" \
+ --ts_proto_yarn_2_opt="${TS_PROTO_OPTS}" \
  $(find ${LBMSDK_DIR} ${LBMSDK_THIRD_PARTY_DIR} -path -prune -o -name '*.proto' -print0 | xargs -0)
+
