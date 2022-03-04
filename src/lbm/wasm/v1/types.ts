@@ -177,13 +177,6 @@ export interface CodeInfo {
   codeHash: Uint8Array;
   /** Creator address who initially stored the code */
   creator: string;
-  /**
-   * Source is a valid absolute HTTPS URI to the contract's source code,
-   * optional
-   */
-  source: string;
-  /** Builder is a valid docker image name with tag, optional */
-  builder: string;
   /** InstantiateConfig access control to apply on contract creation, optional */
   instantiateConfig?: AccessConfig;
 }
@@ -546,8 +539,6 @@ function createBaseCodeInfo(): CodeInfo {
   return {
     codeHash: new Uint8Array(),
     creator: "",
-    source: "",
-    builder: "",
     instantiateConfig: undefined,
   };
 }
@@ -562,12 +553,6 @@ export const CodeInfo = {
     }
     if (message.creator !== "") {
       writer.uint32(18).string(message.creator);
-    }
-    if (message.source !== "") {
-      writer.uint32(26).string(message.source);
-    }
-    if (message.builder !== "") {
-      writer.uint32(34).string(message.builder);
     }
     if (message.instantiateConfig !== undefined) {
       AccessConfig.encode(
@@ -591,12 +576,6 @@ export const CodeInfo = {
         case 2:
           message.creator = reader.string();
           break;
-        case 3:
-          message.source = reader.string();
-          break;
-        case 4:
-          message.builder = reader.string();
-          break;
         case 5:
           message.instantiateConfig = AccessConfig.decode(
             reader,
@@ -617,8 +596,6 @@ export const CodeInfo = {
         ? bytesFromBase64(object.codeHash)
         : new Uint8Array(),
       creator: isSet(object.creator) ? String(object.creator) : "",
-      source: isSet(object.source) ? String(object.source) : "",
-      builder: isSet(object.builder) ? String(object.builder) : "",
       instantiateConfig: isSet(object.instantiateConfig)
         ? AccessConfig.fromJSON(object.instantiateConfig)
         : undefined,
@@ -632,8 +609,6 @@ export const CodeInfo = {
         message.codeHash !== undefined ? message.codeHash : new Uint8Array()
       ));
     message.creator !== undefined && (obj.creator = message.creator);
-    message.source !== undefined && (obj.source = message.source);
-    message.builder !== undefined && (obj.builder = message.builder);
     message.instantiateConfig !== undefined &&
       (obj.instantiateConfig = message.instantiateConfig
         ? AccessConfig.toJSON(message.instantiateConfig)
@@ -645,8 +620,6 @@ export const CodeInfo = {
     const message = createBaseCodeInfo();
     message.codeHash = object.codeHash ?? new Uint8Array();
     message.creator = object.creator ?? "";
-    message.source = object.source ?? "";
-    message.builder = object.builder ?? "";
     message.instantiateConfig =
       object.instantiateConfig !== undefined &&
       object.instantiateConfig !== null

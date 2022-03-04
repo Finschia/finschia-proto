@@ -1,6 +1,6 @@
 {
   "name": "lbmjs-types",
-  "version": "0.44.0-rc0",
+  "version": "0.45.0-rc0",
   "main": "index.js",
   "description": "JS and TS types relating to Protocol Buffers used by LBM-SDK",
   "contributors": [
@@ -22,6 +22,7 @@
     "registry": "https://registry.npmjs.org"
   },
   "scripts": {
+    "format": "prettier --write --loglevel warn \"./src/**/*.ts\"",
     "codegen": "./scripts/codegen.sh",
     "lbmsdk_update": "git submodule foreach git pull --rebase",
     "build": "rm -rf ./build && tsc && ./scripts/prepare.sh",
@@ -34,6 +35,7 @@
   "devDependencies": {
     "@types/long": "^4.0.1",
     "@types/node": "^15.6.2",
+    "prettier": "^2.5.1",
     "ts-proto": "^1.92.1",
     "typescript": "~4.2"
   },

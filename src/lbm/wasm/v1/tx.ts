@@ -18,13 +18,6 @@ export interface MsgStoreCode {
   /** WASMByteCode can be raw or gzip compressed */
   wasmByteCode: Uint8Array;
   /**
-   * Source is a valid absolute HTTPS URI to the contract's source code,
-   * optional
-   */
-  source: string;
-  /** Builder is a valid docker image name with tag, optional */
-  builder: string;
-  /**
    * InstantiatePermission access control to apply on contract creation,
    * optional
    */
@@ -50,8 +43,8 @@ export interface MsgInstantiateContract {
   codeId: Long;
   /** Label is optional metadata to be stored with a contract instance. */
   label: string;
-  /** InitMsg json encoded message to be passed to the contract on instantiation */
-  initMsg: Uint8Array;
+  /** Msg json encoded message to be passed to the contract on instantiation */
+  msg: Uint8Array;
   /** Funds coins that are transferred to the contract on instantiation */
   funds: Coin[];
 }
@@ -70,11 +63,6 @@ export interface MsgStoreCodeAndInstantiateContract {
   sender: string;
   /** WASMByteCode can be raw or gzip compressed */
   wasmByteCode: Uint8Array;
-  /** Source is a valid absolute HTTPS URI to the contract's source code, optional */
-  source: string;
-  /** Builder is a valid docker image name with tag, optional */
-  builder: string;
-  /** InstantiatePermission access control to apply on contract creation, optional */
   instantiatePermission?: AccessConfig;
   /** Admin is an optional address that can execute migrations */
   admin: string;
@@ -122,8 +110,8 @@ export interface MsgMigrateContract {
   contract: string;
   /** CodeID references the new WASM code */
   codeId: Long;
-  /** MigrateMsg json encoded message to be passed to the contract on migration */
-  migrateMsg: Uint8Array;
+  /** Msg json encoded message to be passed to the contract on migration */
+  msg: Uint8Array;
 }
 
 /** MsgMigrateContractResponse returns contract migration result data. */
@@ -176,8 +164,6 @@ function createBaseMsgStoreCode(): MsgStoreCode {
   return {
     sender: "",
     wasmByteCode: new Uint8Array(),
-    source: "",
-    builder: "",
     instantiatePermission: undefined,
   };
 }
@@ -192,12 +178,6 @@ export const MsgStoreCode = {
     }
     if (message.wasmByteCode.length !== 0) {
       writer.uint32(18).bytes(message.wasmByteCode);
-    }
-    if (message.source !== "") {
-      writer.uint32(26).string(message.source);
-    }
-    if (message.builder !== "") {
-      writer.uint32(34).string(message.builder);
     }
     if (message.instantiatePermission !== undefined) {
       AccessConfig.encode(
@@ -221,12 +201,6 @@ export const MsgStoreCode = {
         case 2:
           message.wasmByteCode = reader.bytes();
           break;
-        case 3:
-          message.source = reader.string();
-          break;
-        case 4:
-          message.builder = reader.string();
-          break;
         case 5:
           message.instantiatePermission = AccessConfig.decode(
             reader,
@@ -247,8 +221,6 @@ export const MsgStoreCode = {
       wasmByteCode: isSet(object.wasmByteCode)
         ? bytesFromBase64(object.wasmByteCode)
         : new Uint8Array(),
-      source: isSet(object.source) ? String(object.source) : "",
-      builder: isSet(object.builder) ? String(object.builder) : "",
       instantiatePermission: isSet(object.instantiatePermission)
         ? AccessConfig.fromJSON(object.instantiatePermission)
         : undefined,
@@ -264,8 +236,6 @@ export const MsgStoreCode = {
           ? message.wasmByteCode
           : new Uint8Array()
       ));
-    message.source !== undefined && (obj.source = message.source);
-    message.builder !== undefined && (obj.builder = message.builder);
     message.instantiatePermission !== undefined &&
       (obj.instantiatePermission = message.instantiatePermission
         ? AccessConfig.toJSON(message.instantiatePermission)
@@ -279,8 +249,6 @@ export const MsgStoreCode = {
     const message = createBaseMsgStoreCode();
     message.sender = object.sender ?? "";
     message.wasmByteCode = object.wasmByteCode ?? new Uint8Array();
-    message.source = object.source ?? "";
-    message.builder = object.builder ?? "";
     message.instantiatePermission =
       object.instantiatePermission !== undefined &&
       object.instantiatePermission !== null
@@ -359,7 +327,7 @@ function createBaseMsgInstantiateContract(): MsgInstantiateContract {
     admin: "",
     codeId: Long.UZERO,
     label: "",
-    initMsg: new Uint8Array(),
+    msg: new Uint8Array(),
     funds: [],
   };
 }
@@ -381,8 +349,8 @@ export const MsgInstantiateContract = {
     if (message.label !== "") {
       writer.uint32(34).string(message.label);
     }
-    if (message.initMsg.length !== 0) {
-      writer.uint32(42).bytes(message.initMsg);
+    if (message.msg.length !== 0) {
+      writer.uint32(42).bytes(message.msg);
     }
     for (const v of message.funds) {
       Coin.encode(v!, writer.uint32(50).fork()).ldelim();
@@ -413,7 +381,7 @@ export const MsgInstantiateContract = {
           message.label = reader.string();
           break;
         case 5:
-          message.initMsg = reader.bytes();
+          message.msg = reader.bytes();
           break;
         case 6:
           message.funds.push(Coin.decode(reader, reader.uint32()));
@@ -434,9 +402,7 @@ export const MsgInstantiateContract = {
         ? Long.fromString(object.codeId)
         : Long.UZERO,
       label: isSet(object.label) ? String(object.label) : "",
-      initMsg: isSet(object.initMsg)
-        ? bytesFromBase64(object.initMsg)
-        : new Uint8Array(),
+      msg: isSet(object.msg) ? bytesFromBase64(object.msg) : new Uint8Array(),
       funds: Array.isArray(object?.funds)
         ? object.funds.map((e: any) => Coin.fromJSON(e))
         : [],
@@ -450,9 +416,9 @@ export const MsgInstantiateContract = {
     message.codeId !== undefined &&
       (obj.codeId = (message.codeId || Long.UZERO).toString());
     message.label !== undefined && (obj.label = message.label);
-    message.initMsg !== undefined &&
-      (obj.initMsg = base64FromBytes(
-        message.initMsg !== undefined ? message.initMsg : new Uint8Array()
+    message.msg !== undefined &&
+      (obj.msg = base64FromBytes(
+        message.msg !== undefined ? message.msg : new Uint8Array()
       ));
     if (message.funds) {
       obj.funds = message.funds.map((e) => (e ? Coin.toJSON(e) : undefined));
@@ -473,7 +439,7 @@ export const MsgInstantiateContract = {
         ? Long.fromValue(object.codeId)
         : Long.UZERO;
     message.label = object.label ?? "";
-    message.initMsg = object.initMsg ?? new Uint8Array();
+    message.msg = object.msg ?? new Uint8Array();
     message.funds = object.funds?.map((e) => Coin.fromPartial(e)) || [];
     return message;
   },
@@ -554,8 +520,6 @@ function createBaseMsgStoreCodeAndInstantiateContract(): MsgStoreCodeAndInstanti
   return {
     sender: "",
     wasmByteCode: new Uint8Array(),
-    source: "",
-    builder: "",
     instantiatePermission: undefined,
     admin: "",
     label: "",
@@ -574,12 +538,6 @@ export const MsgStoreCodeAndInstantiateContract = {
     }
     if (message.wasmByteCode.length !== 0) {
       writer.uint32(18).bytes(message.wasmByteCode);
-    }
-    if (message.source !== "") {
-      writer.uint32(26).string(message.source);
-    }
-    if (message.builder !== "") {
-      writer.uint32(34).string(message.builder);
     }
     if (message.instantiatePermission !== undefined) {
       AccessConfig.encode(
@@ -618,12 +576,6 @@ export const MsgStoreCodeAndInstantiateContract = {
         case 2:
           message.wasmByteCode = reader.bytes();
           break;
-        case 3:
-          message.source = reader.string();
-          break;
-        case 4:
-          message.builder = reader.string();
-          break;
         case 5:
           message.instantiatePermission = AccessConfig.decode(
             reader,
@@ -656,8 +608,6 @@ export const MsgStoreCodeAndInstantiateContract = {
       wasmByteCode: isSet(object.wasmByteCode)
         ? bytesFromBase64(object.wasmByteCode)
         : new Uint8Array(),
-      source: isSet(object.source) ? String(object.source) : "",
-      builder: isSet(object.builder) ? String(object.builder) : "",
       instantiatePermission: isSet(object.instantiatePermission)
         ? AccessConfig.fromJSON(object.instantiatePermission)
         : undefined,
@@ -681,8 +631,6 @@ export const MsgStoreCodeAndInstantiateContract = {
           ? message.wasmByteCode
           : new Uint8Array()
       ));
-    message.source !== undefined && (obj.source = message.source);
-    message.builder !== undefined && (obj.builder = message.builder);
     message.instantiatePermission !== undefined &&
       (obj.instantiatePermission = message.instantiatePermission
         ? AccessConfig.toJSON(message.instantiatePermission)
@@ -707,8 +655,6 @@ export const MsgStoreCodeAndInstantiateContract = {
     const message = createBaseMsgStoreCodeAndInstantiateContract();
     message.sender = object.sender ?? "";
     message.wasmByteCode = object.wasmByteCode ?? new Uint8Array();
-    message.source = object.source ?? "";
-    message.builder = object.builder ?? "";
     message.instantiatePermission =
       object.instantiatePermission !== undefined &&
       object.instantiatePermission !== null
@@ -965,7 +911,7 @@ function createBaseMsgMigrateContract(): MsgMigrateContract {
     sender: "",
     contract: "",
     codeId: Long.UZERO,
-    migrateMsg: new Uint8Array(),
+    msg: new Uint8Array(),
   };
 }
 
@@ -983,8 +929,8 @@ export const MsgMigrateContract = {
     if (!message.codeId.isZero()) {
       writer.uint32(24).uint64(message.codeId);
     }
-    if (message.migrateMsg.length !== 0) {
-      writer.uint32(34).bytes(message.migrateMsg);
+    if (message.msg.length !== 0) {
+      writer.uint32(34).bytes(message.msg);
     }
     return writer;
   },
@@ -1006,7 +952,7 @@ export const MsgMigrateContract = {
           message.codeId = reader.uint64() as Long;
           break;
         case 4:
-          message.migrateMsg = reader.bytes();
+          message.msg = reader.bytes();
           break;
         default:
           reader.skipType(tag & 7);
@@ -1023,9 +969,7 @@ export const MsgMigrateContract = {
       codeId: isSet(object.codeId)
         ? Long.fromString(object.codeId)
         : Long.UZERO,
-      migrateMsg: isSet(object.migrateMsg)
-        ? bytesFromBase64(object.migrateMsg)
-        : new Uint8Array(),
+      msg: isSet(object.msg) ? bytesFromBase64(object.msg) : new Uint8Array(),
     };
   },
 
@@ -1035,9 +979,9 @@ export const MsgMigrateContract = {
     message.contract !== undefined && (obj.contract = message.contract);
     message.codeId !== undefined &&
       (obj.codeId = (message.codeId || Long.UZERO).toString());
-    message.migrateMsg !== undefined &&
-      (obj.migrateMsg = base64FromBytes(
-        message.migrateMsg !== undefined ? message.migrateMsg : new Uint8Array()
+    message.msg !== undefined &&
+      (obj.msg = base64FromBytes(
+        message.msg !== undefined ? message.msg : new Uint8Array()
       ));
     return obj;
   },
@@ -1052,7 +996,7 @@ export const MsgMigrateContract = {
       object.codeId !== undefined && object.codeId !== null
         ? Long.fromValue(object.codeId)
         : Long.UZERO;
-    message.migrateMsg = object.migrateMsg ?? new Uint8Array();
+    message.msg = object.msg ?? new Uint8Array();
     return message;
   },
 };

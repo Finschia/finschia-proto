@@ -130,8 +130,6 @@ export interface CodeInfoResponse {
   codeId: Long;
   creator: string;
   dataHash: Uint8Array;
-  source: string;
-  builder: string;
   instantiatePermission?: AccessConfig;
 }
 
@@ -1101,8 +1099,6 @@ function createBaseCodeInfoResponse(): CodeInfoResponse {
     codeId: Long.UZERO,
     creator: "",
     dataHash: new Uint8Array(),
-    source: "",
-    builder: "",
     instantiatePermission: undefined,
   };
 }
@@ -1120,12 +1116,6 @@ export const CodeInfoResponse = {
     }
     if (message.dataHash.length !== 0) {
       writer.uint32(26).bytes(message.dataHash);
-    }
-    if (message.source !== "") {
-      writer.uint32(34).string(message.source);
-    }
-    if (message.builder !== "") {
-      writer.uint32(42).string(message.builder);
     }
     if (message.instantiatePermission !== undefined) {
       AccessConfig.encode(
@@ -1152,12 +1142,6 @@ export const CodeInfoResponse = {
         case 3:
           message.dataHash = reader.bytes();
           break;
-        case 4:
-          message.source = reader.string();
-          break;
-        case 5:
-          message.builder = reader.string();
-          break;
         case 6:
           message.instantiatePermission = AccessConfig.decode(
             reader,
@@ -1181,8 +1165,6 @@ export const CodeInfoResponse = {
       dataHash: isSet(object.dataHash)
         ? bytesFromBase64(object.dataHash)
         : new Uint8Array(),
-      source: isSet(object.source) ? String(object.source) : "",
-      builder: isSet(object.builder) ? String(object.builder) : "",
       instantiatePermission: isSet(object.instantiatePermission)
         ? AccessConfig.fromJSON(object.instantiatePermission)
         : undefined,
@@ -1198,8 +1180,6 @@ export const CodeInfoResponse = {
       (obj.dataHash = base64FromBytes(
         message.dataHash !== undefined ? message.dataHash : new Uint8Array()
       ));
-    message.source !== undefined && (obj.source = message.source);
-    message.builder !== undefined && (obj.builder = message.builder);
     message.instantiatePermission !== undefined &&
       (obj.instantiatePermission = message.instantiatePermission
         ? AccessConfig.toJSON(message.instantiatePermission)
@@ -1217,8 +1197,6 @@ export const CodeInfoResponse = {
         : Long.UZERO;
     message.creator = object.creator ?? "";
     message.dataHash = object.dataHash ?? new Uint8Array();
-    message.source = object.source ?? "";
-    message.builder = object.builder ?? "";
     message.instantiatePermission =
       object.instantiatePermission !== undefined &&
       object.instantiatePermission !== null

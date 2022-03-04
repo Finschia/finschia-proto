@@ -38,6 +38,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/long", "npm:4.0.1"],
             ["@types/node", "npm:15.14.9"],
             ["long", "npm:4.0.0"],
+            ["prettier", "npm:2.5.1"],
             ["protobufjs", "npm:6.11.2"],
             ["ts-proto", "npm:1.100.0"],
             ["typescript", "patch:typescript@npm%3A4.2.4#~builtin<compat/typescript>::version=4.2.4&hash=493e53"]
@@ -188,6 +189,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/long", "npm:4.0.1"],
             ["@types/node", "npm:15.14.9"],
             ["long", "npm:4.0.0"],
+            ["prettier", "npm:2.5.1"],
             ["protobufjs", "npm:6.11.2"],
             ["ts-proto", "npm:1.100.0"],
             ["typescript", "patch:typescript@npm%3A4.2.4#~builtin<compat/typescript>::version=4.2.4&hash=493e53"]
