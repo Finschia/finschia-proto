@@ -35,6 +35,9 @@ export interface Output {
 /**
  * Supply represents a struct that passively keeps track of the total supply
  * amounts in the network.
+ * This message is deprecated now that supply is indexed by denom.
+ *
+ * @deprecated
  */
 export interface Supply {
   total: Coin[];
@@ -74,6 +77,19 @@ export interface Metadata {
    * displayed in clients.
    */
   display: string;
+  /**
+   * name defines the name of the token (eg: Cosmos Atom)
+   *
+   * Since: cosmos-sdk 0.43
+   */
+  name: string;
+  /**
+   * symbol is the token symbol usually shown on exchanges (eg: ATOM). This can
+   * be the same as the display.
+   *
+   * Since: cosmos-sdk 0.43
+   */
+  symbol: string;
 }
 
 function createBaseParams(): Params {
@@ -481,7 +497,14 @@ export const DenomUnit = {
 };
 
 function createBaseMetadata(): Metadata {
-  return { description: "", denomUnits: [], base: "", display: "" };
+  return {
+    description: "",
+    denomUnits: [],
+    base: "",
+    display: "",
+    name: "",
+    symbol: "",
+  };
 }
 
 export const Metadata = {
@@ -500,6 +523,12 @@ export const Metadata = {
     }
     if (message.display !== "") {
       writer.uint32(34).string(message.display);
+    }
+    if (message.name !== "") {
+      writer.uint32(42).string(message.name);
+    }
+    if (message.symbol !== "") {
+      writer.uint32(50).string(message.symbol);
     }
     return writer;
   },
@@ -523,6 +552,12 @@ export const Metadata = {
         case 4:
           message.display = reader.string();
           break;
+        case 5:
+          message.name = reader.string();
+          break;
+        case 6:
+          message.symbol = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -539,6 +574,8 @@ export const Metadata = {
         : [],
       base: isSet(object.base) ? String(object.base) : "",
       display: isSet(object.display) ? String(object.display) : "",
+      name: isSet(object.name) ? String(object.name) : "",
+      symbol: isSet(object.symbol) ? String(object.symbol) : "",
     };
   },
 
@@ -555,6 +592,8 @@ export const Metadata = {
     }
     message.base !== undefined && (obj.base = message.base);
     message.display !== undefined && (obj.display = message.display);
+    message.name !== undefined && (obj.name = message.name);
+    message.symbol !== undefined && (obj.symbol = message.symbol);
     return obj;
   },
 
@@ -565,6 +604,8 @@ export const Metadata = {
       object.denomUnits?.map((e) => DenomUnit.fromPartial(e)) || [];
     message.base = object.base ?? "";
     message.display = object.display ?? "";
+    message.name = object.name ?? "";
+    message.symbol = object.symbol ?? "";
     return message;
   },
 };

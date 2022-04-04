@@ -47,7 +47,14 @@ export interface QueryAllBalancesResponse {
  * QueryTotalSupplyRequest is the request type for the Query/TotalSupply RPC
  * method.
  */
-export interface QueryTotalSupplyRequest {}
+export interface QueryTotalSupplyRequest {
+  /**
+   * pagination defines an optional pagination for the request.
+   *
+   * Since: cosmos-sdk 0.43
+   */
+  pagination?: PageRequest;
+}
 
 /**
  * QueryTotalSupplyResponse is the response type for the Query/TotalSupply RPC
@@ -56,6 +63,12 @@ export interface QueryTotalSupplyRequest {}
 export interface QueryTotalSupplyResponse {
   /** supply is the supply of the coins */
   supply: Coin[];
+  /**
+   * pagination defines the pagination in the response.
+   *
+   * Since: cosmos-sdk 0.43
+   */
+  pagination?: PageResponse;
 }
 
 /** QuerySupplyOfRequest is the request type for the Query/SupplyOf RPC method. */
@@ -398,14 +411,17 @@ export const QueryAllBalancesResponse = {
 };
 
 function createBaseQueryTotalSupplyRequest(): QueryTotalSupplyRequest {
-  return {};
+  return { pagination: undefined };
 }
 
 export const QueryTotalSupplyRequest = {
   encode(
-    _: QueryTotalSupplyRequest,
+    message: QueryTotalSupplyRequest,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -419,6 +435,9 @@ export const QueryTotalSupplyRequest = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -427,25 +446,37 @@ export const QueryTotalSupplyRequest = {
     return message;
   },
 
-  fromJSON(_: any): QueryTotalSupplyRequest {
-    return {};
+  fromJSON(object: any): QueryTotalSupplyRequest {
+    return {
+      pagination: isSet(object.pagination)
+        ? PageRequest.fromJSON(object.pagination)
+        : undefined,
+    };
   },
 
-  toJSON(_: QueryTotalSupplyRequest): unknown {
+  toJSON(message: QueryTotalSupplyRequest): unknown {
     const obj: any = {};
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageRequest.toJSON(message.pagination)
+        : undefined);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<QueryTotalSupplyRequest>, I>>(
-    _: I
+    object: I
   ): QueryTotalSupplyRequest {
     const message = createBaseQueryTotalSupplyRequest();
+    message.pagination =
+      object.pagination !== undefined && object.pagination !== null
+        ? PageRequest.fromPartial(object.pagination)
+        : undefined;
     return message;
   },
 };
 
 function createBaseQueryTotalSupplyResponse(): QueryTotalSupplyResponse {
-  return { supply: [] };
+  return { supply: [], pagination: undefined };
 }
 
 export const QueryTotalSupplyResponse = {
@@ -455,6 +486,12 @@ export const QueryTotalSupplyResponse = {
   ): _m0.Writer {
     for (const v of message.supply) {
       Coin.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(
+        message.pagination,
+        writer.uint32(18).fork()
+      ).ldelim();
     }
     return writer;
   },
@@ -472,6 +509,9 @@ export const QueryTotalSupplyResponse = {
         case 1:
           message.supply.push(Coin.decode(reader, reader.uint32()));
           break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -485,6 +525,9 @@ export const QueryTotalSupplyResponse = {
       supply: Array.isArray(object?.supply)
         ? object.supply.map((e: any) => Coin.fromJSON(e))
         : [],
+      pagination: isSet(object.pagination)
+        ? PageResponse.fromJSON(object.pagination)
+        : undefined,
     };
   },
 
@@ -495,6 +538,10 @@ export const QueryTotalSupplyResponse = {
     } else {
       obj.supply = [];
     }
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageResponse.toJSON(message.pagination)
+        : undefined);
     return obj;
   },
 
@@ -503,6 +550,10 @@ export const QueryTotalSupplyResponse = {
   ): QueryTotalSupplyResponse {
     const message = createBaseQueryTotalSupplyResponse();
     message.supply = object.supply?.map((e) => Coin.fromPartial(e)) || [];
+    message.pagination =
+      object.pagination !== undefined && object.pagination !== null
+        ? PageResponse.fromPartial(object.pagination)
+        : undefined;
     return message;
   },
 };

@@ -2,7 +2,6 @@
 import Long from "long";
 import _m0 from "protobufjs/minimal";
 import { Plan, ModuleVersion } from "../../../lbm/upgrade/v1/upgrade";
-import { Any } from "../../../google/protobuf/any";
 
 export const protobufPackage = "lbm.upgrade.v1";
 
@@ -42,6 +41,8 @@ export interface QueryAppliedPlanResponse {
 /**
  * QueryUpgradedConsensusStateRequest is the request type for the Query/UpgradedConsensusState
  * RPC method.
+ *
+ * @deprecated
  */
 export interface QueryUpgradedConsensusStateRequest {
   /**
@@ -54,14 +55,19 @@ export interface QueryUpgradedConsensusStateRequest {
 /**
  * QueryUpgradedConsensusStateResponse is the response type for the Query/UpgradedConsensusState
  * RPC method.
+ *
+ * @deprecated
  */
 export interface QueryUpgradedConsensusStateResponse {
-  upgradedConsensusState?: Any;
+  /** Since: cosmos-sdk 0.43 */
+  upgradedConsensusState: Uint8Array;
 }
 
 /**
  * QueryModuleVersionsRequest is the request type for the Query/ModuleVersions
  * RPC method.
+ *
+ * Since: cosmos-sdk 0.43
  */
 export interface QueryModuleVersionsRequest {
   /**
@@ -75,6 +81,8 @@ export interface QueryModuleVersionsRequest {
 /**
  * QueryModuleVersionsResponse is the response type for the Query/ModuleVersions
  * RPC method.
+ *
+ * Since: cosmos-sdk 0.43
  */
 export interface QueryModuleVersionsResponse {
   /** module_versions is a list of module names with their consensus versions. */
@@ -371,7 +379,7 @@ export const QueryUpgradedConsensusStateRequest = {
 };
 
 function createBaseQueryUpgradedConsensusStateResponse(): QueryUpgradedConsensusStateResponse {
-  return { upgradedConsensusState: undefined };
+  return { upgradedConsensusState: new Uint8Array() };
 }
 
 export const QueryUpgradedConsensusStateResponse = {
@@ -379,11 +387,8 @@ export const QueryUpgradedConsensusStateResponse = {
     message: QueryUpgradedConsensusStateResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.upgradedConsensusState !== undefined) {
-      Any.encode(
-        message.upgradedConsensusState,
-        writer.uint32(10).fork()
-      ).ldelim();
+    if (message.upgradedConsensusState.length !== 0) {
+      writer.uint32(18).bytes(message.upgradedConsensusState);
     }
     return writer;
   },
@@ -398,8 +403,8 @@ export const QueryUpgradedConsensusStateResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
-          message.upgradedConsensusState = Any.decode(reader, reader.uint32());
+        case 2:
+          message.upgradedConsensusState = reader.bytes();
           break;
         default:
           reader.skipType(tag & 7);
@@ -412,17 +417,19 @@ export const QueryUpgradedConsensusStateResponse = {
   fromJSON(object: any): QueryUpgradedConsensusStateResponse {
     return {
       upgradedConsensusState: isSet(object.upgradedConsensusState)
-        ? Any.fromJSON(object.upgradedConsensusState)
-        : undefined,
+        ? bytesFromBase64(object.upgradedConsensusState)
+        : new Uint8Array(),
     };
   },
 
   toJSON(message: QueryUpgradedConsensusStateResponse): unknown {
     const obj: any = {};
     message.upgradedConsensusState !== undefined &&
-      (obj.upgradedConsensusState = message.upgradedConsensusState
-        ? Any.toJSON(message.upgradedConsensusState)
-        : undefined);
+      (obj.upgradedConsensusState = base64FromBytes(
+        message.upgradedConsensusState !== undefined
+          ? message.upgradedConsensusState
+          : new Uint8Array()
+      ));
     return obj;
   },
 
@@ -431,10 +438,7 @@ export const QueryUpgradedConsensusStateResponse = {
   >(object: I): QueryUpgradedConsensusStateResponse {
     const message = createBaseQueryUpgradedConsensusStateResponse();
     message.upgradedConsensusState =
-      object.upgradedConsensusState !== undefined &&
-      object.upgradedConsensusState !== null
-        ? Any.fromPartial(object.upgradedConsensusState)
-        : undefined;
+      object.upgradedConsensusState ?? new Uint8Array();
     return message;
   },
 };
@@ -579,11 +583,19 @@ export interface Query {
    * as a trusted kernel for the next version of this chain. It will only be
    * stored at the last height of this chain.
    * UpgradedConsensusState RPC not supported with legacy querier
+   * This rpc is deprecated now that IBC has its own replacement
+   * (https://github.com/cosmos/ibc-go/blob/2c880a22e9f9cc75f62b527ca94aa75ce1106001/proto/ibc/core/client/v1/query.proto#L54)
+   *
+   * @deprecated
    */
   UpgradedConsensusState(
     request: QueryUpgradedConsensusStateRequest
   ): Promise<QueryUpgradedConsensusStateResponse>;
-  /** ModuleVersions queries the list of module versions from state. */
+  /**
+   * ModuleVersions queries the list of module versions from state.
+   *
+   * Since: cosmos-sdk 0.43
+   */
   ModuleVersions(
     request: QueryModuleVersionsRequest
   ): Promise<QueryModuleVersionsResponse>;
@@ -661,6 +673,40 @@ interface Rpc {
     method: string,
     data: Uint8Array
   ): Promise<Uint8Array>;
+}
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== "undefined") return globalThis;
+  if (typeof self !== "undefined") return self;
+  if (typeof window !== "undefined") return window;
+  if (typeof global !== "undefined") return global;
+  throw "Unable to locate global object";
+})();
+
+const atob: (b64: string) => string =
+  globalThis.atob ||
+  ((b64) => globalThis.Buffer.from(b64, "base64").toString("binary"));
+function bytesFromBase64(b64: string): Uint8Array {
+  const bin = atob(b64);
+  const arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; ++i) {
+    arr[i] = bin.charCodeAt(i);
+  }
+  return arr;
+}
+
+const btoa: (bin: string) => string =
+  globalThis.btoa ||
+  ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
+function base64FromBytes(arr: Uint8Array): string {
+  const bin: string[] = [];
+  for (const byte of arr) {
+    bin.push(String.fromCharCode(byte));
+  }
+  return btoa(bin.join(""));
 }
 
 type Builtin =

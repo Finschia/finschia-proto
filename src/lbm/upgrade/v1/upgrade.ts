@@ -19,8 +19,11 @@ export interface Plan {
    */
   name: string;
   /**
-   * The time after which the upgrade must be performed.
-   * Leave set to its zero value to use a pre-defined Height instead.
+   * Deprecated: Time based upgrades have been deprecated. Time based upgrade logic
+   * has been removed from the SDK.
+   * If this field is not empty, an error will be thrown.
+   *
+   * @deprecated
    */
   time?: Timestamp;
   /**
@@ -34,11 +37,11 @@ export interface Plan {
    */
   info: string;
   /**
-   * IBC-enabled chains can opt-in to including the upgraded client state in its upgrade plan
-   * This will make the chain commit to the correct upgraded (self) client state before the upgrade occurs,
-   * so that connecting chains can verify that the new upgraded client is valid by verifying a proof on the
-   * previous version of the chain.
-   * This will allow IBC connections to persist smoothly across planned chain upgrades
+   * Deprecated: UpgradedClientState field has been deprecated. IBC upgrade logic has been
+   * moved to the IBC module in the sub module 02-client.
+   * If this field is not empty, an error will be thrown.
+   *
+   * @deprecated
    */
   upgradedClientState?: Any;
 }
@@ -62,7 +65,11 @@ export interface CancelSoftwareUpgradeProposal {
   description: string;
 }
 
-/** ModuleVersion specifies a module and its consensus version. */
+/**
+ * ModuleVersion specifies a module and its consensus version.
+ *
+ * Since: cosmos-sdk 0.43
+ */
 export interface ModuleVersion {
   /** name of the app module */
   name: string;

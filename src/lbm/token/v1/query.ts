@@ -9,15 +9,15 @@ import {
 
 export const protobufPackage = "lbm.token.v1";
 
-/** QueryTokenBalanceRequest is the request type for the Query/TokenBalance RPC method */
-export interface QueryTokenBalanceRequest {
+/** QueryBalanceRequest is the request type for the Query/Balance RPC method */
+export interface QueryBalanceRequest {
   /** class id associated with the token. */
   classId: string;
   address: string;
 }
 
-/** QueryTokenBalanceResponse is the response type for the Query/TokenBalance RPC method */
-export interface QueryTokenBalanceResponse {
+/** QueryBalanceResponse is the response type for the Query/Balance RPC method */
+export interface QueryBalanceResponse {
   amount: string;
 }
 
@@ -95,13 +95,13 @@ export interface QueryApprovesResponse {
   pagination?: PageResponse;
 }
 
-function createBaseQueryTokenBalanceRequest(): QueryTokenBalanceRequest {
+function createBaseQueryBalanceRequest(): QueryBalanceRequest {
   return { classId: "", address: "" };
 }
 
-export const QueryTokenBalanceRequest = {
+export const QueryBalanceRequest = {
   encode(
-    message: QueryTokenBalanceRequest,
+    message: QueryBalanceRequest,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.classId !== "") {
@@ -113,13 +113,10 @@ export const QueryTokenBalanceRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): QueryTokenBalanceRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryBalanceRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryTokenBalanceRequest();
+    const message = createBaseQueryBalanceRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -137,37 +134,37 @@ export const QueryTokenBalanceRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryTokenBalanceRequest {
+  fromJSON(object: any): QueryBalanceRequest {
     return {
       classId: isSet(object.classId) ? String(object.classId) : "",
       address: isSet(object.address) ? String(object.address) : "",
     };
   },
 
-  toJSON(message: QueryTokenBalanceRequest): unknown {
+  toJSON(message: QueryBalanceRequest): unknown {
     const obj: any = {};
     message.classId !== undefined && (obj.classId = message.classId);
     message.address !== undefined && (obj.address = message.address);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QueryTokenBalanceRequest>, I>>(
+  fromPartial<I extends Exact<DeepPartial<QueryBalanceRequest>, I>>(
     object: I
-  ): QueryTokenBalanceRequest {
-    const message = createBaseQueryTokenBalanceRequest();
+  ): QueryBalanceRequest {
+    const message = createBaseQueryBalanceRequest();
     message.classId = object.classId ?? "";
     message.address = object.address ?? "";
     return message;
   },
 };
 
-function createBaseQueryTokenBalanceResponse(): QueryTokenBalanceResponse {
+function createBaseQueryBalanceResponse(): QueryBalanceResponse {
   return { amount: "" };
 }
 
-export const QueryTokenBalanceResponse = {
+export const QueryBalanceResponse = {
   encode(
-    message: QueryTokenBalanceResponse,
+    message: QueryBalanceResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.amount !== "") {
@@ -179,10 +176,10 @@ export const QueryTokenBalanceResponse = {
   decode(
     input: _m0.Reader | Uint8Array,
     length?: number
-  ): QueryTokenBalanceResponse {
+  ): QueryBalanceResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryTokenBalanceResponse();
+    const message = createBaseQueryBalanceResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -197,22 +194,22 @@ export const QueryTokenBalanceResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryTokenBalanceResponse {
+  fromJSON(object: any): QueryBalanceResponse {
     return {
       amount: isSet(object.amount) ? String(object.amount) : "",
     };
   },
 
-  toJSON(message: QueryTokenBalanceResponse): unknown {
+  toJSON(message: QueryBalanceResponse): unknown {
     const obj: any = {};
     message.amount !== undefined && (obj.amount = message.amount);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QueryTokenBalanceResponse>, I>>(
+  fromPartial<I extends Exact<DeepPartial<QueryBalanceResponse>, I>>(
     object: I
-  ): QueryTokenBalanceResponse {
-    const message = createBaseQueryTokenBalanceResponse();
+  ): QueryBalanceResponse {
+    const message = createBaseQueryBalanceResponse();
     message.amount = object.amount ?? "";
     return message;
   },
@@ -1020,10 +1017,8 @@ export const QueryApprovesResponse = {
 
 /** Query defines the gRPC querier service. */
 export interface Query {
-  /** TokenBalance queries the number of tokens of a given class owned by the address. */
-  TokenBalance(
-    request: QueryTokenBalanceRequest
-  ): Promise<QueryTokenBalanceResponse>;
+  /** Balance queries the number of tokens of a given class owned by the address. */
+  Balance(request: QueryBalanceRequest): Promise<QueryBalanceResponse>;
   /** Supply queries the number of tokens from the given class id. */
   Supply(request: QuerySupplyRequest): Promise<QuerySupplyResponse>;
   /** Token queries an token metadata based on its class id. */
@@ -1042,7 +1037,7 @@ export class QueryClientImpl implements Query {
   private readonly rpc: Rpc;
   constructor(rpc: Rpc) {
     this.rpc = rpc;
-    this.TokenBalance = this.TokenBalance.bind(this);
+    this.Balance = this.Balance.bind(this);
     this.Supply = this.Supply.bind(this);
     this.Token = this.Token.bind(this);
     this.Tokens = this.Tokens.bind(this);
@@ -1050,17 +1045,11 @@ export class QueryClientImpl implements Query {
     this.Approve = this.Approve.bind(this);
     this.Approves = this.Approves.bind(this);
   }
-  TokenBalance(
-    request: QueryTokenBalanceRequest
-  ): Promise<QueryTokenBalanceResponse> {
-    const data = QueryTokenBalanceRequest.encode(request).finish();
-    const promise = this.rpc.request(
-      "lbm.token.v1.Query",
-      "TokenBalance",
-      data
-    );
+  Balance(request: QueryBalanceRequest): Promise<QueryBalanceResponse> {
+    const data = QueryBalanceRequest.encode(request).finish();
+    const promise = this.rpc.request("lbm.token.v1.Query", "Balance", data);
     return promise.then((data) =>
-      QueryTokenBalanceResponse.decode(new _m0.Reader(data))
+      QueryBalanceResponse.decode(new _m0.Reader(data))
     );
   }
 

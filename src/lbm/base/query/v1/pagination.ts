@@ -38,6 +38,12 @@ export interface PageRequest {
    * is set.
    */
   countTotal: boolean;
+  /**
+   * reverse is set to true if results are to be returned in the descending order.
+   *
+   * Since: cosmos-sdk 0.43
+   */
+  reverse: boolean;
 }
 
 /**
@@ -68,6 +74,7 @@ function createBasePageRequest(): PageRequest {
     offset: Long.UZERO,
     limit: Long.UZERO,
     countTotal: false,
+    reverse: false,
   };
 }
 
@@ -87,6 +94,9 @@ export const PageRequest = {
     }
     if (message.countTotal === true) {
       writer.uint32(32).bool(message.countTotal);
+    }
+    if (message.reverse === true) {
+      writer.uint32(40).bool(message.reverse);
     }
     return writer;
   },
@@ -110,6 +120,9 @@ export const PageRequest = {
         case 4:
           message.countTotal = reader.bool();
           break;
+        case 5:
+          message.reverse = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -126,6 +139,7 @@ export const PageRequest = {
         : Long.UZERO,
       limit: isSet(object.limit) ? Long.fromString(object.limit) : Long.UZERO,
       countTotal: isSet(object.countTotal) ? Boolean(object.countTotal) : false,
+      reverse: isSet(object.reverse) ? Boolean(object.reverse) : false,
     };
   },
 
@@ -140,6 +154,7 @@ export const PageRequest = {
     message.limit !== undefined &&
       (obj.limit = (message.limit || Long.UZERO).toString());
     message.countTotal !== undefined && (obj.countTotal = message.countTotal);
+    message.reverse !== undefined && (obj.reverse = message.reverse);
     return obj;
   },
 
@@ -157,6 +172,7 @@ export const PageRequest = {
         ? Long.fromValue(object.limit)
         : Long.UZERO;
     message.countTotal = object.countTotal ?? false;
+    message.reverse = object.reverse ?? false;
     return message;
   },
 };

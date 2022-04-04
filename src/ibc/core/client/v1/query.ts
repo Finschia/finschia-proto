@@ -121,6 +121,29 @@ export interface QueryClientParamsResponse {
   params?: Params;
 }
 
+/**
+ * QueryUpgradedClientStateRequest is the request type for the Query/UpgradedClientState RPC
+ * method
+ */
+export interface QueryUpgradedClientStateRequest {
+  /** client state unique identifier */
+  clientId: string;
+  /**
+   * plan height of the current chain must be sent in request
+   * as this is the height under which upgraded client state is stored
+   */
+  planHeight: Long;
+}
+
+/**
+ * QueryUpgradedClientStateResponse is the response type for the Query/UpgradedClientState RPC
+ * method.
+ */
+export interface QueryUpgradedClientStateResponse {
+  /** client state associated with the request identifier */
+  upgradedClientState?: Any;
+}
+
 function createBaseQueryClientStateRequest(): QueryClientStateRequest {
   return { clientId: "" };
 }
@@ -910,6 +933,147 @@ export const QueryClientParamsResponse = {
   },
 };
 
+function createBaseQueryUpgradedClientStateRequest(): QueryUpgradedClientStateRequest {
+  return { clientId: "", planHeight: Long.ZERO };
+}
+
+export const QueryUpgradedClientStateRequest = {
+  encode(
+    message: QueryUpgradedClientStateRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.clientId !== "") {
+      writer.uint32(10).string(message.clientId);
+    }
+    if (!message.planHeight.isZero()) {
+      writer.uint32(16).int64(message.planHeight);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryUpgradedClientStateRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryUpgradedClientStateRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clientId = reader.string();
+          break;
+        case 2:
+          message.planHeight = reader.int64() as Long;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryUpgradedClientStateRequest {
+    return {
+      clientId: isSet(object.clientId) ? String(object.clientId) : "",
+      planHeight: isSet(object.planHeight)
+        ? Long.fromString(object.planHeight)
+        : Long.ZERO,
+    };
+  },
+
+  toJSON(message: QueryUpgradedClientStateRequest): unknown {
+    const obj: any = {};
+    message.clientId !== undefined && (obj.clientId = message.clientId);
+    message.planHeight !== undefined &&
+      (obj.planHeight = (message.planHeight || Long.ZERO).toString());
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryUpgradedClientStateRequest>, I>>(
+    object: I
+  ): QueryUpgradedClientStateRequest {
+    const message = createBaseQueryUpgradedClientStateRequest();
+    message.clientId = object.clientId ?? "";
+    message.planHeight =
+      object.planHeight !== undefined && object.planHeight !== null
+        ? Long.fromValue(object.planHeight)
+        : Long.ZERO;
+    return message;
+  },
+};
+
+function createBaseQueryUpgradedClientStateResponse(): QueryUpgradedClientStateResponse {
+  return { upgradedClientState: undefined };
+}
+
+export const QueryUpgradedClientStateResponse = {
+  encode(
+    message: QueryUpgradedClientStateResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.upgradedClientState !== undefined) {
+      Any.encode(
+        message.upgradedClientState,
+        writer.uint32(10).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryUpgradedClientStateResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryUpgradedClientStateResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.upgradedClientState = Any.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryUpgradedClientStateResponse {
+    return {
+      upgradedClientState: isSet(object.upgradedClientState)
+        ? Any.fromJSON(object.upgradedClientState)
+        : undefined,
+    };
+  },
+
+  toJSON(message: QueryUpgradedClientStateResponse): unknown {
+    const obj: any = {};
+    message.upgradedClientState !== undefined &&
+      (obj.upgradedClientState = message.upgradedClientState
+        ? Any.toJSON(message.upgradedClientState)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<DeepPartial<QueryUpgradedClientStateResponse>, I>
+  >(object: I): QueryUpgradedClientStateResponse {
+    const message = createBaseQueryUpgradedClientStateResponse();
+    message.upgradedClientState =
+      object.upgradedClientState !== undefined &&
+      object.upgradedClientState !== null
+        ? Any.fromPartial(object.upgradedClientState)
+        : undefined;
+    return message;
+  },
+};
+
 /** Query provides defines the gRPC querier service */
 export interface Query {
   /** ClientState queries an IBC light client. */
@@ -938,6 +1102,10 @@ export interface Query {
   ClientParams(
     request: QueryClientParamsRequest
   ): Promise<QueryClientParamsResponse>;
+  /** UpgradedClientState queries an Upgraded IBC light client. */
+  UpgradedClientState(
+    request: QueryUpgradedClientStateRequest
+  ): Promise<QueryUpgradedClientStateResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -949,6 +1117,7 @@ export class QueryClientImpl implements Query {
     this.ConsensusState = this.ConsensusState.bind(this);
     this.ConsensusStates = this.ConsensusStates.bind(this);
     this.ClientParams = this.ClientParams.bind(this);
+    this.UpgradedClientState = this.UpgradedClientState.bind(this);
   }
   ClientState(
     request: QueryClientStateRequest
@@ -1017,6 +1186,20 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryClientParamsResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  UpgradedClientState(
+    request: QueryUpgradedClientStateRequest
+  ): Promise<QueryUpgradedClientStateResponse> {
+    const data = QueryUpgradedClientStateRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "ibc.core.client.v1.Query",
+      "UpgradedClientState",
+      data
+    );
+    return promise.then((data) =>
+      QueryUpgradedClientStateResponse.decode(new _m0.Reader(data))
     );
   }
 }

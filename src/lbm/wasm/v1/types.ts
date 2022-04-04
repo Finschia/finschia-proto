@@ -164,7 +164,6 @@ export interface AccessConfig {
 export interface Params {
   codeUploadAccess?: AccessConfig;
   instantiateDefaultPermission: AccessType;
-  contractStatusAccess?: AccessConfig;
   maxWasmCodeSize: Long;
   gasMultiplier: Long;
   instanceCost: Long;
@@ -364,7 +363,6 @@ function createBaseParams(): Params {
   return {
     codeUploadAccess: undefined,
     instantiateDefaultPermission: 0,
-    contractStatusAccess: undefined,
     maxWasmCodeSize: Long.UZERO,
     gasMultiplier: Long.UZERO,
     instanceCost: Long.UZERO,
@@ -386,23 +384,17 @@ export const Params = {
     if (message.instantiateDefaultPermission !== 0) {
       writer.uint32(16).int32(message.instantiateDefaultPermission);
     }
-    if (message.contractStatusAccess !== undefined) {
-      AccessConfig.encode(
-        message.contractStatusAccess,
-        writer.uint32(26).fork()
-      ).ldelim();
-    }
     if (!message.maxWasmCodeSize.isZero()) {
-      writer.uint32(32).uint64(message.maxWasmCodeSize);
+      writer.uint32(24).uint64(message.maxWasmCodeSize);
     }
     if (!message.gasMultiplier.isZero()) {
-      writer.uint32(40).uint64(message.gasMultiplier);
+      writer.uint32(32).uint64(message.gasMultiplier);
     }
     if (!message.instanceCost.isZero()) {
-      writer.uint32(48).uint64(message.instanceCost);
+      writer.uint32(40).uint64(message.instanceCost);
     }
     if (!message.compileCost.isZero()) {
-      writer.uint32(56).uint64(message.compileCost);
+      writer.uint32(48).uint64(message.compileCost);
     }
     return writer;
   },
@@ -424,21 +416,15 @@ export const Params = {
           message.instantiateDefaultPermission = reader.int32() as any;
           break;
         case 3:
-          message.contractStatusAccess = AccessConfig.decode(
-            reader,
-            reader.uint32()
-          );
-          break;
-        case 4:
           message.maxWasmCodeSize = reader.uint64() as Long;
           break;
-        case 5:
+        case 4:
           message.gasMultiplier = reader.uint64() as Long;
           break;
-        case 6:
+        case 5:
           message.instanceCost = reader.uint64() as Long;
           break;
-        case 7:
+        case 6:
           message.compileCost = reader.uint64() as Long;
           break;
         default:
@@ -457,9 +443,6 @@ export const Params = {
       instantiateDefaultPermission: isSet(object.instantiateDefaultPermission)
         ? accessTypeFromJSON(object.instantiateDefaultPermission)
         : 0,
-      contractStatusAccess: isSet(object.contractStatusAccess)
-        ? AccessConfig.fromJSON(object.contractStatusAccess)
-        : undefined,
       maxWasmCodeSize: isSet(object.maxWasmCodeSize)
         ? Long.fromString(object.maxWasmCodeSize)
         : Long.UZERO,
@@ -485,10 +468,6 @@ export const Params = {
       (obj.instantiateDefaultPermission = accessTypeToJSON(
         message.instantiateDefaultPermission
       ));
-    message.contractStatusAccess !== undefined &&
-      (obj.contractStatusAccess = message.contractStatusAccess
-        ? AccessConfig.toJSON(message.contractStatusAccess)
-        : undefined);
     message.maxWasmCodeSize !== undefined &&
       (obj.maxWasmCodeSize = (
         message.maxWasmCodeSize || Long.UZERO
@@ -510,11 +489,6 @@ export const Params = {
         : undefined;
     message.instantiateDefaultPermission =
       object.instantiateDefaultPermission ?? 0;
-    message.contractStatusAccess =
-      object.contractStatusAccess !== undefined &&
-      object.contractStatusAccess !== null
-        ? AccessConfig.fromPartial(object.contractStatusAccess)
-        : undefined;
     message.maxWasmCodeSize =
       object.maxWasmCodeSize !== undefined && object.maxWasmCodeSize !== null
         ? Long.fromValue(object.maxWasmCodeSize)

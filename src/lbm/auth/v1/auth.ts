@@ -3,6 +3,7 @@ import Long from "long";
 import _m0 from "protobufjs/minimal";
 import { PubKey } from "../../../lbm/crypto/ed25519/keys";
 import { PubKey as PubKey1 } from "../../../lbm/crypto/secp256k1/keys";
+import { PubKey as PubKey2 } from "../../../lbm/crypto/secp256r1/keys";
 import { LegacyAminoPubKey } from "../../../lbm/crypto/multisig/keys";
 
 export const protobufPackage = "lbm.auth.v1";
@@ -16,6 +17,7 @@ export interface BaseAccount {
   address: string;
   ed25519PubKey?: PubKey;
   secp256k1PubKey?: PubKey1;
+  secp256r1PubKey?: PubKey2;
   multisigPubKey?: LegacyAminoPubKey;
   accountNumber: Long;
   sequence: Long;
@@ -42,6 +44,7 @@ function createBaseBaseAccount(): BaseAccount {
     address: "",
     ed25519PubKey: undefined,
     secp256k1PubKey: undefined,
+    secp256r1PubKey: undefined,
     multisigPubKey: undefined,
     accountNumber: Long.UZERO,
     sequence: Long.UZERO,
@@ -65,17 +68,23 @@ export const BaseAccount = {
         writer.uint32(26).fork()
       ).ldelim();
     }
-    if (message.multisigPubKey !== undefined) {
-      LegacyAminoPubKey.encode(
-        message.multisigPubKey,
+    if (message.secp256r1PubKey !== undefined) {
+      PubKey2.encode(
+        message.secp256r1PubKey,
         writer.uint32(34).fork()
       ).ldelim();
     }
+    if (message.multisigPubKey !== undefined) {
+      LegacyAminoPubKey.encode(
+        message.multisigPubKey,
+        writer.uint32(42).fork()
+      ).ldelim();
+    }
     if (!message.accountNumber.isZero()) {
-      writer.uint32(40).uint64(message.accountNumber);
+      writer.uint32(48).uint64(message.accountNumber);
     }
     if (!message.sequence.isZero()) {
-      writer.uint32(48).uint64(message.sequence);
+      writer.uint32(56).uint64(message.sequence);
     }
     return writer;
   },
@@ -97,15 +106,18 @@ export const BaseAccount = {
           message.secp256k1PubKey = PubKey1.decode(reader, reader.uint32());
           break;
         case 4:
+          message.secp256r1PubKey = PubKey2.decode(reader, reader.uint32());
+          break;
+        case 5:
           message.multisigPubKey = LegacyAminoPubKey.decode(
             reader,
             reader.uint32()
           );
           break;
-        case 5:
+        case 6:
           message.accountNumber = reader.uint64() as Long;
           break;
-        case 6:
+        case 7:
           message.sequence = reader.uint64() as Long;
           break;
         default:
@@ -124,6 +136,9 @@ export const BaseAccount = {
         : undefined,
       secp256k1PubKey: isSet(object.secp256k1PubKey)
         ? PubKey1.fromJSON(object.secp256k1PubKey)
+        : undefined,
+      secp256r1PubKey: isSet(object.secp256r1PubKey)
+        ? PubKey2.fromJSON(object.secp256r1PubKey)
         : undefined,
       multisigPubKey: isSet(object.multisigPubKey)
         ? LegacyAminoPubKey.fromJSON(object.multisigPubKey)
@@ -148,6 +163,10 @@ export const BaseAccount = {
       (obj.secp256k1PubKey = message.secp256k1PubKey
         ? PubKey1.toJSON(message.secp256k1PubKey)
         : undefined);
+    message.secp256r1PubKey !== undefined &&
+      (obj.secp256r1PubKey = message.secp256r1PubKey
+        ? PubKey2.toJSON(message.secp256r1PubKey)
+        : undefined);
     message.multisigPubKey !== undefined &&
       (obj.multisigPubKey = message.multisigPubKey
         ? LegacyAminoPubKey.toJSON(message.multisigPubKey)
@@ -171,6 +190,10 @@ export const BaseAccount = {
     message.secp256k1PubKey =
       object.secp256k1PubKey !== undefined && object.secp256k1PubKey !== null
         ? PubKey1.fromPartial(object.secp256k1PubKey)
+        : undefined;
+    message.secp256r1PubKey =
+      object.secp256r1PubKey !== undefined && object.secp256r1PubKey !== null
+        ? PubKey2.fromPartial(object.secp256r1PubKey)
         : undefined;
     message.multisigPubKey =
       object.multisigPubKey !== undefined && object.multisigPubKey !== null

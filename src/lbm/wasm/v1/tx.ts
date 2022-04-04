@@ -1,12 +1,7 @@
 /* eslint-disable */
 import Long from "long";
 import _m0 from "protobufjs/minimal";
-import {
-  AccessConfig,
-  ContractStatus,
-  contractStatusFromJSON,
-  contractStatusToJSON,
-} from "../../../lbm/wasm/v1/types";
+import { AccessConfig } from "../../../lbm/wasm/v1/types";
 import { Coin } from "../../../lbm/base/v1/coin";
 
 export const protobufPackage = "lbm.wasm.v1";
@@ -146,19 +141,6 @@ export interface MsgClearAdmin {
 
 /** MsgClearAdminResponse returns empty data */
 export interface MsgClearAdminResponse {}
-
-/** MsgUpdateContractStatus sets a new status for a smart contract */
-export interface MsgUpdateContractStatus {
-  /** Sender is the that actor that signed the messages */
-  sender: string;
-  /** Contract is the address of the smart contract */
-  contract: string;
-  /** Status to be set */
-  status: ContractStatus;
-}
-
-/** MsgUpdateContractStatusResponse returns empty data */
-export interface MsgUpdateContractStatusResponse {}
 
 function createBaseMsgStoreCode(): MsgStoreCode {
   return {
@@ -1292,129 +1274,6 @@ export const MsgClearAdminResponse = {
   },
 };
 
-function createBaseMsgUpdateContractStatus(): MsgUpdateContractStatus {
-  return { sender: "", contract: "", status: 0 };
-}
-
-export const MsgUpdateContractStatus = {
-  encode(
-    message: MsgUpdateContractStatus,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.sender !== "") {
-      writer.uint32(10).string(message.sender);
-    }
-    if (message.contract !== "") {
-      writer.uint32(18).string(message.contract);
-    }
-    if (message.status !== 0) {
-      writer.uint32(24).int32(message.status);
-    }
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): MsgUpdateContractStatus {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgUpdateContractStatus();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.sender = reader.string();
-          break;
-        case 2:
-          message.contract = reader.string();
-          break;
-        case 3:
-          message.status = reader.int32() as any;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MsgUpdateContractStatus {
-    return {
-      sender: isSet(object.sender) ? String(object.sender) : "",
-      contract: isSet(object.contract) ? String(object.contract) : "",
-      status: isSet(object.status) ? contractStatusFromJSON(object.status) : 0,
-    };
-  },
-
-  toJSON(message: MsgUpdateContractStatus): unknown {
-    const obj: any = {};
-    message.sender !== undefined && (obj.sender = message.sender);
-    message.contract !== undefined && (obj.contract = message.contract);
-    message.status !== undefined &&
-      (obj.status = contractStatusToJSON(message.status));
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgUpdateContractStatus>, I>>(
-    object: I
-  ): MsgUpdateContractStatus {
-    const message = createBaseMsgUpdateContractStatus();
-    message.sender = object.sender ?? "";
-    message.contract = object.contract ?? "";
-    message.status = object.status ?? 0;
-    return message;
-  },
-};
-
-function createBaseMsgUpdateContractStatusResponse(): MsgUpdateContractStatusResponse {
-  return {};
-}
-
-export const MsgUpdateContractStatusResponse = {
-  encode(
-    _: MsgUpdateContractStatusResponse,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): MsgUpdateContractStatusResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgUpdateContractStatusResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(_: any): MsgUpdateContractStatusResponse {
-    return {};
-  },
-
-  toJSON(_: MsgUpdateContractStatusResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgUpdateContractStatusResponse>, I>>(
-    _: I
-  ): MsgUpdateContractStatusResponse {
-    const message = createBaseMsgUpdateContractStatusResponse();
-    return message;
-  },
-};
-
 /** Msg defines the wasm Msg service. */
 export interface Msg {
   /** StoreCode to submit Wasm code to the system */
@@ -1439,10 +1298,6 @@ export interface Msg {
   UpdateAdmin(request: MsgUpdateAdmin): Promise<MsgUpdateAdminResponse>;
   /** ClearAdmin removes any admin stored for a smart contract */
   ClearAdmin(request: MsgClearAdmin): Promise<MsgClearAdminResponse>;
-  /** UpdateContractStatus sets a new status for a smart contract */
-  UpdateContractStatus(
-    request: MsgUpdateContractStatus
-  ): Promise<MsgUpdateContractStatusResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -1457,7 +1312,6 @@ export class MsgClientImpl implements Msg {
     this.MigrateContract = this.MigrateContract.bind(this);
     this.UpdateAdmin = this.UpdateAdmin.bind(this);
     this.ClearAdmin = this.ClearAdmin.bind(this);
-    this.UpdateContractStatus = this.UpdateContractStatus.bind(this);
   }
   StoreCode(request: MsgStoreCode): Promise<MsgStoreCodeResponse> {
     const data = MsgStoreCode.encode(request).finish();
@@ -1536,20 +1390,6 @@ export class MsgClientImpl implements Msg {
     const promise = this.rpc.request("lbm.wasm.v1.Msg", "ClearAdmin", data);
     return promise.then((data) =>
       MsgClearAdminResponse.decode(new _m0.Reader(data))
-    );
-  }
-
-  UpdateContractStatus(
-    request: MsgUpdateContractStatus
-  ): Promise<MsgUpdateContractStatusResponse> {
-    const data = MsgUpdateContractStatus.encode(request).finish();
-    const promise = this.rpc.request(
-      "lbm.wasm.v1.Msg",
-      "UpdateContractStatus",
-      data
-    );
-    return promise.then((data) =>
-      MsgUpdateContractStatusResponse.decode(new _m0.Reader(data))
     );
   }
 }

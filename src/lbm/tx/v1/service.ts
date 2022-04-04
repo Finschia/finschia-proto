@@ -161,8 +161,19 @@ export interface BroadcastTxResponse {
  * RPC method.
  */
 export interface SimulateRequest {
-  /** tx is the transaction to simulate. */
+  /**
+   * tx is the transaction to simulate.
+   * Deprecated. Send raw tx bytes instead.
+   *
+   * @deprecated
+   */
   tx?: Tx;
+  /**
+   * tx_bytes is the raw transaction.
+   *
+   * Since: cosmos-sdk 0.43
+   */
+  txBytes: Uint8Array;
 }
 
 /**
@@ -519,7 +530,7 @@ export const BroadcastTxResponse = {
 };
 
 function createBaseSimulateRequest(): SimulateRequest {
-  return { tx: undefined };
+  return { tx: undefined, txBytes: new Uint8Array() };
 }
 
 export const SimulateRequest = {
@@ -529,6 +540,9 @@ export const SimulateRequest = {
   ): _m0.Writer {
     if (message.tx !== undefined) {
       Tx.encode(message.tx, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.txBytes.length !== 0) {
+      writer.uint32(18).bytes(message.txBytes);
     }
     return writer;
   },
@@ -543,6 +557,9 @@ export const SimulateRequest = {
         case 1:
           message.tx = Tx.decode(reader, reader.uint32());
           break;
+        case 2:
+          message.txBytes = reader.bytes();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -554,6 +571,9 @@ export const SimulateRequest = {
   fromJSON(object: any): SimulateRequest {
     return {
       tx: isSet(object.tx) ? Tx.fromJSON(object.tx) : undefined,
+      txBytes: isSet(object.txBytes)
+        ? bytesFromBase64(object.txBytes)
+        : new Uint8Array(),
     };
   },
 
@@ -561,6 +581,10 @@ export const SimulateRequest = {
     const obj: any = {};
     message.tx !== undefined &&
       (obj.tx = message.tx ? Tx.toJSON(message.tx) : undefined);
+    message.txBytes !== undefined &&
+      (obj.txBytes = base64FromBytes(
+        message.txBytes !== undefined ? message.txBytes : new Uint8Array()
+      ));
     return obj;
   },
 
@@ -572,6 +596,7 @@ export const SimulateRequest = {
       object.tx !== undefined && object.tx !== null
         ? Tx.fromPartial(object.tx)
         : undefined;
+    message.txBytes = object.txBytes ?? new Uint8Array();
     return message;
   },
 };

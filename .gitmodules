@@ -1,4 +1,4 @@
 [submodule "lbm-sdk"]
 	path = lbm-sdk
 	url = https://github.com/line/lbm-sdk.git
-	branch = release/v0.45.x
+	branch = main

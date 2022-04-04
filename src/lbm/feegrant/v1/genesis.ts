@@ -5,6 +5,8 @@ import { Grant } from "../../../lbm/feegrant/v1/feegrant";
 
 export const protobufPackage = "lbm.feegrant.v1";
 
+/** Since: cosmos-sdk 0.43 */
+
 /** GenesisState contains a set of fee allowances, persisted from the store */
 export interface GenesisState {
   allowances: Grant[];

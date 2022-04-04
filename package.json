@@ -1,6 +1,6 @@
 {
   "name": "lbmjs-types",
-  "version": "0.45.0",
+  "version": "0.46.0-rc0",
   "main": "index.js",
   "description": "JS and TS types relating to Protocol Buffers used by LBM-SDK",
   "contributors": [

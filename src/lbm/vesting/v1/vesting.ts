@@ -52,6 +52,17 @@ export interface PeriodicVestingAccount {
   vestingPeriods: Period[];
 }
 
+/**
+ * PermanentLockedAccount implements the VestingAccount interface. It does
+ * not ever release coins, locking them indefinitely. Coins in this account can
+ * still be used for delegating and for governance votes even while locked.
+ *
+ * Since: cosmos-sdk 0.43
+ */
+export interface PermanentLockedAccount {
+  baseVestingAccount?: BaseVestingAccount;
+}
+
 function createBaseBaseVestingAccount(): BaseVestingAccount {
   return {
     baseAccount: undefined,
@@ -527,6 +538,78 @@ export const PeriodicVestingAccount = {
         : Long.ZERO;
     message.vestingPeriods =
       object.vestingPeriods?.map((e) => Period.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBasePermanentLockedAccount(): PermanentLockedAccount {
+  return { baseVestingAccount: undefined };
+}
+
+export const PermanentLockedAccount = {
+  encode(
+    message: PermanentLockedAccount,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.baseVestingAccount !== undefined) {
+      BaseVestingAccount.encode(
+        message.baseVestingAccount,
+        writer.uint32(10).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): PermanentLockedAccount {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePermanentLockedAccount();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.baseVestingAccount = BaseVestingAccount.decode(
+            reader,
+            reader.uint32()
+          );
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): PermanentLockedAccount {
+    return {
+      baseVestingAccount: isSet(object.baseVestingAccount)
+        ? BaseVestingAccount.fromJSON(object.baseVestingAccount)
+        : undefined,
+    };
+  },
+
+  toJSON(message: PermanentLockedAccount): unknown {
+    const obj: any = {};
+    message.baseVestingAccount !== undefined &&
+      (obj.baseVestingAccount = message.baseVestingAccount
+        ? BaseVestingAccount.toJSON(message.baseVestingAccount)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<PermanentLockedAccount>, I>>(
+    object: I
+  ): PermanentLockedAccount {
+    const message = createBasePermanentLockedAccount();
+    message.baseVestingAccount =
+      object.baseVestingAccount !== undefined &&
+      object.baseVestingAccount !== null
+        ? BaseVestingAccount.fromPartial(object.baseVestingAccount)
+        : undefined;
     return message;
   },
 };
