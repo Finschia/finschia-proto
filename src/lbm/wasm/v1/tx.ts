@@ -63,8 +63,8 @@ export interface MsgStoreCodeAndInstantiateContract {
   admin: string;
   /** Label is optional metadata to be stored with a contract instance. */
   label: string;
-  /** InitMsg json encoded message to be passed to the contract on instantiation */
-  initMsg: Uint8Array;
+  /** Msg json encoded message to be passed to the contract on instantiation */
+  msg: Uint8Array;
   /** Funds coins that are transferred to the contract on instantiation */
   funds: Coin[];
 }
@@ -505,7 +505,7 @@ function createBaseMsgStoreCodeAndInstantiateContract(): MsgStoreCodeAndInstanti
     instantiatePermission: undefined,
     admin: "",
     label: "",
-    initMsg: new Uint8Array(),
+    msg: new Uint8Array(),
     funds: [],
   };
 }
@@ -533,8 +533,8 @@ export const MsgStoreCodeAndInstantiateContract = {
     if (message.label !== "") {
       writer.uint32(58).string(message.label);
     }
-    if (message.initMsg.length !== 0) {
-      writer.uint32(66).bytes(message.initMsg);
+    if (message.msg.length !== 0) {
+      writer.uint32(66).bytes(message.msg);
     }
     for (const v of message.funds) {
       Coin.encode(v!, writer.uint32(74).fork()).ldelim();
@@ -571,7 +571,7 @@ export const MsgStoreCodeAndInstantiateContract = {
           message.label = reader.string();
           break;
         case 8:
-          message.initMsg = reader.bytes();
+          message.msg = reader.bytes();
           break;
         case 9:
           message.funds.push(Coin.decode(reader, reader.uint32()));
@@ -595,9 +595,7 @@ export const MsgStoreCodeAndInstantiateContract = {
         : undefined,
       admin: isSet(object.admin) ? String(object.admin) : "",
       label: isSet(object.label) ? String(object.label) : "",
-      initMsg: isSet(object.initMsg)
-        ? bytesFromBase64(object.initMsg)
-        : new Uint8Array(),
+      msg: isSet(object.msg) ? bytesFromBase64(object.msg) : new Uint8Array(),
       funds: Array.isArray(object?.funds)
         ? object.funds.map((e: any) => Coin.fromJSON(e))
         : [],
@@ -619,9 +617,9 @@ export const MsgStoreCodeAndInstantiateContract = {
         : undefined);
     message.admin !== undefined && (obj.admin = message.admin);
     message.label !== undefined && (obj.label = message.label);
-    message.initMsg !== undefined &&
-      (obj.initMsg = base64FromBytes(
-        message.initMsg !== undefined ? message.initMsg : new Uint8Array()
+    message.msg !== undefined &&
+      (obj.msg = base64FromBytes(
+        message.msg !== undefined ? message.msg : new Uint8Array()
       ));
     if (message.funds) {
       obj.funds = message.funds.map((e) => (e ? Coin.toJSON(e) : undefined));
@@ -644,7 +642,7 @@ export const MsgStoreCodeAndInstantiateContract = {
         : undefined;
     message.admin = object.admin ?? "";
     message.label = object.label ?? "";
-    message.initMsg = object.initMsg ?? new Uint8Array();
+    message.msg = object.msg ?? new Uint8Array();
     message.funds = object.funds?.map((e) => Coin.fromPartial(e)) || [];
     return message;
   },
