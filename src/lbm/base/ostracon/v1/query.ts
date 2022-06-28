@@ -4,7 +4,7 @@ import _m0 from "protobufjs/minimal";
 import {
   PageRequest,
   PageResponse,
-} from "../../../../lbm/base/query/v1/pagination";
+} from "../../../../cosmos/base/query/v1beta1/pagination";
 import { Any } from "../../../../google/protobuf/any";
 import { BlockID } from "../../../../ostracon/types/types";
 import { Block } from "../../../../ostracon/types/block";

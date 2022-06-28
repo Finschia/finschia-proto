@@ -2,7 +2,7 @@
 import Long from "long";
 import _m0 from "protobufjs/minimal";
 import { Any } from "../../../../google/protobuf/any";
-import { Plan } from "../../../../lbm/upgrade/v1/upgrade";
+import { Plan } from "../../../../cosmos/upgrade/v1beta1/upgrade";
 
 export const protobufPackage = "ibc.core.client.v1";
 

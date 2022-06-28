@@ -2,7 +2,7 @@
 import Long from "long";
 import _m0 from "protobufjs/minimal";
 import { AccessConfig } from "../../../lbm/wasm/v1/types";
-import { Coin } from "../../../lbm/base/v1/coin";
+import { Coin } from "../../../cosmos/base/v1beta1/coin";
 
 export const protobufPackage = "lbm.wasm.v1";
 

@@ -5,7 +5,7 @@ import { Token, Approve, Grant } from "../../../lbm/token/v1/token";
 import {
   PageRequest,
   PageResponse,
-} from "../../../lbm/base/query/v1/pagination";
+} from "../../../cosmos/base/query/v1beta1/pagination";
 
 export const protobufPackage = "lbm.token.v1";
 

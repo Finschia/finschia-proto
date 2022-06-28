@@ -11,7 +11,7 @@ import {
   proposalExecutorResultToJSON,
 } from "../../../lbm/foundation/v1/foundation";
 import { Any } from "../../../google/protobuf/any";
-import { Coin } from "../../../lbm/base/v1/coin";
+import { Coin } from "../../../cosmos/base/v1beta1/coin";
 
 export const protobufPackage = "lbm.foundation.v1";
 

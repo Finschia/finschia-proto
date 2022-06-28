@@ -12,8 +12,8 @@ import {
 import {
   PageRequest,
   PageResponse,
-} from "../../../lbm/base/query/v1/pagination";
-import { Coin } from "../../../lbm/base/v1/coin";
+} from "../../../cosmos/base/query/v1beta1/pagination";
+import { Coin } from "../../../cosmos/base/v1beta1/coin";
 import { Any } from "../../../google/protobuf/any";
 
 export const protobufPackage = "lbm.foundation.v1";

@@ -8,7 +8,7 @@ import {
 import {
   PageRequest,
   PageResponse,
-} from "../../../../lbm/base/query/v1/pagination";
+} from "../../../../cosmos/base/query/v1beta1/pagination";
 
 export const protobufPackage = "ibc.applications.transfer.v1";
 
