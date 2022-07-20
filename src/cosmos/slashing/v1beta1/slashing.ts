@@ -1,8 +1,8 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../../google/protobuf/timestamp";
 import { Duration } from "../../../google/protobuf/duration";
+import Long from "long";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "cosmos.slashing.v1beta1";
 
@@ -108,10 +108,10 @@ export const ValidatorSigningInfo = {
         : undefined,
       tombstoned: isSet(object.tombstoned) ? Boolean(object.tombstoned) : false,
       missedBlocksCounter: isSet(object.missedBlocksCounter)
-        ? Long.fromString(object.missedBlocksCounter)
+        ? Long.fromValue(object.missedBlocksCounter)
         : Long.ZERO,
       voterSetCounter: isSet(object.voterSetCounter)
-        ? Long.fromString(object.voterSetCounter)
+        ? Long.fromValue(object.voterSetCounter)
         : Long.ZERO,
     };
   },
@@ -226,7 +226,7 @@ export const Params = {
   fromJSON(object: any): Params {
     return {
       signedBlocksWindow: isSet(object.signedBlocksWindow)
-        ? Long.fromString(object.signedBlocksWindow)
+        ? Long.fromValue(object.signedBlocksWindow)
         : Long.ZERO,
       minSignedPerWindow: isSet(object.minSignedPerWindow)
         ? bytesFromBase64(object.minSignedPerWindow)
@@ -323,9 +323,9 @@ const btoa: (bin: string) => string =
   ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
-  for (const byte of arr) {
+  arr.forEach((byte) => {
     bin.push(String.fromCharCode(byte));
-  }
+  });
   return btoa(bin.join(""));
 }
 

@@ -1,10 +1,10 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
-import { Proof } from "../../ostracon/crypto/proof";
-import { Consensus } from "../../ostracon/version/types";
+import { Proof } from "../crypto/proof";
+import { Consensus } from "../version/types";
 import { Timestamp } from "../../google/protobuf/timestamp";
-import { ValidatorSet } from "../../ostracon/types/validator";
+import { ValidatorSet } from "./validator";
+import Long from "long";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "ostracon.types";
 
@@ -48,8 +48,9 @@ export function blockIDFlagToJSON(object: BlockIDFlag): string {
       return "BLOCK_ID_FLAG_COMMIT";
     case BlockIDFlag.BLOCK_ID_FLAG_NIL:
       return "BLOCK_ID_FLAG_NIL";
+    case BlockIDFlag.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -95,8 +96,9 @@ export function signedMsgTypeToJSON(object: SignedMsgType): string {
       return "SIGNED_MSG_TYPE_PRECOMMIT";
     case SignedMsgType.SIGNED_MSG_TYPE_PROPOSAL:
       return "SIGNED_MSG_TYPE_PROPOSAL";
+    case SignedMsgType.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -576,7 +578,7 @@ export const Header = {
         ? Consensus.fromJSON(object.version)
         : undefined,
       chainId: isSet(object.chainId) ? String(object.chainId) : "",
-      height: isSet(object.height) ? Long.fromString(object.height) : Long.ZERO,
+      height: isSet(object.height) ? Long.fromValue(object.height) : Long.ZERO,
       time: isSet(object.time) ? fromJsonTimestamp(object.time) : undefined,
       lastBlockId: isSet(object.lastBlockId)
         ? BlockID.fromJSON(object.lastBlockId)
@@ -852,7 +854,7 @@ export const Vote = {
   fromJSON(object: any): Vote {
     return {
       type: isSet(object.type) ? signedMsgTypeFromJSON(object.type) : 0,
-      height: isSet(object.height) ? Long.fromString(object.height) : Long.ZERO,
+      height: isSet(object.height) ? Long.fromValue(object.height) : Long.ZERO,
       round: isSet(object.round) ? Number(object.round) : 0,
       blockId: isSet(object.blockId)
         ? BlockID.fromJSON(object.blockId)
@@ -976,7 +978,7 @@ export const Commit = {
 
   fromJSON(object: any): Commit {
     return {
-      height: isSet(object.height) ? Long.fromString(object.height) : Long.ZERO,
+      height: isSet(object.height) ? Long.fromValue(object.height) : Long.ZERO,
       round: isSet(object.round) ? Number(object.round) : 0,
       blockId: isSet(object.blockId)
         ? BlockID.fromJSON(object.blockId)
@@ -1210,7 +1212,7 @@ export const Proposal = {
   fromJSON(object: any): Proposal {
     return {
       type: isSet(object.type) ? signedMsgTypeFromJSON(object.type) : 0,
-      height: isSet(object.height) ? Long.fromString(object.height) : Long.ZERO,
+      height: isSet(object.height) ? Long.fromValue(object.height) : Long.ZERO,
       round: isSet(object.round) ? Number(object.round) : 0,
       polRound: isSet(object.polRound) ? Number(object.polRound) : 0,
       blockId: isSet(object.blockId)
@@ -1487,10 +1489,10 @@ export const BlockMeta = {
         ? BlockID.fromJSON(object.blockId)
         : undefined,
       blockSize: isSet(object.blockSize)
-        ? Long.fromString(object.blockSize)
+        ? Long.fromValue(object.blockSize)
         : Long.ZERO,
       header: isSet(object.header) ? Header.fromJSON(object.header) : undefined,
-      numTxs: isSet(object.numTxs) ? Long.fromString(object.numTxs) : Long.ZERO,
+      numTxs: isSet(object.numTxs) ? Long.fromValue(object.numTxs) : Long.ZERO,
     };
   },
 
@@ -1649,9 +1651,9 @@ const btoa: (bin: string) => string =
   ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
-  for (const byte of arr) {
+  arr.forEach((byte) => {
     bin.push(String.fromCharCode(byte));
-  }
+  });
   return btoa(bin.join(""));
 }
 

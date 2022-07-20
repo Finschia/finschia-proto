@@ -1,7 +1,7 @@
 /* eslint-disable */
+import { Plan, ModuleVersion } from "./upgrade";
 import Long from "long";
-import _m0 from "protobufjs/minimal";
-import { Plan, ModuleVersion } from "../../../cosmos/upgrade/v1beta1/upgrade";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "cosmos.upgrade.v1beta1";
 
@@ -292,7 +292,7 @@ export const QueryAppliedPlanResponse = {
 
   fromJSON(object: any): QueryAppliedPlanResponse {
     return {
-      height: isSet(object.height) ? Long.fromString(object.height) : Long.ZERO,
+      height: isSet(object.height) ? Long.fromValue(object.height) : Long.ZERO,
     };
   },
 
@@ -354,7 +354,7 @@ export const QueryUpgradedConsensusStateRequest = {
   fromJSON(object: any): QueryUpgradedConsensusStateRequest {
     return {
       lastHeight: isSet(object.lastHeight)
-        ? Long.fromString(object.lastHeight)
+        ? Long.fromValue(object.lastHeight)
         : Long.ZERO,
     };
   },
@@ -703,9 +703,9 @@ const btoa: (bin: string) => string =
   ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
-  for (const byte of arr) {
+  arr.forEach((byte) => {
     bin.push(String.fromCharCode(byte));
-  }
+  });
   return btoa(bin.join(""));
 }
 

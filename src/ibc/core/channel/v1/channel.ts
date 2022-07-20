@@ -1,7 +1,7 @@
 /* eslint-disable */
+import { Height } from "../../client/v1/client";
 import Long from "long";
-import _m0 from "protobufjs/minimal";
-import { Height } from "../../../../ibc/core/client/v1/client";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "ibc.core.channel.v1";
 
@@ -65,8 +65,9 @@ export function stateToJSON(object: State): string {
       return "STATE_OPEN";
     case State.STATE_CLOSED:
       return "STATE_CLOSED";
+    case State.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -110,8 +111,9 @@ export function orderToJSON(object: Order): string {
       return "ORDER_UNORDERED";
     case Order.ORDER_ORDERED:
       return "ORDER_ORDERED";
+    case Order.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -619,7 +621,7 @@ export const Packet = {
   fromJSON(object: any): Packet {
     return {
       sequence: isSet(object.sequence)
-        ? Long.fromString(object.sequence)
+        ? Long.fromValue(object.sequence)
         : Long.UZERO,
       sourcePort: isSet(object.sourcePort) ? String(object.sourcePort) : "",
       sourceChannel: isSet(object.sourceChannel)
@@ -638,7 +640,7 @@ export const Packet = {
         ? Height.fromJSON(object.timeoutHeight)
         : undefined,
       timeoutTimestamp: isSet(object.timeoutTimestamp)
-        ? Long.fromString(object.timeoutTimestamp)
+        ? Long.fromValue(object.timeoutTimestamp)
         : Long.UZERO,
     };
   },
@@ -753,7 +755,7 @@ export const PacketState = {
       portId: isSet(object.portId) ? String(object.portId) : "",
       channelId: isSet(object.channelId) ? String(object.channelId) : "",
       sequence: isSet(object.sequence)
-        ? Long.fromString(object.sequence)
+        ? Long.fromValue(object.sequence)
         : Long.UZERO,
       data: isSet(object.data)
         ? bytesFromBase64(object.data)
@@ -884,9 +886,9 @@ const btoa: (bin: string) => string =
   ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
-  for (const byte of arr) {
+  arr.forEach((byte) => {
     bin.push(String.fromCharCode(byte));
-  }
+  });
   return btoa(bin.join(""));
 }
 

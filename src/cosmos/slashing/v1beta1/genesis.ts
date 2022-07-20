@@ -1,10 +1,7 @@
 /* eslint-disable */
+import { Params, ValidatorSigningInfo } from "./slashing";
 import Long from "long";
-import _m0 from "protobufjs/minimal";
-import {
-  Params,
-  ValidatorSigningInfo,
-} from "../../../cosmos/slashing/v1beta1/slashing";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "cosmos.slashing.v1beta1";
 
@@ -346,7 +343,7 @@ export const MissedBlock = {
 
   fromJSON(object: any): MissedBlock {
     return {
-      index: isSet(object.index) ? Long.fromString(object.index) : Long.ZERO,
+      index: isSet(object.index) ? Long.fromValue(object.index) : Long.ZERO,
       missed: isSet(object.missed) ? Boolean(object.missed) : false,
     };
   },

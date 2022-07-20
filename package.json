@@ -1,6 +1,6 @@
 {
   "name": "lbmjs-types",
-  "version": "0.46.0-rc3",
+  "version": "0.46.0-rc5",
   "main": "index.js",
   "description": "JS and TS types relating to Protocol Buffers used by LBM-SDK",
   "contributors": [
@@ -27,7 +27,7 @@
     "codegen": "./scripts/codegen.sh",
     "lbmsdk_update": "git submodule update --remote --merge",
     "build": "rm -rf ./build && tsc && ./scripts/prepare.sh",
-    "clean": "rm -rf ./build confio cosmos_proto gogoproto google ibc lbm ostracon"
+    "clean": "rm -rf ./build confio cosmos cosmos_proto gogoproto google ibc lbm ostracon"
   },
   "dependencies": {
     "long": "^4.0.0",

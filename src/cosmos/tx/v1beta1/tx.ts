@@ -1,14 +1,14 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
 import { Any } from "../../../google/protobuf/any";
 import {
   SignMode,
   signModeFromJSON,
   signModeToJSON,
-} from "../../../cosmos/tx/signing/v1beta1/signing";
-import { CompactBitArray } from "../../../cosmos/crypto/multisig/v1beta1/multisig";
-import { Coin } from "../../../cosmos/base/v1beta1/coin";
+} from "../signing/v1beta1/signing";
+import { CompactBitArray } from "../../crypto/multisig/v1beta1/multisig";
+import Long from "long";
+import { Coin } from "../../base/v1beta1/coin";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "cosmos.tx.v1beta1";
 
@@ -459,7 +459,7 @@ export const SignDoc = {
         : new Uint8Array(),
       chainId: isSet(object.chainId) ? String(object.chainId) : "",
       accountNumber: isSet(object.accountNumber)
-        ? Long.fromString(object.accountNumber)
+        ? Long.fromValue(object.accountNumber)
         : Long.UZERO,
     };
   },
@@ -567,7 +567,7 @@ export const TxBody = {
         : [],
       memo: isSet(object.memo) ? String(object.memo) : "",
       timeoutHeight: isSet(object.timeoutHeight)
-        ? Long.fromString(object.timeoutHeight)
+        ? Long.fromValue(object.timeoutHeight)
         : Long.UZERO,
       extensionOptions: Array.isArray(object?.extensionOptions)
         ? object.extensionOptions.map((e: any) => Any.fromJSON(e))
@@ -753,7 +753,7 @@ export const SignerInfo = {
         ? ModeInfo.fromJSON(object.modeInfo)
         : undefined,
       sequence: isSet(object.sequence)
-        ? Long.fromString(object.sequence)
+        ? Long.fromValue(object.sequence)
         : Long.UZERO,
     };
   },
@@ -1061,7 +1061,7 @@ export const Fee = {
         ? object.amount.map((e: any) => Coin.fromJSON(e))
         : [],
       gasLimit: isSet(object.gasLimit)
-        ? Long.fromString(object.gasLimit)
+        ? Long.fromValue(object.gasLimit)
         : Long.UZERO,
       payer: isSet(object.payer) ? String(object.payer) : "",
       granter: isSet(object.granter) ? String(object.granter) : "",
@@ -1123,9 +1123,9 @@ const btoa: (bin: string) => string =
   ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
-  for (const byte of arr) {
+  arr.forEach((byte) => {
     bin.push(String.fromCharCode(byte));
-  }
+  });
   return btoa(bin.join(""));
 }
 

@@ -1,14 +1,14 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
 import { Any } from "../../../google/protobuf/any";
 import {
   VoteOption,
   Member,
   voteOptionFromJSON,
   voteOptionToJSON,
-} from "../../../lbm/foundation/v1/foundation";
+} from "./foundation";
+import Long from "long";
 import { Coin } from "../../../cosmos/base/v1beta1/coin";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.foundation.v1";
 
@@ -50,8 +50,9 @@ export function execToJSON(object: Exec): string {
       return "EXEC_UNSPECIFIED";
     case Exec.EXEC_TRY:
       return "EXEC_TRY";
+    case Exec.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -819,7 +820,7 @@ export const MsgSubmitProposalResponse = {
   fromJSON(object: any): MsgSubmitProposalResponse {
     return {
       proposalId: isSet(object.proposalId)
-        ? Long.fromString(object.proposalId)
+        ? Long.fromValue(object.proposalId)
         : Long.UZERO,
     };
   },
@@ -885,7 +886,7 @@ export const MsgWithdrawProposal = {
   fromJSON(object: any): MsgWithdrawProposal {
     return {
       proposalId: isSet(object.proposalId)
-        ? Long.fromString(object.proposalId)
+        ? Long.fromValue(object.proposalId)
         : Long.UZERO,
       address: isSet(object.address) ? String(object.address) : "",
     };
@@ -1025,7 +1026,7 @@ export const MsgVote = {
   fromJSON(object: any): MsgVote {
     return {
       proposalId: isSet(object.proposalId)
-        ? Long.fromString(object.proposalId)
+        ? Long.fromValue(object.proposalId)
         : Long.UZERO,
       voter: isSet(object.voter) ? String(object.voter) : "",
       option: isSet(object.option) ? voteOptionFromJSON(object.option) : 0,
@@ -1146,7 +1147,7 @@ export const MsgExec = {
   fromJSON(object: any): MsgExec {
     return {
       proposalId: isSet(object.proposalId)
-        ? Long.fromString(object.proposalId)
+        ? Long.fromValue(object.proposalId)
         : Long.UZERO,
       signer: isSet(object.signer) ? String(object.signer) : "",
     };

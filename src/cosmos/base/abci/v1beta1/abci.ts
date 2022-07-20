@@ -1,8 +1,8 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
 import { Any } from "../../../../google/protobuf/any";
+import Long from "long";
 import { Event } from "../../../../ostracon/abci/types";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "cosmos.base.abci.v1beta1";
 
@@ -278,7 +278,7 @@ export const TxResponse = {
 
   fromJSON(object: any): TxResponse {
     return {
-      height: isSet(object.height) ? Long.fromString(object.height) : Long.ZERO,
+      height: isSet(object.height) ? Long.fromValue(object.height) : Long.ZERO,
       txhash: isSet(object.txhash) ? String(object.txhash) : "",
       codespace: isSet(object.codespace) ? String(object.codespace) : "",
       code: isSet(object.code) ? Number(object.code) : 0,
@@ -289,10 +289,10 @@ export const TxResponse = {
         : [],
       info: isSet(object.info) ? String(object.info) : "",
       gasWanted: isSet(object.gasWanted)
-        ? Long.fromString(object.gasWanted)
+        ? Long.fromValue(object.gasWanted)
         : Long.ZERO,
       gasUsed: isSet(object.gasUsed)
-        ? Long.fromString(object.gasUsed)
+        ? Long.fromValue(object.gasUsed)
         : Long.ZERO,
       tx: isSet(object.tx) ? Any.fromJSON(object.tx) : undefined,
       timestamp: isSet(object.timestamp) ? String(object.timestamp) : "",
@@ -629,10 +629,10 @@ export const GasInfo = {
   fromJSON(object: any): GasInfo {
     return {
       gasWanted: isSet(object.gasWanted)
-        ? Long.fromString(object.gasWanted)
+        ? Long.fromValue(object.gasWanted)
         : Long.UZERO,
       gasUsed: isSet(object.gasUsed)
-        ? Long.fromString(object.gasUsed)
+        ? Long.fromValue(object.gasUsed)
         : Long.UZERO,
     };
   },
@@ -1015,16 +1015,16 @@ export const SearchTxsResult = {
   fromJSON(object: any): SearchTxsResult {
     return {
       totalCount: isSet(object.totalCount)
-        ? Long.fromString(object.totalCount)
+        ? Long.fromValue(object.totalCount)
         : Long.UZERO,
-      count: isSet(object.count) ? Long.fromString(object.count) : Long.UZERO,
+      count: isSet(object.count) ? Long.fromValue(object.count) : Long.UZERO,
       pageNumber: isSet(object.pageNumber)
-        ? Long.fromString(object.pageNumber)
+        ? Long.fromValue(object.pageNumber)
         : Long.UZERO,
       pageTotal: isSet(object.pageTotal)
-        ? Long.fromString(object.pageTotal)
+        ? Long.fromValue(object.pageTotal)
         : Long.UZERO,
-      limit: isSet(object.limit) ? Long.fromString(object.limit) : Long.UZERO,
+      limit: isSet(object.limit) ? Long.fromValue(object.limit) : Long.UZERO,
       txs: Array.isArray(object?.txs)
         ? object.txs.map((e: any) => TxResponse.fromJSON(e))
         : [],
@@ -1108,9 +1108,9 @@ const btoa: (bin: string) => string =
   ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
-  for (const byte of arr) {
+  arr.forEach((byte) => {
     bin.push(String.fromCharCode(byte));
-  }
+  });
   return btoa(bin.join(""));
 }
 

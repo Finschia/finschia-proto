@@ -1,10 +1,7 @@
 /* eslint-disable */
+import { Any } from "../../../google/protobuf/any";
 import Long from "long";
-import _m0 from "protobufjs/minimal";
-import { PubKey } from "../../../cosmos/crypto/ed25519/keys";
-import { PubKey as PubKey1 } from "../../../cosmos/crypto/secp256k1/keys";
-import { PubKey as PubKey2 } from "../../../cosmos/crypto/secp256r1/keys";
-import { LegacyAminoPubKey } from "../../../cosmos/crypto/multisig/keys";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "cosmos.auth.v1beta1";
 
@@ -15,10 +12,7 @@ export const protobufPackage = "cosmos.auth.v1beta1";
  */
 export interface BaseAccount {
   address: string;
-  ed25519PubKey?: PubKey;
-  secp256k1PubKey?: PubKey1;
-  secp256r1PubKey?: PubKey2;
-  multisigPubKey?: LegacyAminoPubKey;
+  pubKey?: Any;
   accountNumber: Long;
   sequence: Long;
 }
@@ -42,10 +36,7 @@ export interface Params {
 function createBaseBaseAccount(): BaseAccount {
   return {
     address: "",
-    ed25519PubKey: undefined,
-    secp256k1PubKey: undefined,
-    secp256r1PubKey: undefined,
-    multisigPubKey: undefined,
+    pubKey: undefined,
     accountNumber: Long.UZERO,
     sequence: Long.UZERO,
   };
@@ -59,32 +50,14 @@ export const BaseAccount = {
     if (message.address !== "") {
       writer.uint32(10).string(message.address);
     }
-    if (message.ed25519PubKey !== undefined) {
-      PubKey.encode(message.ed25519PubKey, writer.uint32(18).fork()).ldelim();
-    }
-    if (message.secp256k1PubKey !== undefined) {
-      PubKey1.encode(
-        message.secp256k1PubKey,
-        writer.uint32(26).fork()
-      ).ldelim();
-    }
-    if (message.secp256r1PubKey !== undefined) {
-      PubKey2.encode(
-        message.secp256r1PubKey,
-        writer.uint32(34).fork()
-      ).ldelim();
-    }
-    if (message.multisigPubKey !== undefined) {
-      LegacyAminoPubKey.encode(
-        message.multisigPubKey,
-        writer.uint32(42).fork()
-      ).ldelim();
+    if (message.pubKey !== undefined) {
+      Any.encode(message.pubKey, writer.uint32(18).fork()).ldelim();
     }
     if (!message.accountNumber.isZero()) {
-      writer.uint32(48).uint64(message.accountNumber);
+      writer.uint32(24).uint64(message.accountNumber);
     }
     if (!message.sequence.isZero()) {
-      writer.uint32(56).uint64(message.sequence);
+      writer.uint32(32).uint64(message.sequence);
     }
     return writer;
   },
@@ -100,24 +73,12 @@ export const BaseAccount = {
           message.address = reader.string();
           break;
         case 2:
-          message.ed25519PubKey = PubKey.decode(reader, reader.uint32());
+          message.pubKey = Any.decode(reader, reader.uint32());
           break;
         case 3:
-          message.secp256k1PubKey = PubKey1.decode(reader, reader.uint32());
-          break;
-        case 4:
-          message.secp256r1PubKey = PubKey2.decode(reader, reader.uint32());
-          break;
-        case 5:
-          message.multisigPubKey = LegacyAminoPubKey.decode(
-            reader,
-            reader.uint32()
-          );
-          break;
-        case 6:
           message.accountNumber = reader.uint64() as Long;
           break;
-        case 7:
+        case 4:
           message.sequence = reader.uint64() as Long;
           break;
         default:
@@ -131,23 +92,12 @@ export const BaseAccount = {
   fromJSON(object: any): BaseAccount {
     return {
       address: isSet(object.address) ? String(object.address) : "",
-      ed25519PubKey: isSet(object.ed25519PubKey)
-        ? PubKey.fromJSON(object.ed25519PubKey)
-        : undefined,
-      secp256k1PubKey: isSet(object.secp256k1PubKey)
-        ? PubKey1.fromJSON(object.secp256k1PubKey)
-        : undefined,
-      secp256r1PubKey: isSet(object.secp256r1PubKey)
-        ? PubKey2.fromJSON(object.secp256r1PubKey)
-        : undefined,
-      multisigPubKey: isSet(object.multisigPubKey)
-        ? LegacyAminoPubKey.fromJSON(object.multisigPubKey)
-        : undefined,
+      pubKey: isSet(object.pubKey) ? Any.fromJSON(object.pubKey) : undefined,
       accountNumber: isSet(object.accountNumber)
-        ? Long.fromString(object.accountNumber)
+        ? Long.fromValue(object.accountNumber)
         : Long.UZERO,
       sequence: isSet(object.sequence)
-        ? Long.fromString(object.sequence)
+        ? Long.fromValue(object.sequence)
         : Long.UZERO,
     };
   },
@@ -155,22 +105,8 @@ export const BaseAccount = {
   toJSON(message: BaseAccount): unknown {
     const obj: any = {};
     message.address !== undefined && (obj.address = message.address);
-    message.ed25519PubKey !== undefined &&
-      (obj.ed25519PubKey = message.ed25519PubKey
-        ? PubKey.toJSON(message.ed25519PubKey)
-        : undefined);
-    message.secp256k1PubKey !== undefined &&
-      (obj.secp256k1PubKey = message.secp256k1PubKey
-        ? PubKey1.toJSON(message.secp256k1PubKey)
-        : undefined);
-    message.secp256r1PubKey !== undefined &&
-      (obj.secp256r1PubKey = message.secp256r1PubKey
-        ? PubKey2.toJSON(message.secp256r1PubKey)
-        : undefined);
-    message.multisigPubKey !== undefined &&
-      (obj.multisigPubKey = message.multisigPubKey
-        ? LegacyAminoPubKey.toJSON(message.multisigPubKey)
-        : undefined);
+    message.pubKey !== undefined &&
+      (obj.pubKey = message.pubKey ? Any.toJSON(message.pubKey) : undefined);
     message.accountNumber !== undefined &&
       (obj.accountNumber = (message.accountNumber || Long.UZERO).toString());
     message.sequence !== undefined &&
@@ -183,21 +119,9 @@ export const BaseAccount = {
   ): BaseAccount {
     const message = createBaseBaseAccount();
     message.address = object.address ?? "";
-    message.ed25519PubKey =
-      object.ed25519PubKey !== undefined && object.ed25519PubKey !== null
-        ? PubKey.fromPartial(object.ed25519PubKey)
-        : undefined;
-    message.secp256k1PubKey =
-      object.secp256k1PubKey !== undefined && object.secp256k1PubKey !== null
-        ? PubKey1.fromPartial(object.secp256k1PubKey)
-        : undefined;
-    message.secp256r1PubKey =
-      object.secp256r1PubKey !== undefined && object.secp256r1PubKey !== null
-        ? PubKey2.fromPartial(object.secp256r1PubKey)
-        : undefined;
-    message.multisigPubKey =
-      object.multisigPubKey !== undefined && object.multisigPubKey !== null
-        ? LegacyAminoPubKey.fromPartial(object.multisigPubKey)
+    message.pubKey =
+      object.pubKey !== undefined && object.pubKey !== null
+        ? Any.fromPartial(object.pubKey)
         : undefined;
     message.accountNumber =
       object.accountNumber !== undefined && object.accountNumber !== null
@@ -366,19 +290,19 @@ export const Params = {
   fromJSON(object: any): Params {
     return {
       maxMemoCharacters: isSet(object.maxMemoCharacters)
-        ? Long.fromString(object.maxMemoCharacters)
+        ? Long.fromValue(object.maxMemoCharacters)
         : Long.UZERO,
       txSigLimit: isSet(object.txSigLimit)
-        ? Long.fromString(object.txSigLimit)
+        ? Long.fromValue(object.txSigLimit)
         : Long.UZERO,
       txSizeCostPerByte: isSet(object.txSizeCostPerByte)
-        ? Long.fromString(object.txSizeCostPerByte)
+        ? Long.fromValue(object.txSizeCostPerByte)
         : Long.UZERO,
       sigVerifyCostEd25519: isSet(object.sigVerifyCostEd25519)
-        ? Long.fromString(object.sigVerifyCostEd25519)
+        ? Long.fromValue(object.sigVerifyCostEd25519)
         : Long.UZERO,
       sigVerifyCostSecp256k1: isSet(object.sigVerifyCostSecp256k1)
-        ? Long.fromString(object.sigVerifyCostSecp256k1)
+        ? Long.fromValue(object.sigVerifyCostSecp256k1)
         : Long.UZERO,
     };
   },

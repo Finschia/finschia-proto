@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
-import _m0 from "protobufjs/minimal";
-import { Coin } from "../../../cosmos/base/v1beta1/coin";
+import { Coin } from "../../base/v1beta1/coin";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "cosmos.vesting.v1beta1";
 
@@ -94,7 +94,7 @@ export const MsgCreateVestingAccount = {
         ? object.amount.map((e: any) => Coin.fromJSON(e))
         : [],
       endTime: isSet(object.endTime)
-        ? Long.fromString(object.endTime)
+        ? Long.fromValue(object.endTime)
         : Long.ZERO,
       delayed: isSet(object.delayed) ? Boolean(object.delayed) : false,
     };

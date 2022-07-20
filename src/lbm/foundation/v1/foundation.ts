@@ -1,9 +1,9 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../../google/protobuf/timestamp";
 import { Duration } from "../../../google/protobuf/duration";
 import { Any } from "../../../google/protobuf/any";
+import Long from "long";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.foundation.v1";
 
@@ -58,8 +58,9 @@ export function voteOptionToJSON(object: VoteOption): string {
       return "VOTE_OPTION_NO";
     case VoteOption.VOTE_OPTION_NO_WITH_VETO:
       return "VOTE_OPTION_NO_WITH_VETO";
+    case VoteOption.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -117,8 +118,9 @@ export function proposalStatusToJSON(object: ProposalStatus): string {
       return "PROPOSAL_STATUS_ABORTED";
     case ProposalStatus.PROPOSAL_STATUS_WITHDRAWN:
       return "PROPOSAL_STATUS_WITHDRAWN";
+    case ProposalStatus.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -166,8 +168,9 @@ export function proposalResultToJSON(object: ProposalResult): string {
       return "PROPOSAL_RESULT_ACCEPTED";
     case ProposalResult.PROPOSAL_RESULT_REJECTED:
       return "PROPOSAL_RESULT_REJECTED";
+    case ProposalResult.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -219,8 +222,9 @@ export function proposalExecutorResultToJSON(
       return "PROPOSAL_EXECUTOR_RESULT_SUCCESS";
     case ProposalExecutorResult.PROPOSAL_EXECUTOR_RESULT_FAILURE:
       return "PROPOSAL_EXECUTOR_RESULT_FAILURE";
+    case ProposalExecutorResult.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -1089,7 +1093,7 @@ export const FoundationInfo = {
     return {
       operator: isSet(object.operator) ? String(object.operator) : "",
       version: isSet(object.version)
-        ? Long.fromString(object.version)
+        ? Long.fromValue(object.version)
         : Long.UZERO,
       totalWeight: isSet(object.totalWeight) ? String(object.totalWeight) : "",
       decisionPolicy: isSet(object.decisionPolicy)
@@ -1246,7 +1250,7 @@ export const Proposal = {
 
   fromJSON(object: any): Proposal {
     return {
-      id: isSet(object.id) ? Long.fromString(object.id) : Long.UZERO,
+      id: isSet(object.id) ? Long.fromValue(object.id) : Long.UZERO,
       metadata: isSet(object.metadata) ? String(object.metadata) : "",
       proposers: Array.isArray(object?.proposers)
         ? object.proposers.map((e: any) => String(e))
@@ -1255,7 +1259,7 @@ export const Proposal = {
         ? fromJsonTimestamp(object.submitTime)
         : undefined,
       foundationVersion: isSet(object.foundationVersion)
-        ? Long.fromString(object.foundationVersion)
+        ? Long.fromValue(object.foundationVersion)
         : Long.UZERO,
       status: isSet(object.status) ? proposalStatusFromJSON(object.status) : 0,
       result: isSet(object.result) ? proposalResultFromJSON(object.result) : 0,
@@ -1499,7 +1503,7 @@ export const Vote = {
   fromJSON(object: any): Vote {
     return {
       proposalId: isSet(object.proposalId)
-        ? Long.fromString(object.proposalId)
+        ? Long.fromValue(object.proposalId)
         : Long.UZERO,
       voter: isSet(object.voter) ? String(object.voter) : "",
       option: isSet(object.option) ? voteOptionFromJSON(object.option) : 0,

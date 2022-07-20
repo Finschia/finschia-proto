@@ -1,16 +1,9 @@
 /* eslint-disable */
+import { PageRequest, PageResponse } from "../../base/query/v1beta1/pagination";
+import { TxResponse, GasInfo, Result } from "../../base/abci/v1beta1/abci";
+import { Tx } from "./tx";
 import Long from "long";
-import _m0 from "protobufjs/minimal";
-import {
-  PageRequest,
-  PageResponse,
-} from "../../../cosmos/base/query/v1beta1/pagination";
-import {
-  TxResponse,
-  GasInfo,
-  Result,
-} from "../../../cosmos/base/abci/v1beta1/abci";
-import { Tx } from "../../../cosmos/tx/v1beta1/tx";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "cosmos.tx.v1beta1";
 
@@ -51,8 +44,9 @@ export function orderByToJSON(object: OrderBy): string {
       return "ORDER_BY_ASC";
     case OrderBy.ORDER_BY_DESC:
       return "ORDER_BY_DESC";
+    case OrderBy.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -109,8 +103,9 @@ export function broadcastModeToJSON(object: BroadcastMode): string {
       return "BROADCAST_MODE_SYNC";
     case BroadcastMode.BROADCAST_MODE_ASYNC:
       return "BROADCAST_MODE_ASYNC";
+    case BroadcastMode.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -121,8 +116,6 @@ export function broadcastModeToJSON(object: BroadcastMode): string {
 export interface GetTxsEventRequest {
   /** events is the list of transaction event type. */
   events: string[];
-  /** prove is Include proofs of the transactions inclusion in the block */
-  prove: boolean;
   /** pagination defines an pagination for the request. */
   pagination?: PageRequest;
   orderBy: OrderBy;
@@ -209,7 +202,7 @@ export interface GetTxResponse {
 }
 
 function createBaseGetTxsEventRequest(): GetTxsEventRequest {
-  return { events: [], prove: false, pagination: undefined, orderBy: 0 };
+  return { events: [], pagination: undefined, orderBy: 0 };
 }
 
 export const GetTxsEventRequest = {
@@ -220,14 +213,11 @@ export const GetTxsEventRequest = {
     for (const v of message.events) {
       writer.uint32(10).string(v!);
     }
-    if (message.prove === true) {
-      writer.uint32(16).bool(message.prove);
-    }
     if (message.pagination !== undefined) {
-      PageRequest.encode(message.pagination, writer.uint32(26).fork()).ldelim();
+      PageRequest.encode(message.pagination, writer.uint32(18).fork()).ldelim();
     }
     if (message.orderBy !== 0) {
-      writer.uint32(32).int32(message.orderBy);
+      writer.uint32(24).int32(message.orderBy);
     }
     return writer;
   },
@@ -243,12 +233,9 @@ export const GetTxsEventRequest = {
           message.events.push(reader.string());
           break;
         case 2:
-          message.prove = reader.bool();
-          break;
-        case 3:
           message.pagination = PageRequest.decode(reader, reader.uint32());
           break;
-        case 4:
+        case 3:
           message.orderBy = reader.int32() as any;
           break;
         default:
@@ -264,7 +251,6 @@ export const GetTxsEventRequest = {
       events: Array.isArray(object?.events)
         ? object.events.map((e: any) => String(e))
         : [],
-      prove: isSet(object.prove) ? Boolean(object.prove) : false,
       pagination: isSet(object.pagination)
         ? PageRequest.fromJSON(object.pagination)
         : undefined,
@@ -279,7 +265,6 @@ export const GetTxsEventRequest = {
     } else {
       obj.events = [];
     }
-    message.prove !== undefined && (obj.prove = message.prove);
     message.pagination !== undefined &&
       (obj.pagination = message.pagination
         ? PageRequest.toJSON(message.pagination)
@@ -294,7 +279,6 @@ export const GetTxsEventRequest = {
   ): GetTxsEventRequest {
     const message = createBaseGetTxsEventRequest();
     message.events = object.events?.map((e) => e) || [];
-    message.prove = object.prove ?? false;
     message.pagination =
       object.pagination !== undefined && object.pagination !== null
         ? PageRequest.fromPartial(object.pagination)
@@ -913,9 +897,9 @@ const btoa: (bin: string) => string =
   ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
-  for (const byte of arr) {
+  arr.forEach((byte) => {
     bin.push(String.fromCharCode(byte));
-  }
+  });
   return btoa(bin.join(""));
 }
 

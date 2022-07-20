@@ -1,17 +1,17 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
 import { Any } from "../../../../google/protobuf/any";
 import {
   Height,
   Params,
   IdentifiedClientState,
   ConsensusStateWithHeight,
-} from "../../../../ibc/core/client/v1/client";
+} from "./client";
 import {
   PageRequest,
   PageResponse,
 } from "../../../../cosmos/base/query/v1beta1/pagination";
+import Long from "long";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "ibc.core.client.v1";
 
@@ -518,10 +518,10 @@ export const QueryConsensusStateRequest = {
     return {
       clientId: isSet(object.clientId) ? String(object.clientId) : "",
       revisionNumber: isSet(object.revisionNumber)
-        ? Long.fromString(object.revisionNumber)
+        ? Long.fromValue(object.revisionNumber)
         : Long.UZERO,
       revisionHeight: isSet(object.revisionHeight)
-        ? Long.fromString(object.revisionHeight)
+        ? Long.fromValue(object.revisionHeight)
         : Long.UZERO,
       latestHeight: isSet(object.latestHeight)
         ? Boolean(object.latestHeight)
@@ -979,7 +979,7 @@ export const QueryUpgradedClientStateRequest = {
     return {
       clientId: isSet(object.clientId) ? String(object.clientId) : "",
       planHeight: isSet(object.planHeight)
-        ? Long.fromString(object.planHeight)
+        ? Long.fromValue(object.planHeight)
         : Long.ZERO,
     };
   },
@@ -1240,9 +1240,9 @@ const btoa: (bin: string) => string =
   ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
-  for (const byte of arr) {
+  arr.forEach((byte) => {
     bin.push(String.fromCharCode(byte));
-  }
+  });
   return btoa(bin.join(""));
 }
 

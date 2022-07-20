@@ -1,8 +1,8 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
 import { Any } from "../../../../google/protobuf/any";
-import { CompactBitArray } from "../../../../cosmos/crypto/multisig/v1beta1/multisig";
+import { CompactBitArray } from "../../../crypto/multisig/v1beta1/multisig";
+import Long from "long";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "cosmos.tx.signing.v1beta1";
 
@@ -63,8 +63,9 @@ export function signModeToJSON(object: SignMode): string {
       return "SIGN_MODE_TEXTUAL";
     case SignMode.SIGN_MODE_LEGACY_AMINO_JSON:
       return "SIGN_MODE_LEGACY_AMINO_JSON";
+    case SignMode.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -244,7 +245,7 @@ export const SignatureDescriptor = {
         ? SignatureDescriptor_Data.fromJSON(object.data)
         : undefined,
       sequence: isSet(object.sequence)
-        ? Long.fromString(object.sequence)
+        ? Long.fromValue(object.sequence)
         : Long.UZERO,
     };
   },
@@ -568,9 +569,9 @@ const btoa: (bin: string) => string =
   ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
-  for (const byte of arr) {
+  arr.forEach((byte) => {
     bin.push(String.fromCharCode(byte));
-  }
+  });
   return btoa(bin.join(""));
 }
 

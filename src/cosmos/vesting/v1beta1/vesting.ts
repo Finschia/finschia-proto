@@ -1,8 +1,8 @@
 /* eslint-disable */
+import { BaseAccount } from "../../auth/v1beta1/auth";
 import Long from "long";
-import _m0 from "protobufjs/minimal";
-import { BaseAccount } from "../../../cosmos/auth/v1beta1/auth";
-import { Coin } from "../../../cosmos/base/v1beta1/coin";
+import { Coin } from "../../base/v1beta1/coin";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "cosmos.vesting.v1beta1";
 
@@ -144,7 +144,7 @@ export const BaseVestingAccount = {
         ? object.delegatedVesting.map((e: any) => Coin.fromJSON(e))
         : [],
       endTime: isSet(object.endTime)
-        ? Long.fromString(object.endTime)
+        ? Long.fromValue(object.endTime)
         : Long.ZERO,
     };
   },
@@ -257,7 +257,7 @@ export const ContinuousVestingAccount = {
         ? BaseVestingAccount.fromJSON(object.baseVestingAccount)
         : undefined,
       startTime: isSet(object.startTime)
-        ? Long.fromString(object.startTime)
+        ? Long.fromValue(object.startTime)
         : Long.ZERO,
     };
   },
@@ -403,7 +403,7 @@ export const Period = {
 
   fromJSON(object: any): Period {
     return {
-      length: isSet(object.length) ? Long.fromString(object.length) : Long.ZERO,
+      length: isSet(object.length) ? Long.fromValue(object.length) : Long.ZERO,
       amount: Array.isArray(object?.amount)
         ? object.amount.map((e: any) => Coin.fromJSON(e))
         : [],
@@ -497,7 +497,7 @@ export const PeriodicVestingAccount = {
         ? BaseVestingAccount.fromJSON(object.baseVestingAccount)
         : undefined,
       startTime: isSet(object.startTime)
-        ? Long.fromString(object.startTime)
+        ? Long.fromValue(object.startTime)
         : Long.ZERO,
       vestingPeriods: Array.isArray(object?.vestingPeriods)
         ? object.vestingPeriods.map((e: any) => Period.fromJSON(e))

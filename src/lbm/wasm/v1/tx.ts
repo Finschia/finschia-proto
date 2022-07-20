@@ -1,8 +1,8 @@
 /* eslint-disable */
+import { AccessConfig } from "./types";
 import Long from "long";
-import _m0 from "protobufjs/minimal";
-import { AccessConfig } from "../../../lbm/wasm/v1/types";
 import { Coin } from "../../../cosmos/base/v1beta1/coin";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.wasm.v1";
 
@@ -278,9 +278,7 @@ export const MsgStoreCodeResponse = {
 
   fromJSON(object: any): MsgStoreCodeResponse {
     return {
-      codeId: isSet(object.codeId)
-        ? Long.fromString(object.codeId)
-        : Long.UZERO,
+      codeId: isSet(object.codeId) ? Long.fromValue(object.codeId) : Long.UZERO,
     };
   },
 
@@ -380,9 +378,7 @@ export const MsgInstantiateContract = {
     return {
       sender: isSet(object.sender) ? String(object.sender) : "",
       admin: isSet(object.admin) ? String(object.admin) : "",
-      codeId: isSet(object.codeId)
-        ? Long.fromString(object.codeId)
-        : Long.UZERO,
+      codeId: isSet(object.codeId) ? Long.fromValue(object.codeId) : Long.UZERO,
       label: isSet(object.label) ? String(object.label) : "",
       msg: isSet(object.msg) ? bytesFromBase64(object.msg) : new Uint8Array(),
       funds: Array.isArray(object?.funds)
@@ -698,9 +694,7 @@ export const MsgStoreCodeAndInstantiateContractResponse = {
 
   fromJSON(object: any): MsgStoreCodeAndInstantiateContractResponse {
     return {
-      codeId: isSet(object.codeId)
-        ? Long.fromString(object.codeId)
-        : Long.UZERO,
+      codeId: isSet(object.codeId) ? Long.fromValue(object.codeId) : Long.UZERO,
       address: isSet(object.address) ? String(object.address) : "",
       data: isSet(object.data)
         ? bytesFromBase64(object.data)
@@ -946,9 +940,7 @@ export const MsgMigrateContract = {
     return {
       sender: isSet(object.sender) ? String(object.sender) : "",
       contract: isSet(object.contract) ? String(object.contract) : "",
-      codeId: isSet(object.codeId)
-        ? Long.fromString(object.codeId)
-        : Long.UZERO,
+      codeId: isSet(object.codeId) ? Long.fromValue(object.codeId) : Long.UZERO,
       msg: isSet(object.msg) ? bytesFromBase64(object.msg) : new Uint8Array(),
     };
   },
@@ -1428,9 +1420,9 @@ const btoa: (bin: string) => string =
   ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
-  for (const byte of arr) {
+  arr.forEach((byte) => {
     bin.push(String.fromCharCode(byte));
-  }
+  });
   return btoa(bin.join(""));
 }
 

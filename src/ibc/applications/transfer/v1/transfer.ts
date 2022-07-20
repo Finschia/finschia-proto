@@ -1,6 +1,6 @@
 /* eslint-disable */
 import Long from "long";
-import _m0 from "protobufjs/minimal";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "ibc.applications.transfer.v1";
 
@@ -110,9 +110,7 @@ export const FungibleTokenPacketData = {
   fromJSON(object: any): FungibleTokenPacketData {
     return {
       denom: isSet(object.denom) ? String(object.denom) : "",
-      amount: isSet(object.amount)
-        ? Long.fromString(object.amount)
-        : Long.UZERO,
+      amount: isSet(object.amount) ? Long.fromValue(object.amount) : Long.UZERO,
       sender: isSet(object.sender) ? String(object.sender) : "",
       receiver: isSet(object.receiver) ? String(object.receiver) : "",
     };

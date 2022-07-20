@@ -1,11 +1,11 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
 import { Header } from "../../../ostracon/types/types";
 import { Timestamp } from "../../../google/protobuf/timestamp";
 import { Any } from "../../../google/protobuf/any";
 import { Duration } from "../../../google/protobuf/duration";
-import { Coin } from "../../../cosmos/base/v1beta1/coin";
+import { Coin } from "../../base/v1beta1/coin";
+import Long from "long";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "cosmos.staking.v1beta1";
 
@@ -53,8 +53,9 @@ export function bondStatusToJSON(object: BondStatus): string {
       return "BOND_STATUS_UNBONDING";
     case BondStatus.BOND_STATUS_BONDED:
       return "BOND_STATUS_BONDED";
+    case BondStatus.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -755,7 +756,7 @@ export const Validator = {
         ? Description.fromJSON(object.description)
         : undefined,
       unbondingHeight: isSet(object.unbondingHeight)
-        ? Long.fromString(object.unbondingHeight)
+        ? Long.fromValue(object.unbondingHeight)
         : Long.ZERO,
       unbondingTime: isSet(object.unbondingTime)
         ? fromJsonTimestamp(object.unbondingTime)
@@ -1399,7 +1400,7 @@ export const UnbondingDelegationEntry = {
   fromJSON(object: any): UnbondingDelegationEntry {
     return {
       creationHeight: isSet(object.creationHeight)
-        ? Long.fromString(object.creationHeight)
+        ? Long.fromValue(object.creationHeight)
         : Long.ZERO,
       completionTime: isSet(object.completionTime)
         ? fromJsonTimestamp(object.completionTime)
@@ -1505,7 +1506,7 @@ export const RedelegationEntry = {
   fromJSON(object: any): RedelegationEntry {
     return {
       creationHeight: isSet(object.creationHeight)
-        ? Long.fromString(object.creationHeight)
+        ? Long.fromValue(object.creationHeight)
         : Long.ZERO,
       completionTime: isSet(object.completionTime)
         ? fromJsonTimestamp(object.completionTime)

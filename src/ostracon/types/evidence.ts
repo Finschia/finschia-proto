@@ -1,9 +1,9 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
-import { Vote, LightBlock } from "../../ostracon/types/types";
+import { Vote, LightBlock } from "./types";
 import { Timestamp } from "../../google/protobuf/timestamp";
-import { Validator } from "../../ostracon/types/validator";
+import Long from "long";
+import { Validator } from "./validator";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "ostracon.types";
 
@@ -201,10 +201,10 @@ export const DuplicateVoteEvidence = {
       voteA: isSet(object.voteA) ? Vote.fromJSON(object.voteA) : undefined,
       voteB: isSet(object.voteB) ? Vote.fromJSON(object.voteB) : undefined,
       totalVotingPower: isSet(object.totalVotingPower)
-        ? Long.fromString(object.totalVotingPower)
+        ? Long.fromValue(object.totalVotingPower)
         : Long.ZERO,
       validatorPower: isSet(object.validatorPower)
-        ? Long.fromString(object.validatorPower)
+        ? Long.fromValue(object.validatorPower)
         : Long.ZERO,
       timestamp: isSet(object.timestamp)
         ? fromJsonTimestamp(object.timestamp)
@@ -334,13 +334,13 @@ export const LightClientAttackEvidence = {
         ? LightBlock.fromJSON(object.conflictingBlock)
         : undefined,
       commonHeight: isSet(object.commonHeight)
-        ? Long.fromString(object.commonHeight)
+        ? Long.fromValue(object.commonHeight)
         : Long.ZERO,
       byzantineValidators: Array.isArray(object?.byzantineValidators)
         ? object.byzantineValidators.map((e: any) => Validator.fromJSON(e))
         : [],
       totalVotingPower: isSet(object.totalVotingPower)
-        ? Long.fromString(object.totalVotingPower)
+        ? Long.fromValue(object.totalVotingPower)
         : Long.ZERO,
       timestamp: isSet(object.timestamp)
         ? fromJsonTimestamp(object.timestamp)

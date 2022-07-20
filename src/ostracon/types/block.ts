@@ -1,8 +1,8 @@
 /* eslint-disable */
+import { Header, Data, Commit } from "./types";
+import { EvidenceList } from "./evidence";
 import Long from "long";
-import _m0 from "protobufjs/minimal";
-import { Header, Data, Commit } from "../../ostracon/types/types";
-import { EvidenceList } from "../../ostracon/types/evidence";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "ostracon.types";
 

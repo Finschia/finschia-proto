@@ -1,9 +1,9 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
 import { Any } from "../../../../google/protobuf/any";
-import { ConnectionEnd } from "../../../../ibc/core/connection/v1/connection";
-import { Channel } from "../../../../ibc/core/channel/v1/channel";
+import { ConnectionEnd } from "../../../core/connection/v1/connection";
+import { Channel } from "../../../core/channel/v1/channel";
+import Long from "long";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "ibc.lightclients.solomachine.v1";
 
@@ -96,8 +96,9 @@ export function dataTypeToJSON(object: DataType): string {
       return "DATA_TYPE_NEXT_SEQUENCE_RECV";
     case DataType.DATA_TYPE_HEADER:
       return "DATA_TYPE_HEADER";
+    case DataType.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -326,10 +327,10 @@ export const ClientState = {
   fromJSON(object: any): ClientState {
     return {
       sequence: isSet(object.sequence)
-        ? Long.fromString(object.sequence)
+        ? Long.fromValue(object.sequence)
         : Long.UZERO,
       frozenSequence: isSet(object.frozenSequence)
-        ? Long.fromString(object.frozenSequence)
+        ? Long.fromValue(object.frozenSequence)
         : Long.UZERO,
       consensusState: isSet(object.consensusState)
         ? ConsensusState.fromJSON(object.consensusState)
@@ -428,7 +429,7 @@ export const ConsensusState = {
         : undefined,
       diversifier: isSet(object.diversifier) ? String(object.diversifier) : "",
       timestamp: isSet(object.timestamp)
-        ? Long.fromString(object.timestamp)
+        ? Long.fromValue(object.timestamp)
         : Long.UZERO,
     };
   },
@@ -529,10 +530,10 @@ export const Header = {
   fromJSON(object: any): Header {
     return {
       sequence: isSet(object.sequence)
-        ? Long.fromString(object.sequence)
+        ? Long.fromValue(object.sequence)
         : Long.UZERO,
       timestamp: isSet(object.timestamp)
-        ? Long.fromString(object.timestamp)
+        ? Long.fromValue(object.timestamp)
         : Long.UZERO,
       signature: isSet(object.signature)
         ? bytesFromBase64(object.signature)
@@ -657,7 +658,7 @@ export const Misbehaviour = {
     return {
       clientId: isSet(object.clientId) ? String(object.clientId) : "",
       sequence: isSet(object.sequence)
-        ? Long.fromString(object.sequence)
+        ? Long.fromValue(object.sequence)
         : Long.UZERO,
       signatureOne: isSet(object.signatureOne)
         ? SignatureAndData.fromJSON(object.signatureOne)
@@ -771,7 +772,7 @@ export const SignatureAndData = {
         ? bytesFromBase64(object.data)
         : new Uint8Array(),
       timestamp: isSet(object.timestamp)
-        ? Long.fromString(object.timestamp)
+        ? Long.fromValue(object.timestamp)
         : Long.UZERO,
     };
   },
@@ -856,7 +857,7 @@ export const TimestampedSignatureData = {
         ? bytesFromBase64(object.signatureData)
         : new Uint8Array(),
       timestamp: isSet(object.timestamp)
-        ? Long.fromString(object.timestamp)
+        ? Long.fromValue(object.timestamp)
         : Long.UZERO,
     };
   },
@@ -953,10 +954,10 @@ export const SignBytes = {
   fromJSON(object: any): SignBytes {
     return {
       sequence: isSet(object.sequence)
-        ? Long.fromString(object.sequence)
+        ? Long.fromValue(object.sequence)
         : Long.UZERO,
       timestamp: isSet(object.timestamp)
-        ? Long.fromString(object.timestamp)
+        ? Long.fromValue(object.timestamp)
         : Long.UZERO,
       diversifier: isSet(object.diversifier) ? String(object.diversifier) : "",
       dataType: isSet(object.dataType) ? dataTypeFromJSON(object.dataType) : 0,
@@ -1647,7 +1648,7 @@ export const NextSequenceRecvData = {
         ? bytesFromBase64(object.path)
         : new Uint8Array(),
       nextSeqRecv: isSet(object.nextSeqRecv)
-        ? Long.fromString(object.nextSeqRecv)
+        ? Long.fromValue(object.nextSeqRecv)
         : Long.UZERO,
     };
   },
@@ -1704,9 +1705,9 @@ const btoa: (bin: string) => string =
   ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
-  for (const byte of arr) {
+  arr.forEach((byte) => {
     bin.push(String.fromCharCode(byte));
-  }
+  });
   return btoa(bin.join(""));
 }
 

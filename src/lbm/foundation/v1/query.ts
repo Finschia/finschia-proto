@@ -1,6 +1,4 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
 import {
   Params,
   FoundationInfo,
@@ -8,13 +6,15 @@ import {
   Proposal,
   Vote,
   TallyResult,
-} from "../../../lbm/foundation/v1/foundation";
+} from "./foundation";
 import {
   PageRequest,
   PageResponse,
 } from "../../../cosmos/base/query/v1beta1/pagination";
+import Long from "long";
 import { Coin } from "../../../cosmos/base/v1beta1/coin";
 import { Any } from "../../../google/protobuf/any";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.foundation.v1";
 
@@ -781,7 +781,7 @@ export const QueryProposalRequest = {
   fromJSON(object: any): QueryProposalRequest {
     return {
       proposalId: isSet(object.proposalId)
-        ? Long.fromString(object.proposalId)
+        ? Long.fromValue(object.proposalId)
         : Long.UZERO,
     };
   },
@@ -1063,7 +1063,7 @@ export const QueryVoteRequest = {
   fromJSON(object: any): QueryVoteRequest {
     return {
       proposalId: isSet(object.proposalId)
-        ? Long.fromString(object.proposalId)
+        ? Long.fromValue(object.proposalId)
         : Long.UZERO,
       voter: isSet(object.voter) ? String(object.voter) : "",
     };
@@ -1190,7 +1190,7 @@ export const QueryVotesRequest = {
   fromJSON(object: any): QueryVotesRequest {
     return {
       proposalId: isSet(object.proposalId)
-        ? Long.fromString(object.proposalId)
+        ? Long.fromValue(object.proposalId)
         : Long.UZERO,
       pagination: isSet(object.pagination)
         ? PageRequest.fromJSON(object.pagination)
@@ -1344,7 +1344,7 @@ export const QueryTallyResultRequest = {
   fromJSON(object: any): QueryTallyResultRequest {
     return {
       proposalId: isSet(object.proposalId)
-        ? Long.fromString(object.proposalId)
+        ? Long.fromValue(object.proposalId)
         : Long.UZERO,
     };
   },

@@ -1,14 +1,14 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
 import { Duration } from "../../../../google/protobuf/duration";
-import { Height } from "../../../../ibc/core/client/v1/client";
+import { Height } from "../../../core/client/v1/client";
 import { Timestamp } from "../../../../google/protobuf/timestamp";
-import { MerkleRoot } from "../../../../ibc/core/commitment/v1/commitment";
+import { MerkleRoot } from "../../../core/commitment/v1/commitment";
 import { SignedHeader } from "../../../../ostracon/types/types";
 import { ValidatorSet } from "../../../../ostracon/types/validator";
 import { VoterSet } from "../../../../ostracon/types/voter";
+import Long from "long";
 import { ProofSpec } from "../../../../confio/proofs";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "ibc.lightclients.ostracon.v1";
 
@@ -725,10 +725,10 @@ export const Fraction = {
   fromJSON(object: any): Fraction {
     return {
       numerator: isSet(object.numerator)
-        ? Long.fromString(object.numerator)
+        ? Long.fromValue(object.numerator)
         : Long.UZERO,
       denominator: isSet(object.denominator)
-        ? Long.fromString(object.denominator)
+        ? Long.fromValue(object.denominator)
         : Long.UZERO,
     };
   },
@@ -784,9 +784,9 @@ const btoa: (bin: string) => string =
   ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
-  for (const byte of arr) {
+  arr.forEach((byte) => {
     bin.push(String.fromCharCode(byte));
-  }
+  });
   return btoa(bin.join(""));
 }
 

@@ -1,11 +1,7 @@
 /* eslint-disable */
+import { Params, IdentifiedClientState, ClientConsensusStates } from "./client";
 import Long from "long";
-import _m0 from "protobufjs/minimal";
-import {
-  Params,
-  IdentifiedClientState,
-  ClientConsensusStates,
-} from "../../../../ibc/core/client/v1/client";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "ibc.core.client.v1";
 
@@ -137,7 +133,7 @@ export const GenesisState = {
         ? Boolean(object.createLocalhost)
         : false,
       nextClientSequence: isSet(object.nextClientSequence)
-        ? Long.fromString(object.nextClientSequence)
+        ? Long.fromValue(object.nextClientSequence)
         : Long.UZERO,
     };
   },
@@ -380,9 +376,9 @@ const btoa: (bin: string) => string =
   ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
-  for (const byte of arr) {
+  arr.forEach((byte) => {
     bin.push(String.fromCharCode(byte));
-  }
+  });
   return btoa(bin.join(""));
 }
 

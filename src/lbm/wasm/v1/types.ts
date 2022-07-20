@@ -1,7 +1,7 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
 import { Any } from "../../../google/protobuf/any";
+import Long from "long";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.wasm.v1";
 
@@ -49,8 +49,9 @@ export function accessTypeToJSON(object: AccessType): string {
       return "ACCESS_TYPE_ONLY_ADDRESS";
     case AccessType.ACCESS_TYPE_EVERYBODY:
       return "ACCESS_TYPE_EVERYBODY";
+    case AccessType.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -91,8 +92,9 @@ export function contractStatusToJSON(object: ContractStatus): string {
       return "CONTRACT_STATUS_ACTIVE";
     case ContractStatus.CONTRACT_STATUS_INACTIVE:
       return "CONTRACT_STATUS_INACTIVE";
+    case ContractStatus.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -144,8 +146,9 @@ export function contractCodeHistoryOperationTypeToJSON(
       return "CONTRACT_CODE_HISTORY_OPERATION_TYPE_MIGRATE";
     case ContractCodeHistoryOperationType.CONTRACT_CODE_HISTORY_OPERATION_TYPE_GENESIS:
       return "CONTRACT_CODE_HISTORY_OPERATION_TYPE_GENESIS";
+    case ContractCodeHistoryOperationType.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -164,7 +167,6 @@ export interface AccessConfig {
 export interface Params {
   codeUploadAccess?: AccessConfig;
   instantiateDefaultPermission: AccessType;
-  maxWasmCodeSize: Long;
   gasMultiplier: Long;
   instanceCost: Long;
   compileCost: Long;
@@ -363,7 +365,6 @@ function createBaseParams(): Params {
   return {
     codeUploadAccess: undefined,
     instantiateDefaultPermission: 0,
-    maxWasmCodeSize: Long.UZERO,
     gasMultiplier: Long.UZERO,
     instanceCost: Long.UZERO,
     compileCost: Long.UZERO,
@@ -384,17 +385,14 @@ export const Params = {
     if (message.instantiateDefaultPermission !== 0) {
       writer.uint32(16).int32(message.instantiateDefaultPermission);
     }
-    if (!message.maxWasmCodeSize.isZero()) {
-      writer.uint32(24).uint64(message.maxWasmCodeSize);
-    }
     if (!message.gasMultiplier.isZero()) {
-      writer.uint32(32).uint64(message.gasMultiplier);
+      writer.uint32(24).uint64(message.gasMultiplier);
     }
     if (!message.instanceCost.isZero()) {
-      writer.uint32(40).uint64(message.instanceCost);
+      writer.uint32(32).uint64(message.instanceCost);
     }
     if (!message.compileCost.isZero()) {
-      writer.uint32(48).uint64(message.compileCost);
+      writer.uint32(40).uint64(message.compileCost);
     }
     return writer;
   },
@@ -416,15 +414,12 @@ export const Params = {
           message.instantiateDefaultPermission = reader.int32() as any;
           break;
         case 3:
-          message.maxWasmCodeSize = reader.uint64() as Long;
-          break;
-        case 4:
           message.gasMultiplier = reader.uint64() as Long;
           break;
-        case 5:
+        case 4:
           message.instanceCost = reader.uint64() as Long;
           break;
-        case 6:
+        case 5:
           message.compileCost = reader.uint64() as Long;
           break;
         default:
@@ -443,17 +438,14 @@ export const Params = {
       instantiateDefaultPermission: isSet(object.instantiateDefaultPermission)
         ? accessTypeFromJSON(object.instantiateDefaultPermission)
         : 0,
-      maxWasmCodeSize: isSet(object.maxWasmCodeSize)
-        ? Long.fromString(object.maxWasmCodeSize)
-        : Long.UZERO,
       gasMultiplier: isSet(object.gasMultiplier)
-        ? Long.fromString(object.gasMultiplier)
+        ? Long.fromValue(object.gasMultiplier)
         : Long.UZERO,
       instanceCost: isSet(object.instanceCost)
-        ? Long.fromString(object.instanceCost)
+        ? Long.fromValue(object.instanceCost)
         : Long.UZERO,
       compileCost: isSet(object.compileCost)
-        ? Long.fromString(object.compileCost)
+        ? Long.fromValue(object.compileCost)
         : Long.UZERO,
     };
   },
@@ -468,10 +460,6 @@ export const Params = {
       (obj.instantiateDefaultPermission = accessTypeToJSON(
         message.instantiateDefaultPermission
       ));
-    message.maxWasmCodeSize !== undefined &&
-      (obj.maxWasmCodeSize = (
-        message.maxWasmCodeSize || Long.UZERO
-      ).toString());
     message.gasMultiplier !== undefined &&
       (obj.gasMultiplier = (message.gasMultiplier || Long.UZERO).toString());
     message.instanceCost !== undefined &&
@@ -489,10 +477,6 @@ export const Params = {
         : undefined;
     message.instantiateDefaultPermission =
       object.instantiateDefaultPermission ?? 0;
-    message.maxWasmCodeSize =
-      object.maxWasmCodeSize !== undefined && object.maxWasmCodeSize !== null
-        ? Long.fromValue(object.maxWasmCodeSize)
-        : Long.UZERO;
     message.gasMultiplier =
       object.gasMultiplier !== undefined && object.gasMultiplier !== null
         ? Long.fromValue(object.gasMultiplier)
@@ -692,9 +676,7 @@ export const ContractInfo = {
 
   fromJSON(object: any): ContractInfo {
     return {
-      codeId: isSet(object.codeId)
-        ? Long.fromString(object.codeId)
-        : Long.UZERO,
+      codeId: isSet(object.codeId) ? Long.fromValue(object.codeId) : Long.UZERO,
       creator: isSet(object.creator) ? String(object.creator) : "",
       admin: isSet(object.admin) ? String(object.admin) : "",
       label: isSet(object.label) ? String(object.label) : "",
@@ -822,9 +804,7 @@ export const ContractCodeHistoryEntry = {
       operation: isSet(object.operation)
         ? contractCodeHistoryOperationTypeFromJSON(object.operation)
         : 0,
-      codeId: isSet(object.codeId)
-        ? Long.fromString(object.codeId)
-        : Long.UZERO,
+      codeId: isSet(object.codeId) ? Long.fromValue(object.codeId) : Long.UZERO,
       updated: isSet(object.updated)
         ? AbsoluteTxPosition.fromJSON(object.updated)
         : undefined,
@@ -911,10 +891,10 @@ export const AbsoluteTxPosition = {
   fromJSON(object: any): AbsoluteTxPosition {
     return {
       blockHeight: isSet(object.blockHeight)
-        ? Long.fromString(object.blockHeight)
+        ? Long.fromValue(object.blockHeight)
         : Long.UZERO,
       txIndex: isSet(object.txIndex)
-        ? Long.fromString(object.txIndex)
+        ? Long.fromValue(object.txIndex)
         : Long.UZERO,
     };
   },
@@ -1038,9 +1018,9 @@ const btoa: (bin: string) => string =
   ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
-  for (const byte of arr) {
+  arr.forEach((byte) => {
     bin.push(String.fromCharCode(byte));
-  }
+  });
   return btoa(bin.join(""));
 }
 

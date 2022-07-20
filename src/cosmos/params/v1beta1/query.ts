@@ -1,7 +1,7 @@
 /* eslint-disable */
+import { ParamChange } from "./params";
 import Long from "long";
-import _m0 from "protobufjs/minimal";
-import { ParamChange } from "../../../cosmos/params/v1beta1/params";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "cosmos.params.v1beta1";
 

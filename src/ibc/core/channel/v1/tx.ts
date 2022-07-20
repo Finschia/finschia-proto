@@ -1,8 +1,8 @@
 /* eslint-disable */
+import { Channel, Packet } from "./channel";
+import { Height } from "../../client/v1/client";
 import Long from "long";
-import _m0 from "protobufjs/minimal";
-import { Channel, Packet } from "../../../../ibc/core/channel/v1/channel";
-import { Height } from "../../../../ibc/core/client/v1/client";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "ibc.core.channel.v1";
 
@@ -1309,7 +1309,7 @@ export const MsgTimeout = {
         ? Height.fromJSON(object.proofHeight)
         : undefined,
       nextSequenceRecv: isSet(object.nextSequenceRecv)
-        ? Long.fromString(object.nextSequenceRecv)
+        ? Long.fromValue(object.nextSequenceRecv)
         : Long.UZERO,
       signer: isSet(object.signer) ? String(object.signer) : "",
     };
@@ -1486,7 +1486,7 @@ export const MsgTimeoutOnClose = {
         ? Height.fromJSON(object.proofHeight)
         : undefined,
       nextSequenceRecv: isSet(object.nextSequenceRecv)
-        ? Long.fromString(object.nextSequenceRecv)
+        ? Long.fromValue(object.nextSequenceRecv)
         : Long.UZERO,
       signer: isSet(object.signer) ? String(object.signer) : "",
     };
@@ -1983,9 +1983,9 @@ const btoa: (bin: string) => string =
   ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
-  for (const byte of arr) {
+  arr.forEach((byte) => {
     bin.push(String.fromCharCode(byte));
-  }
+  });
   return btoa(bin.join(""));
 }
 

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import Long from "long";
-import _m0 from "protobufjs/minimal";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "cosmos.mint.v1beta1";
 
@@ -176,7 +176,7 @@ export const Params = {
         : "",
       goalBonded: isSet(object.goalBonded) ? String(object.goalBonded) : "",
       blocksPerYear: isSet(object.blocksPerYear)
-        ? Long.fromString(object.blocksPerYear)
+        ? Long.fromValue(object.blocksPerYear)
         : Long.UZERO,
     };
   },

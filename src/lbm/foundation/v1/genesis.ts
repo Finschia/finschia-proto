@@ -1,14 +1,8 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
-import {
-  Params,
-  FoundationInfo,
-  Member,
-  Proposal,
-  Vote,
-} from "../../../lbm/foundation/v1/foundation";
+import { Params, FoundationInfo, Member, Proposal, Vote } from "./foundation";
 import { Any } from "../../../google/protobuf/any";
+import Long from "long";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.foundation.v1";
 
@@ -129,7 +123,7 @@ export const GenesisState = {
         ? object.members.map((e: any) => Member.fromJSON(e))
         : [],
       previousProposalId: isSet(object.previousProposalId)
-        ? Long.fromString(object.previousProposalId)
+        ? Long.fromValue(object.previousProposalId)
         : Long.UZERO,
       proposals: Array.isArray(object?.proposals)
         ? object.proposals.map((e: any) => Proposal.fromJSON(e))

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import Long from "long";
-import _m0 from "protobufjs/minimal";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "google.protobuf";
 
@@ -155,7 +155,7 @@ export const Timestamp = {
   fromJSON(object: any): Timestamp {
     return {
       seconds: isSet(object.seconds)
-        ? Long.fromString(object.seconds)
+        ? Long.fromValue(object.seconds)
         : Long.ZERO,
       nanos: isSet(object.nanos) ? Number(object.nanos) : 0,
     };

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import Long from "long";
-import _m0 from "protobufjs/minimal";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "cosmos.base.store.v1beta1";
 
@@ -222,7 +222,7 @@ export const SnapshotIAVLItem = {
         ? bytesFromBase64(object.value)
         : new Uint8Array(),
       version: isSet(object.version)
-        ? Long.fromString(object.version)
+        ? Long.fromValue(object.version)
         : Long.ZERO,
       height: isSet(object.height) ? Number(object.height) : 0,
     };
@@ -287,9 +287,9 @@ const btoa: (bin: string) => string =
   ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
-  for (const byte of arr) {
+  arr.forEach((byte) => {
     bin.push(String.fromCharCode(byte));
-  }
+  });
   return btoa(bin.join(""));
 }
 

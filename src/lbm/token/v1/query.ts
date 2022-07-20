@@ -1,102 +1,215 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
-import { Token, Approve, Grant } from "../../../lbm/token/v1/token";
+import {
+  TokenClass,
+  Permission,
+  Grant,
+  Authorization,
+  permissionFromJSON,
+  permissionToJSON,
+} from "./token";
 import {
   PageRequest,
   PageResponse,
 } from "../../../cosmos/base/query/v1beta1/pagination";
+import Long from "long";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.token.v1";
 
 /** QueryBalanceRequest is the request type for the Query/Balance RPC method */
 export interface QueryBalanceRequest {
-  /** class id associated with the token. */
-  classId: string;
+  /** contract id associated with the token class. */
+  contractId: string;
+  /** address is the address to query balance for. */
   address: string;
 }
 
 /** QueryBalanceResponse is the response type for the Query/Balance RPC method */
 export interface QueryBalanceResponse {
+  /** the balance of the tokens. */
   amount: string;
 }
 
 /** QuerySupplyRequest is the request type for the Query/Supply RPC method */
 export interface QuerySupplyRequest {
-  /** class id associated with the token. */
-  classId: string;
-  type: string;
+  /** contract id associated with the token class. */
+  contractId: string;
 }
 
 /** QuerySupplyResponse is the response type for the Query/Supply RPC method */
 export interface QuerySupplyResponse {
+  /** the supply of the tokens. */
   amount: string;
 }
 
-/** QueryTokenRequest is the request type for the Query/Token RPC method */
-export interface QueryTokenRequest {
-  classId: string;
+/** QueryMintedRequest is the request type for the Query/Minted RPC method */
+export interface QueryMintedRequest {
+  /** contract id associated with the token class. */
+  contractId: string;
 }
 
-/** QueryTokenResponse is the response type for the Query/Token RPC method */
-export interface QueryTokenResponse {
-  token?: Token;
+/** QueryMintedResponse is the response type for the Query/Minted RPC method */
+export interface QueryMintedResponse {
+  /** the amount of the minted tokens. */
+  amount: string;
 }
 
-/** QueryTokensRequest is the request type for the Query/Tokens RPC method */
-export interface QueryTokensRequest {
+/** QueryBurntRequest is the request type for the Query/Burnt RPC method */
+export interface QueryBurntRequest {
+  /** contract id associated with the token class. */
+  contractId: string;
+}
+
+/** QueryBurntResponse is the response type for the Query/Burnt RPC method */
+export interface QueryBurntResponse {
+  /** the amount of the burnt tokens. */
+  amount: string;
+}
+
+/** QueryTokenClassRequest is the request type for the Query/TokenClass RPC method */
+export interface QueryTokenClassRequest {
+  /** contract id associated with the token class. */
+  contractId: string;
+}
+
+/** QueryTokenClassResponse is the response type for the Query/TokenClass RPC method */
+export interface QueryTokenClassResponse {
+  class?: TokenClass;
+}
+
+/**
+ * QueryTokenClassesRequest is the request type for the Query/TokenClasses RPC method
+ * Since: finschia
+ */
+export interface QueryTokenClassesRequest {
   /** pagination defines an optional pagination for the request. */
   pagination?: PageRequest;
 }
 
-/** QueryTokensResponse is the response type for the Query/Tokens RPC method */
-export interface QueryTokensResponse {
-  tokens: Token[];
+/**
+ * QueryTokenClassesResponse is the response type for the Query/TokenClasses RPC method
+ * Since: finschia
+ */
+export interface QueryTokenClassesResponse {
+  /** information of the token classes. */
+  classes: TokenClass[];
+  /** pagination defines the pagination in the response. */
   pagination?: PageResponse;
 }
 
-/** QueryGrantsRequest is the request type for the Query/Grants RPC method */
-export interface QueryGrantsRequest {
-  /** class id associated with the token. */
-  classId: string;
+/**
+ * QueryGrantRequest is the request type for the Query/Grant RPC method
+ * Since: finschia
+ */
+export interface QueryGrantRequest {
+  /** contract id associated with the token class. */
+  contractId: string;
+  /** grantee which has permissions on the token class. */
   grantee: string;
+  /** a permission given to the grantee. */
+  permission: Permission;
 }
 
-/** QueryGrantsResponse is the response type for the Query/Grants RPC method */
-export interface QueryGrantsResponse {
+/**
+ * QueryGrantResponse is the response type for the Query/Grant RPC method
+ * Since: finschia
+ */
+export interface QueryGrantResponse {
+  grant?: Grant;
+}
+
+/**
+ * QueryGranteeGrantsRequest is the request type for the Query/GranteeGrants RPC method
+ * Since: finschia
+ */
+export interface QueryGranteeGrantsRequest {
+  /** contract id associated with the token class. */
+  contractId: string;
+  /** grantee which has permissions on the token class. */
+  grantee: string;
+  /** pagination defines an optional pagination for the request. */
+  pagination?: PageRequest;
+}
+
+/**
+ * QueryGranteeGrantsResponse is the response type for the Query/GranteeGrants RPC method
+ * Since: finschia
+ */
+export interface QueryGranteeGrantsResponse {
+  /** all the grants on the grantee. */
   grants: Grant[];
+  /** pagination defines the pagination in the response. */
+  pagination?: PageResponse;
 }
 
-/** QueryApproveRequest is the request type for the Query/Approve RPC method */
-export interface QueryApproveRequest {
-  /** class id associated with the token. */
-  classId: string;
-  proxy: string;
+/**
+ * QueryAuthorizationRequest is the request type for the Query/Authorization RPC method
+ * Since: finschia
+ */
+export interface QueryAuthorizationRequest {
+  /** contract id associated with the token class. */
+  contractId: string;
+  /** address of the operator which the authorization is granted to. */
+  operator: string;
+  /** address of the token holder which has approved the authorization. */
+  holder: string;
+}
+
+/**
+ * QueryAuthorizationResponse is the response type for the Query/Authorization RPC method
+ * Since: finschia
+ */
+export interface QueryAuthorizationResponse {
+  authorization?: Authorization;
+}
+
+/**
+ * QueryOperatorAuthorizationsRequest is the request type for the Query/OperatorAuthorizations RPC method
+ * Since: finschia
+ */
+export interface QueryOperatorAuthorizationsRequest {
+  /** contract id associated with the token class. */
+  contractId: string;
+  /** address of the operator which the authorization is granted to. */
+  operator: string;
+  /** pagination defines an optional pagination for the request. */
+  pagination?: PageRequest;
+}
+
+/**
+ * QueryOperatorAuthorizationsResponse is the response type for the Query/OperatorAuthorizations RPC method
+ * Since: finschia
+ */
+export interface QueryOperatorAuthorizationsResponse {
+  /** all the authorizations on the operator. */
+  authorizations: Authorization[];
+  /** pagination defines the pagination in the response. */
+  pagination?: PageResponse;
+}
+
+/**
+ * QueryApprovedRequest is the request type for the Query/Approved RPC method
+ * NOTE: deprecated (use QueryApproved)
+ */
+export interface QueryApprovedRequest {
+  /** contract id associated with the token class. */
+  contractId: string;
+  /** address of the operator which the authorization is granted to. */
+  address: string;
+  /** approver is the address of the approver of the authorization. */
   approver: string;
 }
 
-/** QueryApproveResponse is the response type for the Query/Approve RPC method */
-export interface QueryApproveResponse {
-  approve?: Approve;
-}
-
-/** QueryApprovesRequest is the request type for the Query/Approves RPC method */
-export interface QueryApprovesRequest {
-  /** class id associated with the token. */
-  classId: string;
-  proxy: string;
-  /** pagination defines an optional pagination for the request. */
-  pagination?: PageRequest;
-}
-
-/** QueryApprovesResponse is the response type for the Query/Approves RPC method */
-export interface QueryApprovesResponse {
-  approves: Approve[];
-  pagination?: PageResponse;
+/**
+ * QueryApprovedResponse is the response type for the Query/Approved RPC method
+ * NOTE: deprecated
+ */
+export interface QueryApprovedResponse {
+  approved: boolean;
 }
 
 function createBaseQueryBalanceRequest(): QueryBalanceRequest {
-  return { classId: "", address: "" };
+  return { contractId: "", address: "" };
 }
 
 export const QueryBalanceRequest = {
@@ -104,8 +217,8 @@ export const QueryBalanceRequest = {
     message: QueryBalanceRequest,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.classId !== "") {
-      writer.uint32(10).string(message.classId);
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
     }
     if (message.address !== "") {
       writer.uint32(18).string(message.address);
@@ -121,7 +234,7 @@ export const QueryBalanceRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.classId = reader.string();
+          message.contractId = reader.string();
           break;
         case 2:
           message.address = reader.string();
@@ -136,14 +249,14 @@ export const QueryBalanceRequest = {
 
   fromJSON(object: any): QueryBalanceRequest {
     return {
-      classId: isSet(object.classId) ? String(object.classId) : "",
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
       address: isSet(object.address) ? String(object.address) : "",
     };
   },
 
   toJSON(message: QueryBalanceRequest): unknown {
     const obj: any = {};
-    message.classId !== undefined && (obj.classId = message.classId);
+    message.contractId !== undefined && (obj.contractId = message.contractId);
     message.address !== undefined && (obj.address = message.address);
     return obj;
   },
@@ -152,7 +265,7 @@ export const QueryBalanceRequest = {
     object: I
   ): QueryBalanceRequest {
     const message = createBaseQueryBalanceRequest();
-    message.classId = object.classId ?? "";
+    message.contractId = object.contractId ?? "";
     message.address = object.address ?? "";
     return message;
   },
@@ -216,7 +329,7 @@ export const QueryBalanceResponse = {
 };
 
 function createBaseQuerySupplyRequest(): QuerySupplyRequest {
-  return { classId: "", type: "" };
+  return { contractId: "" };
 }
 
 export const QuerySupplyRequest = {
@@ -224,11 +337,8 @@ export const QuerySupplyRequest = {
     message: QuerySupplyRequest,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.classId !== "") {
-      writer.uint32(10).string(message.classId);
-    }
-    if (message.type !== "") {
-      writer.uint32(18).string(message.type);
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
     }
     return writer;
   },
@@ -241,10 +351,7 @@ export const QuerySupplyRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.classId = reader.string();
-          break;
-        case 2:
-          message.type = reader.string();
+          message.contractId = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -256,15 +363,13 @@ export const QuerySupplyRequest = {
 
   fromJSON(object: any): QuerySupplyRequest {
     return {
-      classId: isSet(object.classId) ? String(object.classId) : "",
-      type: isSet(object.type) ? String(object.type) : "",
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
     };
   },
 
   toJSON(message: QuerySupplyRequest): unknown {
     const obj: any = {};
-    message.classId !== undefined && (obj.classId = message.classId);
-    message.type !== undefined && (obj.type = message.type);
+    message.contractId !== undefined && (obj.contractId = message.contractId);
     return obj;
   },
 
@@ -272,8 +377,7 @@ export const QuerySupplyRequest = {
     object: I
   ): QuerySupplyRequest {
     const message = createBaseQuerySupplyRequest();
-    message.classId = object.classId ?? "";
-    message.type = object.type ?? "";
+    message.contractId = object.contractId ?? "";
     return message;
   },
 };
@@ -332,30 +436,30 @@ export const QuerySupplyResponse = {
   },
 };
 
-function createBaseQueryTokenRequest(): QueryTokenRequest {
-  return { classId: "" };
+function createBaseQueryMintedRequest(): QueryMintedRequest {
+  return { contractId: "" };
 }
 
-export const QueryTokenRequest = {
+export const QueryMintedRequest = {
   encode(
-    message: QueryTokenRequest,
+    message: QueryMintedRequest,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.classId !== "") {
-      writer.uint32(10).string(message.classId);
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): QueryTokenRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryMintedRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryTokenRequest();
+    const message = createBaseQueryMintedRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.classId = reader.string();
+          message.contractId = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -365,51 +469,51 @@ export const QueryTokenRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryTokenRequest {
+  fromJSON(object: any): QueryMintedRequest {
     return {
-      classId: isSet(object.classId) ? String(object.classId) : "",
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
     };
   },
 
-  toJSON(message: QueryTokenRequest): unknown {
+  toJSON(message: QueryMintedRequest): unknown {
     const obj: any = {};
-    message.classId !== undefined && (obj.classId = message.classId);
+    message.contractId !== undefined && (obj.contractId = message.contractId);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QueryTokenRequest>, I>>(
+  fromPartial<I extends Exact<DeepPartial<QueryMintedRequest>, I>>(
     object: I
-  ): QueryTokenRequest {
-    const message = createBaseQueryTokenRequest();
-    message.classId = object.classId ?? "";
+  ): QueryMintedRequest {
+    const message = createBaseQueryMintedRequest();
+    message.contractId = object.contractId ?? "";
     return message;
   },
 };
 
-function createBaseQueryTokenResponse(): QueryTokenResponse {
-  return { token: undefined };
+function createBaseQueryMintedResponse(): QueryMintedResponse {
+  return { amount: "" };
 }
 
-export const QueryTokenResponse = {
+export const QueryMintedResponse = {
   encode(
-    message: QueryTokenResponse,
+    message: QueryMintedResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.token !== undefined) {
-      Token.encode(message.token, writer.uint32(10).fork()).ldelim();
+    if (message.amount !== "") {
+      writer.uint32(10).string(message.amount);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): QueryTokenResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryMintedResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryTokenResponse();
+    const message = createBaseQueryMintedResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.token = Token.decode(reader, reader.uint32());
+          message.amount = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -419,38 +523,264 @@ export const QueryTokenResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryTokenResponse {
+  fromJSON(object: any): QueryMintedResponse {
     return {
-      token: isSet(object.token) ? Token.fromJSON(object.token) : undefined,
+      amount: isSet(object.amount) ? String(object.amount) : "",
     };
   },
 
-  toJSON(message: QueryTokenResponse): unknown {
+  toJSON(message: QueryMintedResponse): unknown {
     const obj: any = {};
-    message.token !== undefined &&
-      (obj.token = message.token ? Token.toJSON(message.token) : undefined);
+    message.amount !== undefined && (obj.amount = message.amount);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QueryTokenResponse>, I>>(
+  fromPartial<I extends Exact<DeepPartial<QueryMintedResponse>, I>>(
     object: I
-  ): QueryTokenResponse {
-    const message = createBaseQueryTokenResponse();
-    message.token =
-      object.token !== undefined && object.token !== null
-        ? Token.fromPartial(object.token)
+  ): QueryMintedResponse {
+    const message = createBaseQueryMintedResponse();
+    message.amount = object.amount ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryBurntRequest(): QueryBurntRequest {
+  return { contractId: "" };
+}
+
+export const QueryBurntRequest = {
+  encode(
+    message: QueryBurntRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryBurntRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryBurntRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.contractId = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryBurntRequest {
+    return {
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+    };
+  },
+
+  toJSON(message: QueryBurntRequest): unknown {
+    const obj: any = {};
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryBurntRequest>, I>>(
+    object: I
+  ): QueryBurntRequest {
+    const message = createBaseQueryBurntRequest();
+    message.contractId = object.contractId ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryBurntResponse(): QueryBurntResponse {
+  return { amount: "" };
+}
+
+export const QueryBurntResponse = {
+  encode(
+    message: QueryBurntResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.amount !== "") {
+      writer.uint32(10).string(message.amount);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryBurntResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryBurntResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.amount = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryBurntResponse {
+    return {
+      amount: isSet(object.amount) ? String(object.amount) : "",
+    };
+  },
+
+  toJSON(message: QueryBurntResponse): unknown {
+    const obj: any = {};
+    message.amount !== undefined && (obj.amount = message.amount);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryBurntResponse>, I>>(
+    object: I
+  ): QueryBurntResponse {
+    const message = createBaseQueryBurntResponse();
+    message.amount = object.amount ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryTokenClassRequest(): QueryTokenClassRequest {
+  return { contractId: "" };
+}
+
+export const QueryTokenClassRequest = {
+  encode(
+    message: QueryTokenClassRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryTokenClassRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryTokenClassRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.contractId = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryTokenClassRequest {
+    return {
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+    };
+  },
+
+  toJSON(message: QueryTokenClassRequest): unknown {
+    const obj: any = {};
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryTokenClassRequest>, I>>(
+    object: I
+  ): QueryTokenClassRequest {
+    const message = createBaseQueryTokenClassRequest();
+    message.contractId = object.contractId ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryTokenClassResponse(): QueryTokenClassResponse {
+  return { class: undefined };
+}
+
+export const QueryTokenClassResponse = {
+  encode(
+    message: QueryTokenClassResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.class !== undefined) {
+      TokenClass.encode(message.class, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryTokenClassResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryTokenClassResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.class = TokenClass.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryTokenClassResponse {
+    return {
+      class: isSet(object.class)
+        ? TokenClass.fromJSON(object.class)
+        : undefined,
+    };
+  },
+
+  toJSON(message: QueryTokenClassResponse): unknown {
+    const obj: any = {};
+    message.class !== undefined &&
+      (obj.class = message.class
+        ? TokenClass.toJSON(message.class)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryTokenClassResponse>, I>>(
+    object: I
+  ): QueryTokenClassResponse {
+    const message = createBaseQueryTokenClassResponse();
+    message.class =
+      object.class !== undefined && object.class !== null
+        ? TokenClass.fromPartial(object.class)
         : undefined;
     return message;
   },
 };
 
-function createBaseQueryTokensRequest(): QueryTokensRequest {
+function createBaseQueryTokenClassesRequest(): QueryTokenClassesRequest {
   return { pagination: undefined };
 }
 
-export const QueryTokensRequest = {
+export const QueryTokenClassesRequest = {
   encode(
-    message: QueryTokensRequest,
+    message: QueryTokenClassesRequest,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.pagination !== undefined) {
@@ -459,10 +789,13 @@ export const QueryTokensRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): QueryTokensRequest {
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryTokenClassesRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryTokensRequest();
+    const message = createBaseQueryTokenClassesRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -477,7 +810,7 @@ export const QueryTokensRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryTokensRequest {
+  fromJSON(object: any): QueryTokenClassesRequest {
     return {
       pagination: isSet(object.pagination)
         ? PageRequest.fromJSON(object.pagination)
@@ -485,7 +818,7 @@ export const QueryTokensRequest = {
     };
   },
 
-  toJSON(message: QueryTokensRequest): unknown {
+  toJSON(message: QueryTokenClassesRequest): unknown {
     const obj: any = {};
     message.pagination !== undefined &&
       (obj.pagination = message.pagination
@@ -494,10 +827,10 @@ export const QueryTokensRequest = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QueryTokensRequest>, I>>(
+  fromPartial<I extends Exact<DeepPartial<QueryTokenClassesRequest>, I>>(
     object: I
-  ): QueryTokensRequest {
-    const message = createBaseQueryTokensRequest();
+  ): QueryTokenClassesRequest {
+    const message = createBaseQueryTokenClassesRequest();
     message.pagination =
       object.pagination !== undefined && object.pagination !== null
         ? PageRequest.fromPartial(object.pagination)
@@ -506,17 +839,17 @@ export const QueryTokensRequest = {
   },
 };
 
-function createBaseQueryTokensResponse(): QueryTokensResponse {
-  return { tokens: [], pagination: undefined };
+function createBaseQueryTokenClassesResponse(): QueryTokenClassesResponse {
+  return { classes: [], pagination: undefined };
 }
 
-export const QueryTokensResponse = {
+export const QueryTokenClassesResponse = {
   encode(
-    message: QueryTokensResponse,
+    message: QueryTokenClassesResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    for (const v of message.tokens) {
-      Token.encode(v!, writer.uint32(10).fork()).ldelim();
+    for (const v of message.classes) {
+      TokenClass.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     if (message.pagination !== undefined) {
       PageResponse.encode(
@@ -527,15 +860,18 @@ export const QueryTokensResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): QueryTokensResponse {
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryTokenClassesResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryTokensResponse();
+    const message = createBaseQueryTokenClassesResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.tokens.push(Token.decode(reader, reader.uint32()));
+          message.classes.push(TokenClass.decode(reader, reader.uint32()));
           break;
         case 2:
           message.pagination = PageResponse.decode(reader, reader.uint32());
@@ -548,10 +884,10 @@ export const QueryTokensResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryTokensResponse {
+  fromJSON(object: any): QueryTokenClassesResponse {
     return {
-      tokens: Array.isArray(object?.tokens)
-        ? object.tokens.map((e: any) => Token.fromJSON(e))
+      classes: Array.isArray(object?.classes)
+        ? object.classes.map((e: any) => TokenClass.fromJSON(e))
         : [],
       pagination: isSet(object.pagination)
         ? PageResponse.fromJSON(object.pagination)
@@ -559,12 +895,14 @@ export const QueryTokensResponse = {
     };
   },
 
-  toJSON(message: QueryTokensResponse): unknown {
+  toJSON(message: QueryTokenClassesResponse): unknown {
     const obj: any = {};
-    if (message.tokens) {
-      obj.tokens = message.tokens.map((e) => (e ? Token.toJSON(e) : undefined));
+    if (message.classes) {
+      obj.classes = message.classes.map((e) =>
+        e ? TokenClass.toJSON(e) : undefined
+      );
     } else {
-      obj.tokens = [];
+      obj.classes = [];
     }
     message.pagination !== undefined &&
       (obj.pagination = message.pagination
@@ -573,11 +911,12 @@ export const QueryTokensResponse = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QueryTokensResponse>, I>>(
+  fromPartial<I extends Exact<DeepPartial<QueryTokenClassesResponse>, I>>(
     object: I
-  ): QueryTokensResponse {
-    const message = createBaseQueryTokensResponse();
-    message.tokens = object.tokens?.map((e) => Token.fromPartial(e)) || [];
+  ): QueryTokenClassesResponse {
+    const message = createBaseQueryTokenClassesResponse();
+    message.classes =
+      object.classes?.map((e) => TokenClass.fromPartial(e)) || [];
     message.pagination =
       object.pagination !== undefined && object.pagination !== null
         ? PageResponse.fromPartial(object.pagination)
@@ -586,36 +925,42 @@ export const QueryTokensResponse = {
   },
 };
 
-function createBaseQueryGrantsRequest(): QueryGrantsRequest {
-  return { classId: "", grantee: "" };
+function createBaseQueryGrantRequest(): QueryGrantRequest {
+  return { contractId: "", grantee: "", permission: 0 };
 }
 
-export const QueryGrantsRequest = {
+export const QueryGrantRequest = {
   encode(
-    message: QueryGrantsRequest,
+    message: QueryGrantRequest,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.classId !== "") {
-      writer.uint32(10).string(message.classId);
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
     }
     if (message.grantee !== "") {
       writer.uint32(18).string(message.grantee);
     }
+    if (message.permission !== 0) {
+      writer.uint32(24).int32(message.permission);
+    }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGrantsRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGrantRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryGrantsRequest();
+    const message = createBaseQueryGrantRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.classId = reader.string();
+          message.contractId = reader.string();
           break;
         case 2:
           message.grantee = reader.string();
+          break;
+        case 3:
+          message.permission = reader.int32() as any;
           break;
         default:
           reader.skipType(tag & 7);
@@ -625,55 +970,214 @@ export const QueryGrantsRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryGrantsRequest {
+  fromJSON(object: any): QueryGrantRequest {
     return {
-      classId: isSet(object.classId) ? String(object.classId) : "",
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
       grantee: isSet(object.grantee) ? String(object.grantee) : "",
+      permission: isSet(object.permission)
+        ? permissionFromJSON(object.permission)
+        : 0,
     };
   },
 
-  toJSON(message: QueryGrantsRequest): unknown {
+  toJSON(message: QueryGrantRequest): unknown {
     const obj: any = {};
-    message.classId !== undefined && (obj.classId = message.classId);
+    message.contractId !== undefined && (obj.contractId = message.contractId);
     message.grantee !== undefined && (obj.grantee = message.grantee);
+    message.permission !== undefined &&
+      (obj.permission = permissionToJSON(message.permission));
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QueryGrantsRequest>, I>>(
+  fromPartial<I extends Exact<DeepPartial<QueryGrantRequest>, I>>(
     object: I
-  ): QueryGrantsRequest {
-    const message = createBaseQueryGrantsRequest();
-    message.classId = object.classId ?? "";
+  ): QueryGrantRequest {
+    const message = createBaseQueryGrantRequest();
+    message.contractId = object.contractId ?? "";
     message.grantee = object.grantee ?? "";
+    message.permission = object.permission ?? 0;
     return message;
   },
 };
 
-function createBaseQueryGrantsResponse(): QueryGrantsResponse {
-  return { grants: [] };
+function createBaseQueryGrantResponse(): QueryGrantResponse {
+  return { grant: undefined };
 }
 
-export const QueryGrantsResponse = {
+export const QueryGrantResponse = {
   encode(
-    message: QueryGrantsResponse,
+    message: QueryGrantResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.grant !== undefined) {
+      Grant.encode(message.grant, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGrantResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGrantResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.grant = Grant.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGrantResponse {
+    return {
+      grant: isSet(object.grant) ? Grant.fromJSON(object.grant) : undefined,
+    };
+  },
+
+  toJSON(message: QueryGrantResponse): unknown {
+    const obj: any = {};
+    message.grant !== undefined &&
+      (obj.grant = message.grant ? Grant.toJSON(message.grant) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGrantResponse>, I>>(
+    object: I
+  ): QueryGrantResponse {
+    const message = createBaseQueryGrantResponse();
+    message.grant =
+      object.grant !== undefined && object.grant !== null
+        ? Grant.fromPartial(object.grant)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryGranteeGrantsRequest(): QueryGranteeGrantsRequest {
+  return { contractId: "", grantee: "", pagination: undefined };
+}
+
+export const QueryGranteeGrantsRequest = {
+  encode(
+    message: QueryGranteeGrantsRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
+    }
+    if (message.grantee !== "") {
+      writer.uint32(18).string(message.grantee);
+    }
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryGranteeGrantsRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGranteeGrantsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.contractId = reader.string();
+          break;
+        case 2:
+          message.grantee = reader.string();
+          break;
+        case 3:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGranteeGrantsRequest {
+    return {
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      grantee: isSet(object.grantee) ? String(object.grantee) : "",
+      pagination: isSet(object.pagination)
+        ? PageRequest.fromJSON(object.pagination)
+        : undefined,
+    };
+  },
+
+  toJSON(message: QueryGranteeGrantsRequest): unknown {
+    const obj: any = {};
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.grantee !== undefined && (obj.grantee = message.grantee);
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageRequest.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGranteeGrantsRequest>, I>>(
+    object: I
+  ): QueryGranteeGrantsRequest {
+    const message = createBaseQueryGranteeGrantsRequest();
+    message.contractId = object.contractId ?? "";
+    message.grantee = object.grantee ?? "";
+    message.pagination =
+      object.pagination !== undefined && object.pagination !== null
+        ? PageRequest.fromPartial(object.pagination)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryGranteeGrantsResponse(): QueryGranteeGrantsResponse {
+  return { grants: [], pagination: undefined };
+}
+
+export const QueryGranteeGrantsResponse = {
+  encode(
+    message: QueryGranteeGrantsResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     for (const v of message.grants) {
       Grant.encode(v!, writer.uint32(10).fork()).ldelim();
     }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(
+        message.pagination,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGrantsResponse {
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryGranteeGrantsResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryGrantsResponse();
+    const message = createBaseQueryGranteeGrantsResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
           message.grants.push(Grant.decode(reader, reader.uint32()));
           break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -682,47 +1186,372 @@ export const QueryGrantsResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryGrantsResponse {
+  fromJSON(object: any): QueryGranteeGrantsResponse {
     return {
       grants: Array.isArray(object?.grants)
         ? object.grants.map((e: any) => Grant.fromJSON(e))
         : [],
+      pagination: isSet(object.pagination)
+        ? PageResponse.fromJSON(object.pagination)
+        : undefined,
     };
   },
 
-  toJSON(message: QueryGrantsResponse): unknown {
+  toJSON(message: QueryGranteeGrantsResponse): unknown {
     const obj: any = {};
     if (message.grants) {
       obj.grants = message.grants.map((e) => (e ? Grant.toJSON(e) : undefined));
     } else {
       obj.grants = [];
     }
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageResponse.toJSON(message.pagination)
+        : undefined);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QueryGrantsResponse>, I>>(
+  fromPartial<I extends Exact<DeepPartial<QueryGranteeGrantsResponse>, I>>(
     object: I
-  ): QueryGrantsResponse {
-    const message = createBaseQueryGrantsResponse();
+  ): QueryGranteeGrantsResponse {
+    const message = createBaseQueryGranteeGrantsResponse();
     message.grants = object.grants?.map((e) => Grant.fromPartial(e)) || [];
+    message.pagination =
+      object.pagination !== undefined && object.pagination !== null
+        ? PageResponse.fromPartial(object.pagination)
+        : undefined;
     return message;
   },
 };
 
-function createBaseQueryApproveRequest(): QueryApproveRequest {
-  return { classId: "", proxy: "", approver: "" };
+function createBaseQueryAuthorizationRequest(): QueryAuthorizationRequest {
+  return { contractId: "", operator: "", holder: "" };
 }
 
-export const QueryApproveRequest = {
+export const QueryAuthorizationRequest = {
   encode(
-    message: QueryApproveRequest,
+    message: QueryAuthorizationRequest,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.classId !== "") {
-      writer.uint32(10).string(message.classId);
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
     }
-    if (message.proxy !== "") {
-      writer.uint32(18).string(message.proxy);
+    if (message.operator !== "") {
+      writer.uint32(18).string(message.operator);
+    }
+    if (message.holder !== "") {
+      writer.uint32(26).string(message.holder);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryAuthorizationRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAuthorizationRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.contractId = reader.string();
+          break;
+        case 2:
+          message.operator = reader.string();
+          break;
+        case 3:
+          message.holder = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAuthorizationRequest {
+    return {
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      operator: isSet(object.operator) ? String(object.operator) : "",
+      holder: isSet(object.holder) ? String(object.holder) : "",
+    };
+  },
+
+  toJSON(message: QueryAuthorizationRequest): unknown {
+    const obj: any = {};
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.operator !== undefined && (obj.operator = message.operator);
+    message.holder !== undefined && (obj.holder = message.holder);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAuthorizationRequest>, I>>(
+    object: I
+  ): QueryAuthorizationRequest {
+    const message = createBaseQueryAuthorizationRequest();
+    message.contractId = object.contractId ?? "";
+    message.operator = object.operator ?? "";
+    message.holder = object.holder ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryAuthorizationResponse(): QueryAuthorizationResponse {
+  return { authorization: undefined };
+}
+
+export const QueryAuthorizationResponse = {
+  encode(
+    message: QueryAuthorizationResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.authorization !== undefined) {
+      Authorization.encode(
+        message.authorization,
+        writer.uint32(10).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryAuthorizationResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAuthorizationResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.authorization = Authorization.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAuthorizationResponse {
+    return {
+      authorization: isSet(object.authorization)
+        ? Authorization.fromJSON(object.authorization)
+        : undefined,
+    };
+  },
+
+  toJSON(message: QueryAuthorizationResponse): unknown {
+    const obj: any = {};
+    message.authorization !== undefined &&
+      (obj.authorization = message.authorization
+        ? Authorization.toJSON(message.authorization)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAuthorizationResponse>, I>>(
+    object: I
+  ): QueryAuthorizationResponse {
+    const message = createBaseQueryAuthorizationResponse();
+    message.authorization =
+      object.authorization !== undefined && object.authorization !== null
+        ? Authorization.fromPartial(object.authorization)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryOperatorAuthorizationsRequest(): QueryOperatorAuthorizationsRequest {
+  return { contractId: "", operator: "", pagination: undefined };
+}
+
+export const QueryOperatorAuthorizationsRequest = {
+  encode(
+    message: QueryOperatorAuthorizationsRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
+    }
+    if (message.operator !== "") {
+      writer.uint32(18).string(message.operator);
+    }
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryOperatorAuthorizationsRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryOperatorAuthorizationsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.contractId = reader.string();
+          break;
+        case 2:
+          message.operator = reader.string();
+          break;
+        case 3:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryOperatorAuthorizationsRequest {
+    return {
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      operator: isSet(object.operator) ? String(object.operator) : "",
+      pagination: isSet(object.pagination)
+        ? PageRequest.fromJSON(object.pagination)
+        : undefined,
+    };
+  },
+
+  toJSON(message: QueryOperatorAuthorizationsRequest): unknown {
+    const obj: any = {};
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.operator !== undefined && (obj.operator = message.operator);
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageRequest.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<DeepPartial<QueryOperatorAuthorizationsRequest>, I>
+  >(object: I): QueryOperatorAuthorizationsRequest {
+    const message = createBaseQueryOperatorAuthorizationsRequest();
+    message.contractId = object.contractId ?? "";
+    message.operator = object.operator ?? "";
+    message.pagination =
+      object.pagination !== undefined && object.pagination !== null
+        ? PageRequest.fromPartial(object.pagination)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryOperatorAuthorizationsResponse(): QueryOperatorAuthorizationsResponse {
+  return { authorizations: [], pagination: undefined };
+}
+
+export const QueryOperatorAuthorizationsResponse = {
+  encode(
+    message: QueryOperatorAuthorizationsResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    for (const v of message.authorizations) {
+      Authorization.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(
+        message.pagination,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryOperatorAuthorizationsResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryOperatorAuthorizationsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.authorizations.push(
+            Authorization.decode(reader, reader.uint32())
+          );
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryOperatorAuthorizationsResponse {
+    return {
+      authorizations: Array.isArray(object?.authorizations)
+        ? object.authorizations.map((e: any) => Authorization.fromJSON(e))
+        : [],
+      pagination: isSet(object.pagination)
+        ? PageResponse.fromJSON(object.pagination)
+        : undefined,
+    };
+  },
+
+  toJSON(message: QueryOperatorAuthorizationsResponse): unknown {
+    const obj: any = {};
+    if (message.authorizations) {
+      obj.authorizations = message.authorizations.map((e) =>
+        e ? Authorization.toJSON(e) : undefined
+      );
+    } else {
+      obj.authorizations = [];
+    }
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageResponse.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<DeepPartial<QueryOperatorAuthorizationsResponse>, I>
+  >(object: I): QueryOperatorAuthorizationsResponse {
+    const message = createBaseQueryOperatorAuthorizationsResponse();
+    message.authorizations =
+      object.authorizations?.map((e) => Authorization.fromPartial(e)) || [];
+    message.pagination =
+      object.pagination !== undefined && object.pagination !== null
+        ? PageResponse.fromPartial(object.pagination)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryApprovedRequest(): QueryApprovedRequest {
+  return { contractId: "", address: "", approver: "" };
+}
+
+export const QueryApprovedRequest = {
+  encode(
+    message: QueryApprovedRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
+    }
+    if (message.address !== "") {
+      writer.uint32(18).string(message.address);
     }
     if (message.approver !== "") {
       writer.uint32(26).string(message.approver);
@@ -730,18 +1559,21 @@ export const QueryApproveRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): QueryApproveRequest {
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryApprovedRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryApproveRequest();
+    const message = createBaseQueryApprovedRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.classId = reader.string();
+          message.contractId = reader.string();
           break;
         case 2:
-          message.proxy = reader.string();
+          message.address = reader.string();
           break;
         case 3:
           message.approver = reader.string();
@@ -754,44 +1586,44 @@ export const QueryApproveRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryApproveRequest {
+  fromJSON(object: any): QueryApprovedRequest {
     return {
-      classId: isSet(object.classId) ? String(object.classId) : "",
-      proxy: isSet(object.proxy) ? String(object.proxy) : "",
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      address: isSet(object.address) ? String(object.address) : "",
       approver: isSet(object.approver) ? String(object.approver) : "",
     };
   },
 
-  toJSON(message: QueryApproveRequest): unknown {
+  toJSON(message: QueryApprovedRequest): unknown {
     const obj: any = {};
-    message.classId !== undefined && (obj.classId = message.classId);
-    message.proxy !== undefined && (obj.proxy = message.proxy);
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.address !== undefined && (obj.address = message.address);
     message.approver !== undefined && (obj.approver = message.approver);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QueryApproveRequest>, I>>(
+  fromPartial<I extends Exact<DeepPartial<QueryApprovedRequest>, I>>(
     object: I
-  ): QueryApproveRequest {
-    const message = createBaseQueryApproveRequest();
-    message.classId = object.classId ?? "";
-    message.proxy = object.proxy ?? "";
+  ): QueryApprovedRequest {
+    const message = createBaseQueryApprovedRequest();
+    message.contractId = object.contractId ?? "";
+    message.address = object.address ?? "";
     message.approver = object.approver ?? "";
     return message;
   },
 };
 
-function createBaseQueryApproveResponse(): QueryApproveResponse {
-  return { approve: undefined };
+function createBaseQueryApprovedResponse(): QueryApprovedResponse {
+  return { approved: false };
 }
 
-export const QueryApproveResponse = {
+export const QueryApprovedResponse = {
   encode(
-    message: QueryApproveResponse,
+    message: QueryApprovedResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.approve !== undefined) {
-      Approve.encode(message.approve, writer.uint32(10).fork()).ldelim();
+    if (message.approved === true) {
+      writer.uint32(8).bool(message.approved);
     }
     return writer;
   },
@@ -799,15 +1631,15 @@ export const QueryApproveResponse = {
   decode(
     input: _m0.Reader | Uint8Array,
     length?: number
-  ): QueryApproveResponse {
+  ): QueryApprovedResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryApproveResponse();
+    const message = createBaseQueryApprovedResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.approve = Approve.decode(reader, reader.uint32());
+          message.approved = reader.bool();
           break;
         default:
           reader.skipType(tag & 7);
@@ -817,220 +1649,138 @@ export const QueryApproveResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryApproveResponse {
+  fromJSON(object: any): QueryApprovedResponse {
     return {
-      approve: isSet(object.approve)
-        ? Approve.fromJSON(object.approve)
-        : undefined,
+      approved: isSet(object.approved) ? Boolean(object.approved) : false,
     };
   },
 
-  toJSON(message: QueryApproveResponse): unknown {
+  toJSON(message: QueryApprovedResponse): unknown {
     const obj: any = {};
-    message.approve !== undefined &&
-      (obj.approve = message.approve
-        ? Approve.toJSON(message.approve)
-        : undefined);
+    message.approved !== undefined && (obj.approved = message.approved);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QueryApproveResponse>, I>>(
+  fromPartial<I extends Exact<DeepPartial<QueryApprovedResponse>, I>>(
     object: I
-  ): QueryApproveResponse {
-    const message = createBaseQueryApproveResponse();
-    message.approve =
-      object.approve !== undefined && object.approve !== null
-        ? Approve.fromPartial(object.approve)
-        : undefined;
-    return message;
-  },
-};
-
-function createBaseQueryApprovesRequest(): QueryApprovesRequest {
-  return { classId: "", proxy: "", pagination: undefined };
-}
-
-export const QueryApprovesRequest = {
-  encode(
-    message: QueryApprovesRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.classId !== "") {
-      writer.uint32(10).string(message.classId);
-    }
-    if (message.proxy !== "") {
-      writer.uint32(18).string(message.proxy);
-    }
-    if (message.pagination !== undefined) {
-      PageRequest.encode(message.pagination, writer.uint32(26).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): QueryApprovesRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryApprovesRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.classId = reader.string();
-          break;
-        case 2:
-          message.proxy = reader.string();
-          break;
-        case 3:
-          message.pagination = PageRequest.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): QueryApprovesRequest {
-    return {
-      classId: isSet(object.classId) ? String(object.classId) : "",
-      proxy: isSet(object.proxy) ? String(object.proxy) : "",
-      pagination: isSet(object.pagination)
-        ? PageRequest.fromJSON(object.pagination)
-        : undefined,
-    };
-  },
-
-  toJSON(message: QueryApprovesRequest): unknown {
-    const obj: any = {};
-    message.classId !== undefined && (obj.classId = message.classId);
-    message.proxy !== undefined && (obj.proxy = message.proxy);
-    message.pagination !== undefined &&
-      (obj.pagination = message.pagination
-        ? PageRequest.toJSON(message.pagination)
-        : undefined);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<QueryApprovesRequest>, I>>(
-    object: I
-  ): QueryApprovesRequest {
-    const message = createBaseQueryApprovesRequest();
-    message.classId = object.classId ?? "";
-    message.proxy = object.proxy ?? "";
-    message.pagination =
-      object.pagination !== undefined && object.pagination !== null
-        ? PageRequest.fromPartial(object.pagination)
-        : undefined;
-    return message;
-  },
-};
-
-function createBaseQueryApprovesResponse(): QueryApprovesResponse {
-  return { approves: [], pagination: undefined };
-}
-
-export const QueryApprovesResponse = {
-  encode(
-    message: QueryApprovesResponse,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    for (const v of message.approves) {
-      Approve.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.pagination !== undefined) {
-      PageResponse.encode(
-        message.pagination,
-        writer.uint32(18).fork()
-      ).ldelim();
-    }
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): QueryApprovesResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryApprovesResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.approves.push(Approve.decode(reader, reader.uint32()));
-          break;
-        case 2:
-          message.pagination = PageResponse.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): QueryApprovesResponse {
-    return {
-      approves: Array.isArray(object?.approves)
-        ? object.approves.map((e: any) => Approve.fromJSON(e))
-        : [],
-      pagination: isSet(object.pagination)
-        ? PageResponse.fromJSON(object.pagination)
-        : undefined,
-    };
-  },
-
-  toJSON(message: QueryApprovesResponse): unknown {
-    const obj: any = {};
-    if (message.approves) {
-      obj.approves = message.approves.map((e) =>
-        e ? Approve.toJSON(e) : undefined
-      );
-    } else {
-      obj.approves = [];
-    }
-    message.pagination !== undefined &&
-      (obj.pagination = message.pagination
-        ? PageResponse.toJSON(message.pagination)
-        : undefined);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<QueryApprovesResponse>, I>>(
-    object: I
-  ): QueryApprovesResponse {
-    const message = createBaseQueryApprovesResponse();
-    message.approves =
-      object.approves?.map((e) => Approve.fromPartial(e)) || [];
-    message.pagination =
-      object.pagination !== undefined && object.pagination !== null
-        ? PageResponse.fromPartial(object.pagination)
-        : undefined;
+  ): QueryApprovedResponse {
+    const message = createBaseQueryApprovedResponse();
+    message.approved = object.approved ?? false;
     return message;
   },
 };
 
 /** Query defines the gRPC querier service. */
 export interface Query {
-  /** Balance queries the number of tokens of a given class owned by the address. */
+  /**
+   * Balance queries the number of tokens of a given contract owned by the address.
+   * Throws:
+   * - ErrInvalidRequest
+   *   - `contract_id` is of invalid format.
+   * - ErrInvalidAddress
+   *   - `address` is of invalid format.
+   */
   Balance(request: QueryBalanceRequest): Promise<QueryBalanceResponse>;
-  /** Supply queries the number of tokens from the given class id. */
+  /**
+   * Supply queries the number of tokens from the given contract id.
+   * Throws:
+   * - ErrInvalidRequest
+   *   - `contract_id` is of invalid format.
+   * - ErrNotFound
+   *   - there is no token class of `contract_id`.
+   */
   Supply(request: QuerySupplyRequest): Promise<QuerySupplyResponse>;
-  /** Token queries an token metadata based on its class id. */
-  Token(request: QueryTokenRequest): Promise<QueryTokenResponse>;
-  /** Tokens queries all token metadata. */
-  Tokens(request: QueryTokensRequest): Promise<QueryTokensResponse>;
-  /** Grants queries grants on a given grantee. */
-  Grants(request: QueryGrantsRequest): Promise<QueryGrantsResponse>;
-  /** Approve queries approve on a given proxy approver pair. */
-  Approve(request: QueryApproveRequest): Promise<QueryApproveResponse>;
-  /** Approves queries all approves on a given proxy. */
-  Approves(request: QueryApprovesRequest): Promise<QueryApprovesResponse>;
+  /**
+   * Minted queries the number of minted tokens from the given contract id.
+   * Throws:
+   * - ErrInvalidRequest
+   *   - `contract_id` is of invalid format.
+   * - ErrNotFound
+   *   - there is no token class of `contract_id`.
+   */
+  Minted(request: QueryMintedRequest): Promise<QueryMintedResponse>;
+  /**
+   * Burnt queries the number of burnt tokens from the given contract id.
+   * Throws:
+   * - ErrInvalidRequest
+   *   - `contract_id` is of invalid format.
+   * - ErrNotFound
+   *   - there is no token class of `contract_id`.
+   */
+  Burnt(request: QueryBurntRequest): Promise<QueryBurntResponse>;
+  /**
+   * TokenClass queries an token metadata based on its contract id.
+   * Throws:
+   * - ErrInvalidRequest
+   *   - `contract_id` is of invalid format.
+   * - ErrNotFound
+   *   - there is no token class of `contract_id`.
+   */
+  TokenClass(request: QueryTokenClassRequest): Promise<QueryTokenClassResponse>;
+  /**
+   * TokenClasses queries all token metadata.
+   * Since: finschia
+   */
+  TokenClasses(
+    request: QueryTokenClassesRequest
+  ): Promise<QueryTokenClassesResponse>;
+  /**
+   * Grant queries a permission on a given grantee permission pair.
+   * Throws:
+   * - ErrInvalidRequest
+   *   - `contract_id` is of invalid format.
+   *   - `permission` is not a valid permission.
+   * - ErrInvalidAddress
+   *   - `grantee` is of invalid format.
+   * - ErrNotFound
+   *   - there is no permission of `permission` on `grantee`.
+   * Since: finschia
+   */
+  Grant(request: QueryGrantRequest): Promise<QueryGrantResponse>;
+  /**
+   * GranteeGrants queries permissions on a given grantee.
+   * Throws:
+   * - ErrInvalidRequest
+   *   - `contract_id` is of invalid format.
+   * - ErrInvalidAddress
+   *   - `grantee` is of invalid format.
+   * Since: finschia
+   */
+  GranteeGrants(
+    request: QueryGranteeGrantsRequest
+  ): Promise<QueryGranteeGrantsResponse>;
+  /**
+   * Authorization queries authorization on a given operator holder pair.
+   * Throws:
+   * - ErrInvalidRequest
+   *   - `contract_id` is of invalid format.
+   * - ErrInvalidAddress
+   *   - `operator` is of invalid format.
+   *   - `holder` is of invalid format.
+   * - ErrNotFound
+   *   - there is no authorization given by `holder` to `operator`.
+   * Since: finschia
+   */
+  Authorization(
+    request: QueryAuthorizationRequest
+  ): Promise<QueryAuthorizationResponse>;
+  /**
+   * OperatorAuthorizations queries authorization on a given operator.
+   * Throws:
+   * - ErrInvalidRequest
+   *   - `contract_id` is of invalid format.
+   * - ErrInvalidAddress
+   *   - `operator` is of invalid format.
+   * Since: finschia
+   */
+  OperatorAuthorizations(
+    request: QueryOperatorAuthorizationsRequest
+  ): Promise<QueryOperatorAuthorizationsResponse>;
+  /**
+   * Approved queries authorization on a given proxy approver pair.
+   * NOTE: deprecated (use Authorization)
+   */
+  Approved(request: QueryApprovedRequest): Promise<QueryApprovedResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -1039,11 +1789,15 @@ export class QueryClientImpl implements Query {
     this.rpc = rpc;
     this.Balance = this.Balance.bind(this);
     this.Supply = this.Supply.bind(this);
-    this.Token = this.Token.bind(this);
-    this.Tokens = this.Tokens.bind(this);
-    this.Grants = this.Grants.bind(this);
-    this.Approve = this.Approve.bind(this);
-    this.Approves = this.Approves.bind(this);
+    this.Minted = this.Minted.bind(this);
+    this.Burnt = this.Burnt.bind(this);
+    this.TokenClass = this.TokenClass.bind(this);
+    this.TokenClasses = this.TokenClasses.bind(this);
+    this.Grant = this.Grant.bind(this);
+    this.GranteeGrants = this.GranteeGrants.bind(this);
+    this.Authorization = this.Authorization.bind(this);
+    this.OperatorAuthorizations = this.OperatorAuthorizations.bind(this);
+    this.Approved = this.Approved.bind(this);
   }
   Balance(request: QueryBalanceRequest): Promise<QueryBalanceResponse> {
     const data = QueryBalanceRequest.encode(request).finish();
@@ -1061,43 +1815,101 @@ export class QueryClientImpl implements Query {
     );
   }
 
-  Token(request: QueryTokenRequest): Promise<QueryTokenResponse> {
-    const data = QueryTokenRequest.encode(request).finish();
-    const promise = this.rpc.request("lbm.token.v1.Query", "Token", data);
+  Minted(request: QueryMintedRequest): Promise<QueryMintedResponse> {
+    const data = QueryMintedRequest.encode(request).finish();
+    const promise = this.rpc.request("lbm.token.v1.Query", "Minted", data);
     return promise.then((data) =>
-      QueryTokenResponse.decode(new _m0.Reader(data))
+      QueryMintedResponse.decode(new _m0.Reader(data))
     );
   }
 
-  Tokens(request: QueryTokensRequest): Promise<QueryTokensResponse> {
-    const data = QueryTokensRequest.encode(request).finish();
-    const promise = this.rpc.request("lbm.token.v1.Query", "Tokens", data);
+  Burnt(request: QueryBurntRequest): Promise<QueryBurntResponse> {
+    const data = QueryBurntRequest.encode(request).finish();
+    const promise = this.rpc.request("lbm.token.v1.Query", "Burnt", data);
     return promise.then((data) =>
-      QueryTokensResponse.decode(new _m0.Reader(data))
+      QueryBurntResponse.decode(new _m0.Reader(data))
     );
   }
 
-  Grants(request: QueryGrantsRequest): Promise<QueryGrantsResponse> {
-    const data = QueryGrantsRequest.encode(request).finish();
-    const promise = this.rpc.request("lbm.token.v1.Query", "Grants", data);
+  TokenClass(
+    request: QueryTokenClassRequest
+  ): Promise<QueryTokenClassResponse> {
+    const data = QueryTokenClassRequest.encode(request).finish();
+    const promise = this.rpc.request("lbm.token.v1.Query", "TokenClass", data);
     return promise.then((data) =>
-      QueryGrantsResponse.decode(new _m0.Reader(data))
+      QueryTokenClassResponse.decode(new _m0.Reader(data))
     );
   }
 
-  Approve(request: QueryApproveRequest): Promise<QueryApproveResponse> {
-    const data = QueryApproveRequest.encode(request).finish();
-    const promise = this.rpc.request("lbm.token.v1.Query", "Approve", data);
+  TokenClasses(
+    request: QueryTokenClassesRequest
+  ): Promise<QueryTokenClassesResponse> {
+    const data = QueryTokenClassesRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "lbm.token.v1.Query",
+      "TokenClasses",
+      data
+    );
     return promise.then((data) =>
-      QueryApproveResponse.decode(new _m0.Reader(data))
+      QueryTokenClassesResponse.decode(new _m0.Reader(data))
     );
   }
 
-  Approves(request: QueryApprovesRequest): Promise<QueryApprovesResponse> {
-    const data = QueryApprovesRequest.encode(request).finish();
-    const promise = this.rpc.request("lbm.token.v1.Query", "Approves", data);
+  Grant(request: QueryGrantRequest): Promise<QueryGrantResponse> {
+    const data = QueryGrantRequest.encode(request).finish();
+    const promise = this.rpc.request("lbm.token.v1.Query", "Grant", data);
     return promise.then((data) =>
-      QueryApprovesResponse.decode(new _m0.Reader(data))
+      QueryGrantResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  GranteeGrants(
+    request: QueryGranteeGrantsRequest
+  ): Promise<QueryGranteeGrantsResponse> {
+    const data = QueryGranteeGrantsRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "lbm.token.v1.Query",
+      "GranteeGrants",
+      data
+    );
+    return promise.then((data) =>
+      QueryGranteeGrantsResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  Authorization(
+    request: QueryAuthorizationRequest
+  ): Promise<QueryAuthorizationResponse> {
+    const data = QueryAuthorizationRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "lbm.token.v1.Query",
+      "Authorization",
+      data
+    );
+    return promise.then((data) =>
+      QueryAuthorizationResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  OperatorAuthorizations(
+    request: QueryOperatorAuthorizationsRequest
+  ): Promise<QueryOperatorAuthorizationsResponse> {
+    const data = QueryOperatorAuthorizationsRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "lbm.token.v1.Query",
+      "OperatorAuthorizations",
+      data
+    );
+    return promise.then((data) =>
+      QueryOperatorAuthorizationsResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  Approved(request: QueryApprovedRequest): Promise<QueryApprovedResponse> {
+    const data = QueryApprovedRequest.encode(request).finish();
+    const promise = this.rpc.request("lbm.token.v1.Query", "Approved", data);
+    return promise.then((data) =>
+      QueryApprovedResponse.decode(new _m0.Reader(data))
     );
   }
 }

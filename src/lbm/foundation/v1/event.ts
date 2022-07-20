@@ -1,6 +1,4 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
 import {
   Params,
   Proposal,
@@ -9,9 +7,11 @@ import {
   Member,
   proposalExecutorResultFromJSON,
   proposalExecutorResultToJSON,
-} from "../../../lbm/foundation/v1/foundation";
+} from "./foundation";
 import { Any } from "../../../google/protobuf/any";
+import Long from "long";
 import { Coin } from "../../../cosmos/base/v1beta1/coin";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.foundation.v1";
 
@@ -522,7 +522,7 @@ export const EventWithdrawProposal = {
   fromJSON(object: any): EventWithdrawProposal {
     return {
       proposalId: isSet(object.proposalId)
-        ? Long.fromString(object.proposalId)
+        ? Long.fromValue(object.proposalId)
         : Long.UZERO,
     };
   },
@@ -646,7 +646,7 @@ export const EventExec = {
   fromJSON(object: any): EventExec {
     return {
       proposalId: isSet(object.proposalId)
-        ? Long.fromString(object.proposalId)
+        ? Long.fromValue(object.proposalId)
         : Long.UZERO,
       result: isSet(object.result)
         ? proposalExecutorResultFromJSON(object.result)

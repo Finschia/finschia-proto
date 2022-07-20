@@ -1,7 +1,7 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
 import { Duration } from "../../google/protobuf/duration";
+import Long from "long";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "ostracon.types";
 
@@ -257,11 +257,11 @@ export const BlockParams = {
   fromJSON(object: any): BlockParams {
     return {
       maxBytes: isSet(object.maxBytes)
-        ? Long.fromString(object.maxBytes)
+        ? Long.fromValue(object.maxBytes)
         : Long.ZERO,
-      maxGas: isSet(object.maxGas) ? Long.fromString(object.maxGas) : Long.ZERO,
+      maxGas: isSet(object.maxGas) ? Long.fromValue(object.maxGas) : Long.ZERO,
       timeIotaMs: isSet(object.timeIotaMs)
-        ? Long.fromString(object.timeIotaMs)
+        ? Long.fromValue(object.timeIotaMs)
         : Long.ZERO,
     };
   },
@@ -352,13 +352,13 @@ export const EvidenceParams = {
   fromJSON(object: any): EvidenceParams {
     return {
       maxAgeNumBlocks: isSet(object.maxAgeNumBlocks)
-        ? Long.fromString(object.maxAgeNumBlocks)
+        ? Long.fromValue(object.maxAgeNumBlocks)
         : Long.ZERO,
       maxAgeDuration: isSet(object.maxAgeDuration)
         ? Duration.fromJSON(object.maxAgeDuration)
         : undefined,
       maxBytes: isSet(object.maxBytes)
-        ? Long.fromString(object.maxBytes)
+        ? Long.fromValue(object.maxBytes)
         : Long.ZERO,
     };
   },
@@ -492,7 +492,7 @@ export const VersionParams = {
   fromJSON(object: any): VersionParams {
     return {
       appVersion: isSet(object.appVersion)
-        ? Long.fromString(object.appVersion)
+        ? Long.fromValue(object.appVersion)
         : Long.UZERO,
     };
   },
@@ -558,10 +558,10 @@ export const HashedParams = {
   fromJSON(object: any): HashedParams {
     return {
       blockMaxBytes: isSet(object.blockMaxBytes)
-        ? Long.fromString(object.blockMaxBytes)
+        ? Long.fromValue(object.blockMaxBytes)
         : Long.ZERO,
       blockMaxGas: isSet(object.blockMaxGas)
-        ? Long.fromString(object.blockMaxGas)
+        ? Long.fromValue(object.blockMaxGas)
         : Long.ZERO,
     };
   },

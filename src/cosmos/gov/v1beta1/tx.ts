@@ -1,14 +1,14 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
 import { Any } from "../../../google/protobuf/any";
 import {
   VoteOption,
   WeightedVoteOption,
   voteOptionFromJSON,
   voteOptionToJSON,
-} from "../../../cosmos/gov/v1beta1/gov";
-import { Coin } from "../../../cosmos/base/v1beta1/coin";
+} from "./gov";
+import Long from "long";
+import { Coin } from "../../base/v1beta1/coin";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "cosmos.gov.v1beta1";
 
@@ -189,7 +189,7 @@ export const MsgSubmitProposalResponse = {
   fromJSON(object: any): MsgSubmitProposalResponse {
     return {
       proposalId: isSet(object.proposalId)
-        ? Long.fromString(object.proposalId)
+        ? Long.fromValue(object.proposalId)
         : Long.UZERO,
     };
   },
@@ -261,7 +261,7 @@ export const MsgVote = {
   fromJSON(object: any): MsgVote {
     return {
       proposalId: isSet(object.proposalId)
-        ? Long.fromString(object.proposalId)
+        ? Long.fromValue(object.proposalId)
         : Long.UZERO,
       voter: isSet(object.voter) ? String(object.voter) : "",
       option: isSet(object.option) ? voteOptionFromJSON(object.option) : 0,
@@ -384,7 +384,7 @@ export const MsgVoteWeighted = {
   fromJSON(object: any): MsgVoteWeighted {
     return {
       proposalId: isSet(object.proposalId)
-        ? Long.fromString(object.proposalId)
+        ? Long.fromValue(object.proposalId)
         : Long.UZERO,
       voter: isSet(object.voter) ? String(object.voter) : "",
       options: Array.isArray(object?.options)
@@ -518,7 +518,7 @@ export const MsgDeposit = {
   fromJSON(object: any): MsgDeposit {
     return {
       proposalId: isSet(object.proposalId)
-        ? Long.fromString(object.proposalId)
+        ? Long.fromValue(object.proposalId)
         : Long.UZERO,
       depositor: isSet(object.depositor) ? String(object.depositor) : "",
       amount: Array.isArray(object?.amount)

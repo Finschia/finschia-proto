@@ -1,7 +1,7 @@
 /* eslint-disable */
+import { PublicKey } from "../crypto/keys";
 import Long from "long";
-import _m0 from "protobufjs/minimal";
-import { PublicKey } from "../../ostracon/crypto/keys";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "ostracon.types";
 
@@ -77,7 +77,7 @@ export const ValidatorSet = {
         ? Validator.fromJSON(object.proposer)
         : undefined,
       totalVotingPower: isSet(object.totalVotingPower)
-        ? Long.fromString(object.totalVotingPower)
+        ? Long.fromValue(object.totalVotingPower)
         : Long.ZERO,
     };
   },
@@ -185,10 +185,10 @@ export const Validator = {
         ? PublicKey.fromJSON(object.pubKey)
         : undefined,
       votingPower: isSet(object.votingPower)
-        ? Long.fromString(object.votingPower)
+        ? Long.fromValue(object.votingPower)
         : Long.ZERO,
       proposerPriority: isSet(object.proposerPriority)
-        ? Long.fromString(object.proposerPriority)
+        ? Long.fromValue(object.proposerPriority)
         : Long.ZERO,
     };
   },
@@ -278,7 +278,7 @@ export const SimpleValidator = {
         ? PublicKey.fromJSON(object.pubKey)
         : undefined,
       votingPower: isSet(object.votingPower)
-        ? Long.fromString(object.votingPower)
+        ? Long.fromValue(object.votingPower)
         : Long.ZERO,
     };
   },
@@ -338,9 +338,9 @@ const btoa: (bin: string) => string =
   ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
-  for (const byte of arr) {
+  arr.forEach((byte) => {
     bin.push(String.fromCharCode(byte));
-  }
+  });
   return btoa(bin.join(""));
 }
 

@@ -1,17 +1,8 @@
 /* eslint-disable */
+import { Params, CodeInfo, ContractInfo, Model } from "./types";
 import Long from "long";
-import _m0 from "protobufjs/minimal";
-import {
-  Params,
-  CodeInfo,
-  ContractInfo,
-  Model,
-} from "../../../lbm/wasm/v1/types";
-import {
-  MsgStoreCode,
-  MsgInstantiateContract,
-  MsgExecuteContract,
-} from "../../../lbm/wasm/v1/tx";
+import { MsgStoreCode, MsgInstantiateContract, MsgExecuteContract } from "./tx";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.wasm.v1";
 
@@ -362,9 +353,7 @@ export const Code = {
 
   fromJSON(object: any): Code {
     return {
-      codeId: isSet(object.codeId)
-        ? Long.fromString(object.codeId)
-        : Long.UZERO,
+      codeId: isSet(object.codeId) ? Long.fromValue(object.codeId) : Long.UZERO,
       codeInfo: isSet(object.codeInfo)
         ? CodeInfo.fromJSON(object.codeInfo)
         : undefined,
@@ -544,7 +533,7 @@ export const Sequence = {
       idKey: isSet(object.idKey)
         ? bytesFromBase64(object.idKey)
         : new Uint8Array(),
-      value: isSet(object.value) ? Long.fromString(object.value) : Long.UZERO,
+      value: isSet(object.value) ? Long.fromValue(object.value) : Long.UZERO,
     };
   },
 
@@ -598,9 +587,9 @@ const btoa: (bin: string) => string =
   ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
-  for (const byte of arr) {
+  arr.forEach((byte) => {
     bin.push(String.fromCharCode(byte));
-  }
+  });
   return btoa(bin.join(""));
 }
 

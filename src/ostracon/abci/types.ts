@@ -1,15 +1,15 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
-import { Header } from "../../ostracon/types/types";
-import { ProofOps } from "../../ostracon/crypto/proof";
+import { Header } from "../types/types";
+import { ProofOps } from "../crypto/proof";
 import {
   EvidenceParams,
   ValidatorParams,
   VersionParams,
-} from "../../ostracon/types/params";
-import { PublicKey } from "../../ostracon/crypto/keys";
+} from "../types/params";
+import { PublicKey } from "../crypto/keys";
+import Long from "long";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "ostracon.abci";
 
@@ -40,8 +40,9 @@ export function checkTxTypeToJSON(object: CheckTxType): string {
       return "NEW";
     case CheckTxType.RECHECK:
       return "RECHECK";
+    case CheckTxType.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -78,8 +79,9 @@ export function evidenceTypeToJSON(object: EvidenceType): string {
       return "DUPLICATE_VOTE";
     case EvidenceType.LIGHT_CLIENT_ATTACK:
       return "LIGHT_CLIENT_ATTACK";
+    case EvidenceType.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -359,8 +361,9 @@ export function responseOfferSnapshot_ResultToJSON(
       return "REJECT_FORMAT";
     case ResponseOfferSnapshot_Result.REJECT_SENDER:
       return "REJECT_SENDER";
+    case ResponseOfferSnapshot_Result.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -437,8 +440,9 @@ export function responseApplySnapshotChunk_ResultToJSON(
       return "RETRY_SNAPSHOT";
     case ResponseApplySnapshotChunk_Result.REJECT_SNAPSHOT:
       return "REJECT_SNAPSHOT";
+    case ResponseApplySnapshotChunk_Result.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -1042,10 +1046,10 @@ export const RequestInfo = {
     return {
       version: isSet(object.version) ? String(object.version) : "",
       blockVersion: isSet(object.blockVersion)
-        ? Long.fromString(object.blockVersion)
+        ? Long.fromValue(object.blockVersion)
         : Long.UZERO,
       p2pVersion: isSet(object.p2pVersion)
-        ? Long.fromString(object.p2pVersion)
+        ? Long.fromValue(object.p2pVersion)
         : Long.UZERO,
     };
   },
@@ -1232,7 +1236,7 @@ export const RequestInitChain = {
         ? bytesFromBase64(object.appStateBytes)
         : new Uint8Array(),
       initialHeight: isSet(object.initialHeight)
-        ? Long.fromString(object.initialHeight)
+        ? Long.fromValue(object.initialHeight)
         : Long.ZERO,
     };
   },
@@ -1345,7 +1349,7 @@ export const RequestQuery = {
         ? bytesFromBase64(object.data)
         : new Uint8Array(),
       path: isSet(object.path) ? String(object.path) : "",
-      height: isSet(object.height) ? Long.fromString(object.height) : Long.ZERO,
+      height: isSet(object.height) ? Long.fromValue(object.height) : Long.ZERO,
       prove: isSet(object.prove) ? Boolean(object.prove) : false,
     };
   },
@@ -1656,7 +1660,7 @@ export const RequestEndBlock = {
 
   fromJSON(object: any): RequestEndBlock {
     return {
-      height: isSet(object.height) ? Long.fromString(object.height) : Long.ZERO,
+      height: isSet(object.height) ? Long.fromValue(object.height) : Long.ZERO,
     };
   },
 
@@ -1899,9 +1903,7 @@ export const RequestLoadSnapshotChunk = {
 
   fromJSON(object: any): RequestLoadSnapshotChunk {
     return {
-      height: isSet(object.height)
-        ? Long.fromString(object.height)
-        : Long.UZERO,
+      height: isSet(object.height) ? Long.fromValue(object.height) : Long.UZERO,
       format: isSet(object.format) ? Number(object.format) : 0,
       chunk: isSet(object.chunk) ? Number(object.chunk) : 0,
     };
@@ -2604,10 +2606,10 @@ export const ResponseInfo = {
       data: isSet(object.data) ? String(object.data) : "",
       version: isSet(object.version) ? String(object.version) : "",
       appVersion: isSet(object.appVersion)
-        ? Long.fromString(object.appVersion)
+        ? Long.fromValue(object.appVersion)
         : Long.UZERO,
       lastBlockHeight: isSet(object.lastBlockHeight)
-        ? Long.fromString(object.lastBlockHeight)
+        ? Long.fromValue(object.lastBlockHeight)
         : Long.ZERO,
       lastBlockAppHash: isSet(object.lastBlockAppHash)
         ? bytesFromBase64(object.lastBlockAppHash)
@@ -2925,7 +2927,7 @@ export const ResponseQuery = {
       code: isSet(object.code) ? Number(object.code) : 0,
       log: isSet(object.log) ? String(object.log) : "",
       info: isSet(object.info) ? String(object.info) : "",
-      index: isSet(object.index) ? Long.fromString(object.index) : Long.ZERO,
+      index: isSet(object.index) ? Long.fromValue(object.index) : Long.ZERO,
       key: isSet(object.key) ? bytesFromBase64(object.key) : new Uint8Array(),
       value: isSet(object.value)
         ? bytesFromBase64(object.value)
@@ -2933,7 +2935,7 @@ export const ResponseQuery = {
       proofOps: isSet(object.proofOps)
         ? ProofOps.fromJSON(object.proofOps)
         : undefined,
-      height: isSet(object.height) ? Long.fromString(object.height) : Long.ZERO,
+      height: isSet(object.height) ? Long.fromValue(object.height) : Long.ZERO,
       codespace: isSet(object.codespace) ? String(object.codespace) : "",
     };
   },
@@ -3142,10 +3144,10 @@ export const ResponseCheckTx = {
       log: isSet(object.log) ? String(object.log) : "",
       info: isSet(object.info) ? String(object.info) : "",
       gasWanted: isSet(object.gas_wanted)
-        ? Long.fromString(object.gas_wanted)
+        ? Long.fromValue(object.gas_wanted)
         : Long.ZERO,
       gasUsed: isSet(object.gas_used)
-        ? Long.fromString(object.gas_used)
+        ? Long.fromValue(object.gas_used)
         : Long.ZERO,
       events: Array.isArray(object?.events)
         ? object.events.map((e: any) => Event.fromJSON(e))
@@ -3291,10 +3293,10 @@ export const ResponseDeliverTx = {
       log: isSet(object.log) ? String(object.log) : "",
       info: isSet(object.info) ? String(object.info) : "",
       gasWanted: isSet(object.gas_wanted)
-        ? Long.fromString(object.gas_wanted)
+        ? Long.fromValue(object.gas_wanted)
         : Long.ZERO,
       gasUsed: isSet(object.gas_used)
-        ? Long.fromString(object.gas_used)
+        ? Long.fromValue(object.gas_used)
         : Long.ZERO,
       events: Array.isArray(object?.events)
         ? object.events.map((e: any) => Event.fromJSON(e))
@@ -3496,7 +3498,7 @@ export const ResponseCommit = {
         ? bytesFromBase64(object.data)
         : new Uint8Array(),
       retainHeight: isSet(object.retainHeight)
-        ? Long.fromString(object.retainHeight)
+        ? Long.fromValue(object.retainHeight)
         : Long.ZERO,
     };
   },
@@ -3978,9 +3980,9 @@ export const BlockParams = {
   fromJSON(object: any): BlockParams {
     return {
       maxBytes: isSet(object.maxBytes)
-        ? Long.fromString(object.maxBytes)
+        ? Long.fromValue(object.maxBytes)
         : Long.ZERO,
-      maxGas: isSet(object.maxGas) ? Long.fromString(object.maxGas) : Long.ZERO,
+      maxGas: isSet(object.maxGas) ? Long.fromValue(object.maxGas) : Long.ZERO,
     };
   },
 
@@ -4290,7 +4292,7 @@ export const TxResult = {
 
   fromJSON(object: any): TxResult {
     return {
-      height: isSet(object.height) ? Long.fromString(object.height) : Long.ZERO,
+      height: isSet(object.height) ? Long.fromValue(object.height) : Long.ZERO,
       index: isSet(object.index) ? Number(object.index) : 0,
       tx: isSet(object.tx) ? bytesFromBase64(object.tx) : new Uint8Array(),
       result: isSet(object.result)
@@ -4375,7 +4377,7 @@ export const Validator = {
       address: isSet(object.address)
         ? bytesFromBase64(object.address)
         : new Uint8Array(),
-      power: isSet(object.power) ? Long.fromString(object.power) : Long.ZERO,
+      power: isSet(object.power) ? Long.fromValue(object.power) : Long.ZERO,
     };
   },
 
@@ -4447,7 +4449,7 @@ export const ValidatorUpdate = {
       pubKey: isSet(object.pubKey)
         ? PublicKey.fromJSON(object.pubKey)
         : undefined,
-      power: isSet(object.power) ? Long.fromString(object.power) : Long.ZERO,
+      power: isSet(object.power) ? Long.fromValue(object.power) : Long.ZERO,
     };
   },
 
@@ -4619,10 +4621,10 @@ export const Evidence = {
       validator: isSet(object.validator)
         ? Validator.fromJSON(object.validator)
         : undefined,
-      height: isSet(object.height) ? Long.fromString(object.height) : Long.ZERO,
+      height: isSet(object.height) ? Long.fromValue(object.height) : Long.ZERO,
       time: isSet(object.time) ? fromJsonTimestamp(object.time) : undefined,
       totalVotingPower: isSet(object.totalVotingPower)
-        ? Long.fromString(object.totalVotingPower)
+        ? Long.fromValue(object.totalVotingPower)
         : Long.ZERO,
     };
   },
@@ -4733,9 +4735,7 @@ export const Snapshot = {
 
   fromJSON(object: any): Snapshot {
     return {
-      height: isSet(object.height)
-        ? Long.fromString(object.height)
-        : Long.UZERO,
+      height: isSet(object.height) ? Long.fromValue(object.height) : Long.UZERO,
       format: isSet(object.format) ? Number(object.format) : 0,
       chunks: isSet(object.chunks) ? Number(object.chunks) : 0,
       hash: isSet(object.hash)
@@ -5029,9 +5029,9 @@ const btoa: (bin: string) => string =
   ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
-  for (const byte of arr) {
+  arr.forEach((byte) => {
     bin.push(String.fromCharCode(byte));
-  }
+  });
   return btoa(bin.join(""));
 }
 

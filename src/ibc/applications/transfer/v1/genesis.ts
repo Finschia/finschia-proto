@@ -1,10 +1,7 @@
 /* eslint-disable */
+import { Params, DenomTrace } from "./transfer";
 import Long from "long";
-import _m0 from "protobufjs/minimal";
-import {
-  Params,
-  DenomTrace,
-} from "../../../../ibc/applications/transfer/v1/transfer";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "ibc.applications.transfer.v1";
 

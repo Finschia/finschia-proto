@@ -1,10 +1,7 @@
 /* eslint-disable */
 import Long from "long";
-import _m0 from "protobufjs/minimal";
-import {
-  IdentifiedConnection,
-  ConnectionPaths,
-} from "../../../../ibc/core/connection/v1/connection";
+import { IdentifiedConnection, ConnectionPaths } from "./connection";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "ibc.core.connection.v1";
 
@@ -80,7 +77,7 @@ export const GenesisState = {
           )
         : [],
       nextConnectionSequence: isSet(object.nextConnectionSequence)
-        ? Long.fromString(object.nextConnectionSequence)
+        ? Long.fromValue(object.nextConnectionSequence)
         : Long.UZERO,
     };
   },

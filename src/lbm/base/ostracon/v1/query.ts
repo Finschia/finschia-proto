@@ -1,6 +1,4 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
 import {
   PageRequest,
   PageResponse,
@@ -14,6 +12,8 @@ import {
   ResponseDeliverTx,
 } from "../../../../ostracon/abci/types";
 import { DefaultNodeInfo } from "../../../../ostracon/p2p/types";
+import Long from "long";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.base.ostracon.v1";
 
@@ -182,7 +182,7 @@ export const GetValidatorSetByHeightRequest = {
 
   fromJSON(object: any): GetValidatorSetByHeightRequest {
     return {
-      height: isSet(object.height) ? Long.fromString(object.height) : Long.ZERO,
+      height: isSet(object.height) ? Long.fromValue(object.height) : Long.ZERO,
       pagination: isSet(object.pagination)
         ? PageRequest.fromJSON(object.pagination)
         : undefined,
@@ -270,7 +270,7 @@ export const GetValidatorSetByHeightResponse = {
   fromJSON(object: any): GetValidatorSetByHeightResponse {
     return {
       blockHeight: isSet(object.blockHeight)
-        ? Long.fromString(object.blockHeight)
+        ? Long.fromValue(object.blockHeight)
         : Long.ZERO,
       validators: Array.isArray(object?.validators)
         ? object.validators.map((e: any) => Validator.fromJSON(e))
@@ -436,7 +436,7 @@ export const GetLatestValidatorSetResponse = {
   fromJSON(object: any): GetLatestValidatorSetResponse {
     return {
       blockHeight: isSet(object.blockHeight)
-        ? Long.fromString(object.blockHeight)
+        ? Long.fromValue(object.blockHeight)
         : Long.ZERO,
       validators: Array.isArray(object?.validators)
         ? object.validators.map((e: any) => Validator.fromJSON(e))
@@ -544,10 +544,10 @@ export const Validator = {
       address: isSet(object.address) ? String(object.address) : "",
       pubKey: isSet(object.pubKey) ? Any.fromJSON(object.pubKey) : undefined,
       votingPower: isSet(object.votingPower)
-        ? Long.fromString(object.votingPower)
+        ? Long.fromValue(object.votingPower)
         : Long.ZERO,
       proposerPriority: isSet(object.proposerPriority)
-        ? Long.fromString(object.proposerPriority)
+        ? Long.fromValue(object.proposerPriority)
         : Long.ZERO,
     };
   },
@@ -625,7 +625,7 @@ export const GetBlockByHeightRequest = {
 
   fromJSON(object: any): GetBlockByHeightRequest {
     return {
-      height: isSet(object.height) ? Long.fromString(object.height) : Long.ZERO,
+      height: isSet(object.height) ? Long.fromValue(object.height) : Long.ZERO,
     };
   },
 
@@ -904,7 +904,7 @@ export const GetBlockResultsByHeightRequest = {
 
   fromJSON(object: any): GetBlockResultsByHeightRequest {
     return {
-      height: isSet(object.height) ? Long.fromString(object.height) : Long.ZERO,
+      height: isSet(object.height) ? Long.fromValue(object.height) : Long.ZERO,
     };
   },
 
@@ -1002,7 +1002,7 @@ export const GetBlockResultsByHeightResponse = {
 
   fromJSON(object: any): GetBlockResultsByHeightResponse {
     return {
-      height: isSet(object.height) ? Long.fromString(object.height) : Long.ZERO,
+      height: isSet(object.height) ? Long.fromValue(object.height) : Long.ZERO,
       txsResults: Array.isArray(object?.txsResults)
         ? object.txsResults.map((e: any) => ResponseDeliverTx.fromJSON(e))
         : [],
@@ -1816,9 +1816,9 @@ const btoa: (bin: string) => string =
   ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
-  for (const byte of arr) {
+  arr.forEach((byte) => {
     bin.push(String.fromCharCode(byte));
-  }
+  });
   return btoa(bin.join(""));
 }
 

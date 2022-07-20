@@ -1,6 +1,4 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
 import {
   ValidatorAccumulatedCommission,
   ValidatorHistoricalRewards,
@@ -9,8 +7,10 @@ import {
   ValidatorSlashEvent,
   Params,
   FeePool,
-} from "../../../cosmos/distribution/v1beta1/distribution";
-import { DecCoin } from "../../../cosmos/base/v1beta1/coin";
+} from "./distribution";
+import Long from "long";
+import { DecCoin } from "../../base/v1beta1/coin";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "cosmos.distribution.v1beta1";
 
@@ -406,9 +406,7 @@ export const ValidatorHistoricalRewardsRecord = {
       validatorAddress: isSet(object.validatorAddress)
         ? String(object.validatorAddress)
         : "",
-      period: isSet(object.period)
-        ? Long.fromString(object.period)
-        : Long.UZERO,
+      period: isSet(object.period) ? Long.fromValue(object.period) : Long.UZERO,
       rewards: isSet(object.rewards)
         ? ValidatorHistoricalRewards.fromJSON(object.rewards)
         : undefined,
@@ -697,12 +695,8 @@ export const ValidatorSlashEventRecord = {
       validatorAddress: isSet(object.validatorAddress)
         ? String(object.validatorAddress)
         : "",
-      height: isSet(object.height)
-        ? Long.fromString(object.height)
-        : Long.UZERO,
-      period: isSet(object.period)
-        ? Long.fromString(object.period)
-        : Long.UZERO,
+      height: isSet(object.height) ? Long.fromValue(object.height) : Long.UZERO,
+      period: isSet(object.period) ? Long.fromValue(object.period) : Long.UZERO,
       validatorSlashEvent: isSet(object.validatorSlashEvent)
         ? ValidatorSlashEvent.fromJSON(object.validatorSlashEvent)
         : undefined,

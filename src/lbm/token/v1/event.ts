@@ -1,90 +1,898 @@
 /* eslint-disable */
+import {
+  Permission,
+  Pair,
+  permissionFromJSON,
+  permissionToJSON,
+} from "./token";
 import Long from "long";
-import _m0 from "protobufjs/minimal";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.token.v1";
 
-/** EventTransfer is emitted on Msg/Transfer and Msg/TransferFrom */
-export interface EventTransfer {
-  /** class id associated with the token. */
-  classId: string;
+/**
+ * Deprecated: use typed events.
+ *
+ * EventType enumerates the valid event types on x/token.
+ */
+export enum EventType {
+  EVENT_TYPE_UNSPECIFIED = 0,
+  EVENT_TYPE_ISSUE = 1,
+  EVENT_TYPE_MINT = 2,
+  EVENT_TYPE_BURN = 3,
+  EVENT_TYPE_BURN_FROM = 4,
+  EVENT_TYPE_MODIFY_TOKEN = 5,
+  EVENT_TYPE_TRANSFER = 6,
+  EVENT_TYPE_TRANSFER_FROM = 7,
+  EVENT_TYPE_GRANT_PERM = 8,
+  EVENT_TYPE_REVOKE_PERM = 9,
+  EVENT_TYPE_APPROVE_TOKEN = 10,
+  UNRECOGNIZED = -1,
+}
+
+export function eventTypeFromJSON(object: any): EventType {
+  switch (object) {
+    case 0:
+    case "EVENT_TYPE_UNSPECIFIED":
+      return EventType.EVENT_TYPE_UNSPECIFIED;
+    case 1:
+    case "EVENT_TYPE_ISSUE":
+      return EventType.EVENT_TYPE_ISSUE;
+    case 2:
+    case "EVENT_TYPE_MINT":
+      return EventType.EVENT_TYPE_MINT;
+    case 3:
+    case "EVENT_TYPE_BURN":
+      return EventType.EVENT_TYPE_BURN;
+    case 4:
+    case "EVENT_TYPE_BURN_FROM":
+      return EventType.EVENT_TYPE_BURN_FROM;
+    case 5:
+    case "EVENT_TYPE_MODIFY_TOKEN":
+      return EventType.EVENT_TYPE_MODIFY_TOKEN;
+    case 6:
+    case "EVENT_TYPE_TRANSFER":
+      return EventType.EVENT_TYPE_TRANSFER;
+    case 7:
+    case "EVENT_TYPE_TRANSFER_FROM":
+      return EventType.EVENT_TYPE_TRANSFER_FROM;
+    case 8:
+    case "EVENT_TYPE_GRANT_PERM":
+      return EventType.EVENT_TYPE_GRANT_PERM;
+    case 9:
+    case "EVENT_TYPE_REVOKE_PERM":
+      return EventType.EVENT_TYPE_REVOKE_PERM;
+    case 10:
+    case "EVENT_TYPE_APPROVE_TOKEN":
+      return EventType.EVENT_TYPE_APPROVE_TOKEN;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return EventType.UNRECOGNIZED;
+  }
+}
+
+export function eventTypeToJSON(object: EventType): string {
+  switch (object) {
+    case EventType.EVENT_TYPE_UNSPECIFIED:
+      return "EVENT_TYPE_UNSPECIFIED";
+    case EventType.EVENT_TYPE_ISSUE:
+      return "EVENT_TYPE_ISSUE";
+    case EventType.EVENT_TYPE_MINT:
+      return "EVENT_TYPE_MINT";
+    case EventType.EVENT_TYPE_BURN:
+      return "EVENT_TYPE_BURN";
+    case EventType.EVENT_TYPE_BURN_FROM:
+      return "EVENT_TYPE_BURN_FROM";
+    case EventType.EVENT_TYPE_MODIFY_TOKEN:
+      return "EVENT_TYPE_MODIFY_TOKEN";
+    case EventType.EVENT_TYPE_TRANSFER:
+      return "EVENT_TYPE_TRANSFER";
+    case EventType.EVENT_TYPE_TRANSFER_FROM:
+      return "EVENT_TYPE_TRANSFER_FROM";
+    case EventType.EVENT_TYPE_GRANT_PERM:
+      return "EVENT_TYPE_GRANT_PERM";
+    case EventType.EVENT_TYPE_REVOKE_PERM:
+      return "EVENT_TYPE_REVOKE_PERM";
+    case EventType.EVENT_TYPE_APPROVE_TOKEN:
+      return "EVENT_TYPE_APPROVE_TOKEN";
+    case EventType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+/** AttributeKey enumerates the valid attribute keys on x/token. */
+export enum AttributeKey {
+  ATTRIBUTE_KEY_UNSPECIFIED = 0,
+  ATTRIBUTE_KEY_NAME = 1,
+  ATTRIBUTE_KEY_SYMBOL = 2,
+  ATTRIBUTE_KEY_META = 3,
+  ATTRIBUTE_KEY_CONTRACT_ID = 4,
+  ATTRIBUTE_KEY_OWNER = 5,
+  ATTRIBUTE_KEY_AMOUNT = 6,
+  ATTRIBUTE_KEY_DECIMALS = 7,
+  ATTRIBUTE_KEY_IMG_URI = 8,
+  ATTRIBUTE_KEY_MINTABLE = 9,
+  ATTRIBUTE_KEY_FROM = 10,
+  ATTRIBUTE_KEY_TO = 11,
+  ATTRIBUTE_KEY_PERM = 12,
+  ATTRIBUTE_KEY_APPROVER = 13,
+  ATTRIBUTE_KEY_PROXY = 14,
+  UNRECOGNIZED = -1,
+}
+
+export function attributeKeyFromJSON(object: any): AttributeKey {
+  switch (object) {
+    case 0:
+    case "ATTRIBUTE_KEY_UNSPECIFIED":
+      return AttributeKey.ATTRIBUTE_KEY_UNSPECIFIED;
+    case 1:
+    case "ATTRIBUTE_KEY_NAME":
+      return AttributeKey.ATTRIBUTE_KEY_NAME;
+    case 2:
+    case "ATTRIBUTE_KEY_SYMBOL":
+      return AttributeKey.ATTRIBUTE_KEY_SYMBOL;
+    case 3:
+    case "ATTRIBUTE_KEY_META":
+      return AttributeKey.ATTRIBUTE_KEY_META;
+    case 4:
+    case "ATTRIBUTE_KEY_CONTRACT_ID":
+      return AttributeKey.ATTRIBUTE_KEY_CONTRACT_ID;
+    case 5:
+    case "ATTRIBUTE_KEY_OWNER":
+      return AttributeKey.ATTRIBUTE_KEY_OWNER;
+    case 6:
+    case "ATTRIBUTE_KEY_AMOUNT":
+      return AttributeKey.ATTRIBUTE_KEY_AMOUNT;
+    case 7:
+    case "ATTRIBUTE_KEY_DECIMALS":
+      return AttributeKey.ATTRIBUTE_KEY_DECIMALS;
+    case 8:
+    case "ATTRIBUTE_KEY_IMG_URI":
+      return AttributeKey.ATTRIBUTE_KEY_IMG_URI;
+    case 9:
+    case "ATTRIBUTE_KEY_MINTABLE":
+      return AttributeKey.ATTRIBUTE_KEY_MINTABLE;
+    case 10:
+    case "ATTRIBUTE_KEY_FROM":
+      return AttributeKey.ATTRIBUTE_KEY_FROM;
+    case 11:
+    case "ATTRIBUTE_KEY_TO":
+      return AttributeKey.ATTRIBUTE_KEY_TO;
+    case 12:
+    case "ATTRIBUTE_KEY_PERM":
+      return AttributeKey.ATTRIBUTE_KEY_PERM;
+    case 13:
+    case "ATTRIBUTE_KEY_APPROVER":
+      return AttributeKey.ATTRIBUTE_KEY_APPROVER;
+    case 14:
+    case "ATTRIBUTE_KEY_PROXY":
+      return AttributeKey.ATTRIBUTE_KEY_PROXY;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return AttributeKey.UNRECOGNIZED;
+  }
+}
+
+export function attributeKeyToJSON(object: AttributeKey): string {
+  switch (object) {
+    case AttributeKey.ATTRIBUTE_KEY_UNSPECIFIED:
+      return "ATTRIBUTE_KEY_UNSPECIFIED";
+    case AttributeKey.ATTRIBUTE_KEY_NAME:
+      return "ATTRIBUTE_KEY_NAME";
+    case AttributeKey.ATTRIBUTE_KEY_SYMBOL:
+      return "ATTRIBUTE_KEY_SYMBOL";
+    case AttributeKey.ATTRIBUTE_KEY_META:
+      return "ATTRIBUTE_KEY_META";
+    case AttributeKey.ATTRIBUTE_KEY_CONTRACT_ID:
+      return "ATTRIBUTE_KEY_CONTRACT_ID";
+    case AttributeKey.ATTRIBUTE_KEY_OWNER:
+      return "ATTRIBUTE_KEY_OWNER";
+    case AttributeKey.ATTRIBUTE_KEY_AMOUNT:
+      return "ATTRIBUTE_KEY_AMOUNT";
+    case AttributeKey.ATTRIBUTE_KEY_DECIMALS:
+      return "ATTRIBUTE_KEY_DECIMALS";
+    case AttributeKey.ATTRIBUTE_KEY_IMG_URI:
+      return "ATTRIBUTE_KEY_IMG_URI";
+    case AttributeKey.ATTRIBUTE_KEY_MINTABLE:
+      return "ATTRIBUTE_KEY_MINTABLE";
+    case AttributeKey.ATTRIBUTE_KEY_FROM:
+      return "ATTRIBUTE_KEY_FROM";
+    case AttributeKey.ATTRIBUTE_KEY_TO:
+      return "ATTRIBUTE_KEY_TO";
+    case AttributeKey.ATTRIBUTE_KEY_PERM:
+      return "ATTRIBUTE_KEY_PERM";
+    case AttributeKey.ATTRIBUTE_KEY_APPROVER:
+      return "ATTRIBUTE_KEY_APPROVER";
+    case AttributeKey.ATTRIBUTE_KEY_PROXY:
+      return "ATTRIBUTE_KEY_PROXY";
+    case AttributeKey.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+/**
+ * EventSent is emitted when tokens are transferred.
+ *
+ * Since: 0.46.0 (finschia)
+ */
+export interface EventSent {
+  /** contract id associated with the token class. */
+  contractId: string;
+  /** address which triggered the send. */
+  operator: string;
+  /** holder whose tokens were sent. */
   from: string;
+  /** recipient of the tokens */
   to: string;
+  /** number of tokens sent. */
   amount: string;
 }
 
-/** EventApprove is emitted on Msg/Approve */
-export interface EventApprove {
-  /** class id associated with the token. */
-  classId: string;
-  approver: string;
-  proxy: string;
+/**
+ * EventAuthorizedOperator is emitted when a holder authorizes an operator to manipulate its tokens.
+ *
+ * Since: 0.46.0 (finschia)
+ */
+export interface EventAuthorizedOperator {
+  /** contract id associated with the token class. */
+  contractId: string;
+  /** address of a holder which authorized the `operator` address as an operator. */
+  holder: string;
+  /** address which became an operator of `holder`. */
+  operator: string;
 }
 
-/** EventIssue is emitted on Msg/Issue */
+/**
+ * EventRevokedOperator is emitted when an authorization is revoked.
+ *
+ * Since: 0.46.0 (finschia)
+ */
+export interface EventRevokedOperator {
+  /** contract id associated with the token class. */
+  contractId: string;
+  /** address of a holder which revoked the `operator` address as an operator. */
+  holder: string;
+  /** address which was revoked as an operator of `holder`. */
+  operator: string;
+}
+
+/**
+ * EventIssue is emitted when a new token class is created.
+ *
+ * Since: 0.46.0 (finschia)
+ */
 export interface EventIssue {
-  /** class id associated with the token. */
-  classId: string;
+  /** contract id associated with the token class. */
+  contractId: string;
+  /** name defines the human-readable name of the token class. */
+  name: string;
+  /** symbol is an abbreviated name for token class. */
+  symbol: string;
+  /** uri is an uri for the resource of the token class stored off chain. */
+  uri: string;
+  /** meta is a brief description of token class. */
+  meta: string;
+  /** decimals is the number of decimals which one must divide the amount by to get its user representation. */
+  decimals: number;
+  /** mintable represents whether the token is allowed to mint. */
+  mintable: boolean;
 }
 
-/** EventGrant is emitted on Msg/Grant */
+/**
+ * EventGrant is emitted when a granter grants its permission to a grantee.
+ *
+ * Info: `granter` would be empty if the permission is granted by an issuance.
+ *
+ * Since: 0.46.0 (finschia)
+ */
 export interface EventGrant {
-  /** class id associated with the token. */
-  classId: string;
-  /** address of the granted account. */
+  /** contract id associated with the token class. */
+  contractId: string;
+  /**
+   * address which granted the permission to `grantee`.
+   * it would be empty where the event is triggered by the issuance.
+   */
+  granter: string;
+  /** address of the grantee. */
   grantee: string;
-  /** action on the token class. Must be one of "mint", "burn" and "modify". */
-  action: string;
+  /** permission on the token class. */
+  permission: Permission;
 }
 
-/** EventRevoke is emitted on Msg/Revoke */
-export interface EventRevoke {
-  /** class id associated with the token. */
-  classId: string;
-  /** address of the revoked account. */
+/**
+ * EventAbandon is emitted when a grantee abandons its permission.
+ *
+ * Since: 0.46.0 (finschia)
+ */
+export interface EventAbandon {
+  /** contract id associated with the token class. */
+  contractId: string;
+  /** address of the grantee which abandons its grant. */
   grantee: string;
-  /** action on the token class. Must be one of "mint", "burn" and "modify". */
-  action: string;
+  /** permission on the token class. */
+  permission: Permission;
 }
 
-/** EventMint is emitted on Msg/Mint */
-export interface EventMint {
-  /** class id associated with the token. */
-  classId: string;
+/**
+ * EventMinted is emitted when tokens are minted.
+ *
+ * Since: 0.46.0 (finschia)
+ */
+export interface EventMinted {
+  /** contract id associated with the token class. */
+  contractId: string;
+  /** address which triggered the mint. */
+  operator: string;
+  /** recipient of the tokens. */
   to: string;
+  /** number of tokens minted. */
   amount: string;
 }
 
-/** EventBurn is emitted on Msg/Burn */
-export interface EventBurn {
-  /** class id associated with the token. */
-  classId: string;
+/**
+ * EventBurned is emitted when tokens are burnt.
+ *
+ * Since: 0.46.0 (finschia)
+ */
+export interface EventBurned {
+  /** contract id associated with the token class. */
+  contractId: string;
+  /** address which triggered the burn. */
+  operator: string;
+  /** holder whose tokens were burned. */
   from: string;
+  /** number of tokens burned. */
   amount: string;
 }
 
-/** EventModify is emitted on Msg/Modify */
-export interface EventModify {
-  /** class id associated with the token. */
-  classId: string;
-  key: string;
-  value: string;
+/**
+ * EventModified is emitted when the information of a token class is modified.
+ *
+ * Since: 0.46.0 (finschia)
+ */
+export interface EventModified {
+  /** contract id associated with the token class. */
+  contractId: string;
+  /** address which triggered the modify. */
+  operator: string;
+  /** changes on the metadata of the class. */
+  changes: Pair[];
 }
 
-function createBaseEventTransfer(): EventTransfer {
-  return { classId: "", from: "", to: "", amount: "" };
+function createBaseEventSent(): EventSent {
+  return { contractId: "", operator: "", from: "", to: "", amount: "" };
 }
 
-export const EventTransfer = {
+export const EventSent = {
   encode(
-    message: EventTransfer,
+    message: EventSent,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.classId !== "") {
-      writer.uint32(10).string(message.classId);
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
+    }
+    if (message.operator !== "") {
+      writer.uint32(18).string(message.operator);
     }
     if (message.from !== "") {
-      writer.uint32(18).string(message.from);
+      writer.uint32(26).string(message.from);
+    }
+    if (message.to !== "") {
+      writer.uint32(34).string(message.to);
+    }
+    if (message.amount !== "") {
+      writer.uint32(42).string(message.amount);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventSent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEventSent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.contractId = reader.string();
+          break;
+        case 2:
+          message.operator = reader.string();
+          break;
+        case 3:
+          message.from = reader.string();
+          break;
+        case 4:
+          message.to = reader.string();
+          break;
+        case 5:
+          message.amount = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EventSent {
+    return {
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      operator: isSet(object.operator) ? String(object.operator) : "",
+      from: isSet(object.from) ? String(object.from) : "",
+      to: isSet(object.to) ? String(object.to) : "",
+      amount: isSet(object.amount) ? String(object.amount) : "",
+    };
+  },
+
+  toJSON(message: EventSent): unknown {
+    const obj: any = {};
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.operator !== undefined && (obj.operator = message.operator);
+    message.from !== undefined && (obj.from = message.from);
+    message.to !== undefined && (obj.to = message.to);
+    message.amount !== undefined && (obj.amount = message.amount);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EventSent>, I>>(
+    object: I
+  ): EventSent {
+    const message = createBaseEventSent();
+    message.contractId = object.contractId ?? "";
+    message.operator = object.operator ?? "";
+    message.from = object.from ?? "";
+    message.to = object.to ?? "";
+    message.amount = object.amount ?? "";
+    return message;
+  },
+};
+
+function createBaseEventAuthorizedOperator(): EventAuthorizedOperator {
+  return { contractId: "", holder: "", operator: "" };
+}
+
+export const EventAuthorizedOperator = {
+  encode(
+    message: EventAuthorizedOperator,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
+    }
+    if (message.holder !== "") {
+      writer.uint32(18).string(message.holder);
+    }
+    if (message.operator !== "") {
+      writer.uint32(26).string(message.operator);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): EventAuthorizedOperator {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEventAuthorizedOperator();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.contractId = reader.string();
+          break;
+        case 2:
+          message.holder = reader.string();
+          break;
+        case 3:
+          message.operator = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EventAuthorizedOperator {
+    return {
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      holder: isSet(object.holder) ? String(object.holder) : "",
+      operator: isSet(object.operator) ? String(object.operator) : "",
+    };
+  },
+
+  toJSON(message: EventAuthorizedOperator): unknown {
+    const obj: any = {};
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.holder !== undefined && (obj.holder = message.holder);
+    message.operator !== undefined && (obj.operator = message.operator);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EventAuthorizedOperator>, I>>(
+    object: I
+  ): EventAuthorizedOperator {
+    const message = createBaseEventAuthorizedOperator();
+    message.contractId = object.contractId ?? "";
+    message.holder = object.holder ?? "";
+    message.operator = object.operator ?? "";
+    return message;
+  },
+};
+
+function createBaseEventRevokedOperator(): EventRevokedOperator {
+  return { contractId: "", holder: "", operator: "" };
+}
+
+export const EventRevokedOperator = {
+  encode(
+    message: EventRevokedOperator,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
+    }
+    if (message.holder !== "") {
+      writer.uint32(18).string(message.holder);
+    }
+    if (message.operator !== "") {
+      writer.uint32(26).string(message.operator);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): EventRevokedOperator {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEventRevokedOperator();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.contractId = reader.string();
+          break;
+        case 2:
+          message.holder = reader.string();
+          break;
+        case 3:
+          message.operator = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EventRevokedOperator {
+    return {
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      holder: isSet(object.holder) ? String(object.holder) : "",
+      operator: isSet(object.operator) ? String(object.operator) : "",
+    };
+  },
+
+  toJSON(message: EventRevokedOperator): unknown {
+    const obj: any = {};
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.holder !== undefined && (obj.holder = message.holder);
+    message.operator !== undefined && (obj.operator = message.operator);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EventRevokedOperator>, I>>(
+    object: I
+  ): EventRevokedOperator {
+    const message = createBaseEventRevokedOperator();
+    message.contractId = object.contractId ?? "";
+    message.holder = object.holder ?? "";
+    message.operator = object.operator ?? "";
+    return message;
+  },
+};
+
+function createBaseEventIssue(): EventIssue {
+  return {
+    contractId: "",
+    name: "",
+    symbol: "",
+    uri: "",
+    meta: "",
+    decimals: 0,
+    mintable: false,
+  };
+}
+
+export const EventIssue = {
+  encode(
+    message: EventIssue,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
+    }
+    if (message.name !== "") {
+      writer.uint32(18).string(message.name);
+    }
+    if (message.symbol !== "") {
+      writer.uint32(26).string(message.symbol);
+    }
+    if (message.uri !== "") {
+      writer.uint32(34).string(message.uri);
+    }
+    if (message.meta !== "") {
+      writer.uint32(42).string(message.meta);
+    }
+    if (message.decimals !== 0) {
+      writer.uint32(48).int32(message.decimals);
+    }
+    if (message.mintable === true) {
+      writer.uint32(56).bool(message.mintable);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventIssue {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEventIssue();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.contractId = reader.string();
+          break;
+        case 2:
+          message.name = reader.string();
+          break;
+        case 3:
+          message.symbol = reader.string();
+          break;
+        case 4:
+          message.uri = reader.string();
+          break;
+        case 5:
+          message.meta = reader.string();
+          break;
+        case 6:
+          message.decimals = reader.int32();
+          break;
+        case 7:
+          message.mintable = reader.bool();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EventIssue {
+    return {
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      name: isSet(object.name) ? String(object.name) : "",
+      symbol: isSet(object.symbol) ? String(object.symbol) : "",
+      uri: isSet(object.uri) ? String(object.uri) : "",
+      meta: isSet(object.meta) ? String(object.meta) : "",
+      decimals: isSet(object.decimals) ? Number(object.decimals) : 0,
+      mintable: isSet(object.mintable) ? Boolean(object.mintable) : false,
+    };
+  },
+
+  toJSON(message: EventIssue): unknown {
+    const obj: any = {};
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.name !== undefined && (obj.name = message.name);
+    message.symbol !== undefined && (obj.symbol = message.symbol);
+    message.uri !== undefined && (obj.uri = message.uri);
+    message.meta !== undefined && (obj.meta = message.meta);
+    message.decimals !== undefined &&
+      (obj.decimals = Math.round(message.decimals));
+    message.mintable !== undefined && (obj.mintable = message.mintable);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EventIssue>, I>>(
+    object: I
+  ): EventIssue {
+    const message = createBaseEventIssue();
+    message.contractId = object.contractId ?? "";
+    message.name = object.name ?? "";
+    message.symbol = object.symbol ?? "";
+    message.uri = object.uri ?? "";
+    message.meta = object.meta ?? "";
+    message.decimals = object.decimals ?? 0;
+    message.mintable = object.mintable ?? false;
+    return message;
+  },
+};
+
+function createBaseEventGrant(): EventGrant {
+  return { contractId: "", granter: "", grantee: "", permission: 0 };
+}
+
+export const EventGrant = {
+  encode(
+    message: EventGrant,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
+    }
+    if (message.granter !== "") {
+      writer.uint32(18).string(message.granter);
+    }
+    if (message.grantee !== "") {
+      writer.uint32(26).string(message.grantee);
+    }
+    if (message.permission !== 0) {
+      writer.uint32(32).int32(message.permission);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventGrant {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEventGrant();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.contractId = reader.string();
+          break;
+        case 2:
+          message.granter = reader.string();
+          break;
+        case 3:
+          message.grantee = reader.string();
+          break;
+        case 4:
+          message.permission = reader.int32() as any;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EventGrant {
+    return {
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      granter: isSet(object.granter) ? String(object.granter) : "",
+      grantee: isSet(object.grantee) ? String(object.grantee) : "",
+      permission: isSet(object.permission)
+        ? permissionFromJSON(object.permission)
+        : 0,
+    };
+  },
+
+  toJSON(message: EventGrant): unknown {
+    const obj: any = {};
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.granter !== undefined && (obj.granter = message.granter);
+    message.grantee !== undefined && (obj.grantee = message.grantee);
+    message.permission !== undefined &&
+      (obj.permission = permissionToJSON(message.permission));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EventGrant>, I>>(
+    object: I
+  ): EventGrant {
+    const message = createBaseEventGrant();
+    message.contractId = object.contractId ?? "";
+    message.granter = object.granter ?? "";
+    message.grantee = object.grantee ?? "";
+    message.permission = object.permission ?? 0;
+    return message;
+  },
+};
+
+function createBaseEventAbandon(): EventAbandon {
+  return { contractId: "", grantee: "", permission: 0 };
+}
+
+export const EventAbandon = {
+  encode(
+    message: EventAbandon,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
+    }
+    if (message.grantee !== "") {
+      writer.uint32(18).string(message.grantee);
+    }
+    if (message.permission !== 0) {
+      writer.uint32(24).int32(message.permission);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventAbandon {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEventAbandon();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.contractId = reader.string();
+          break;
+        case 2:
+          message.grantee = reader.string();
+          break;
+        case 3:
+          message.permission = reader.int32() as any;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EventAbandon {
+    return {
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      grantee: isSet(object.grantee) ? String(object.grantee) : "",
+      permission: isSet(object.permission)
+        ? permissionFromJSON(object.permission)
+        : 0,
+    };
+  },
+
+  toJSON(message: EventAbandon): unknown {
+    const obj: any = {};
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.grantee !== undefined && (obj.grantee = message.grantee);
+    message.permission !== undefined &&
+      (obj.permission = permissionToJSON(message.permission));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EventAbandon>, I>>(
+    object: I
+  ): EventAbandon {
+    const message = createBaseEventAbandon();
+    message.contractId = object.contractId ?? "";
+    message.grantee = object.grantee ?? "";
+    message.permission = object.permission ?? 0;
+    return message;
+  },
+};
+
+function createBaseEventMinted(): EventMinted {
+  return { contractId: "", operator: "", to: "", amount: "" };
+}
+
+export const EventMinted = {
+  encode(
+    message: EventMinted,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
+    }
+    if (message.operator !== "") {
+      writer.uint32(18).string(message.operator);
     }
     if (message.to !== "") {
       writer.uint32(26).string(message.to);
@@ -95,18 +903,18 @@ export const EventTransfer = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): EventTransfer {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventMinted {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventTransfer();
+    const message = createBaseEventMinted();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.classId = reader.string();
+          message.contractId = reader.string();
           break;
         case 2:
-          message.from = reader.string();
+          message.operator = reader.string();
           break;
         case 3:
           message.to = reader.string();
@@ -122,413 +930,77 @@ export const EventTransfer = {
     return message;
   },
 
-  fromJSON(object: any): EventTransfer {
+  fromJSON(object: any): EventMinted {
     return {
-      classId: isSet(object.classId) ? String(object.classId) : "",
-      from: isSet(object.from) ? String(object.from) : "",
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      operator: isSet(object.operator) ? String(object.operator) : "",
       to: isSet(object.to) ? String(object.to) : "",
       amount: isSet(object.amount) ? String(object.amount) : "",
     };
   },
 
-  toJSON(message: EventTransfer): unknown {
+  toJSON(message: EventMinted): unknown {
     const obj: any = {};
-    message.classId !== undefined && (obj.classId = message.classId);
-    message.from !== undefined && (obj.from = message.from);
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.operator !== undefined && (obj.operator = message.operator);
     message.to !== undefined && (obj.to = message.to);
     message.amount !== undefined && (obj.amount = message.amount);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<EventTransfer>, I>>(
+  fromPartial<I extends Exact<DeepPartial<EventMinted>, I>>(
     object: I
-  ): EventTransfer {
-    const message = createBaseEventTransfer();
-    message.classId = object.classId ?? "";
-    message.from = object.from ?? "";
+  ): EventMinted {
+    const message = createBaseEventMinted();
+    message.contractId = object.contractId ?? "";
+    message.operator = object.operator ?? "";
     message.to = object.to ?? "";
     message.amount = object.amount ?? "";
     return message;
   },
 };
 
-function createBaseEventApprove(): EventApprove {
-  return { classId: "", approver: "", proxy: "" };
+function createBaseEventBurned(): EventBurned {
+  return { contractId: "", operator: "", from: "", amount: "" };
 }
 
-export const EventApprove = {
+export const EventBurned = {
   encode(
-    message: EventApprove,
+    message: EventBurned,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.classId !== "") {
-      writer.uint32(10).string(message.classId);
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
     }
-    if (message.approver !== "") {
-      writer.uint32(18).string(message.approver);
-    }
-    if (message.proxy !== "") {
-      writer.uint32(26).string(message.proxy);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): EventApprove {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventApprove();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.classId = reader.string();
-          break;
-        case 2:
-          message.approver = reader.string();
-          break;
-        case 3:
-          message.proxy = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): EventApprove {
-    return {
-      classId: isSet(object.classId) ? String(object.classId) : "",
-      approver: isSet(object.approver) ? String(object.approver) : "",
-      proxy: isSet(object.proxy) ? String(object.proxy) : "",
-    };
-  },
-
-  toJSON(message: EventApprove): unknown {
-    const obj: any = {};
-    message.classId !== undefined && (obj.classId = message.classId);
-    message.approver !== undefined && (obj.approver = message.approver);
-    message.proxy !== undefined && (obj.proxy = message.proxy);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<EventApprove>, I>>(
-    object: I
-  ): EventApprove {
-    const message = createBaseEventApprove();
-    message.classId = object.classId ?? "";
-    message.approver = object.approver ?? "";
-    message.proxy = object.proxy ?? "";
-    return message;
-  },
-};
-
-function createBaseEventIssue(): EventIssue {
-  return { classId: "" };
-}
-
-export const EventIssue = {
-  encode(
-    message: EventIssue,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.classId !== "") {
-      writer.uint32(10).string(message.classId);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): EventIssue {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventIssue();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.classId = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): EventIssue {
-    return {
-      classId: isSet(object.classId) ? String(object.classId) : "",
-    };
-  },
-
-  toJSON(message: EventIssue): unknown {
-    const obj: any = {};
-    message.classId !== undefined && (obj.classId = message.classId);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<EventIssue>, I>>(
-    object: I
-  ): EventIssue {
-    const message = createBaseEventIssue();
-    message.classId = object.classId ?? "";
-    return message;
-  },
-};
-
-function createBaseEventGrant(): EventGrant {
-  return { classId: "", grantee: "", action: "" };
-}
-
-export const EventGrant = {
-  encode(
-    message: EventGrant,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.classId !== "") {
-      writer.uint32(10).string(message.classId);
-    }
-    if (message.grantee !== "") {
-      writer.uint32(18).string(message.grantee);
-    }
-    if (message.action !== "") {
-      writer.uint32(26).string(message.action);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): EventGrant {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventGrant();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.classId = reader.string();
-          break;
-        case 2:
-          message.grantee = reader.string();
-          break;
-        case 3:
-          message.action = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): EventGrant {
-    return {
-      classId: isSet(object.classId) ? String(object.classId) : "",
-      grantee: isSet(object.grantee) ? String(object.grantee) : "",
-      action: isSet(object.action) ? String(object.action) : "",
-    };
-  },
-
-  toJSON(message: EventGrant): unknown {
-    const obj: any = {};
-    message.classId !== undefined && (obj.classId = message.classId);
-    message.grantee !== undefined && (obj.grantee = message.grantee);
-    message.action !== undefined && (obj.action = message.action);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<EventGrant>, I>>(
-    object: I
-  ): EventGrant {
-    const message = createBaseEventGrant();
-    message.classId = object.classId ?? "";
-    message.grantee = object.grantee ?? "";
-    message.action = object.action ?? "";
-    return message;
-  },
-};
-
-function createBaseEventRevoke(): EventRevoke {
-  return { classId: "", grantee: "", action: "" };
-}
-
-export const EventRevoke = {
-  encode(
-    message: EventRevoke,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.classId !== "") {
-      writer.uint32(10).string(message.classId);
-    }
-    if (message.grantee !== "") {
-      writer.uint32(18).string(message.grantee);
-    }
-    if (message.action !== "") {
-      writer.uint32(26).string(message.action);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): EventRevoke {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventRevoke();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.classId = reader.string();
-          break;
-        case 2:
-          message.grantee = reader.string();
-          break;
-        case 3:
-          message.action = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): EventRevoke {
-    return {
-      classId: isSet(object.classId) ? String(object.classId) : "",
-      grantee: isSet(object.grantee) ? String(object.grantee) : "",
-      action: isSet(object.action) ? String(object.action) : "",
-    };
-  },
-
-  toJSON(message: EventRevoke): unknown {
-    const obj: any = {};
-    message.classId !== undefined && (obj.classId = message.classId);
-    message.grantee !== undefined && (obj.grantee = message.grantee);
-    message.action !== undefined && (obj.action = message.action);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<EventRevoke>, I>>(
-    object: I
-  ): EventRevoke {
-    const message = createBaseEventRevoke();
-    message.classId = object.classId ?? "";
-    message.grantee = object.grantee ?? "";
-    message.action = object.action ?? "";
-    return message;
-  },
-};
-
-function createBaseEventMint(): EventMint {
-  return { classId: "", to: "", amount: "" };
-}
-
-export const EventMint = {
-  encode(
-    message: EventMint,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.classId !== "") {
-      writer.uint32(10).string(message.classId);
-    }
-    if (message.to !== "") {
-      writer.uint32(18).string(message.to);
-    }
-    if (message.amount !== "") {
-      writer.uint32(26).string(message.amount);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): EventMint {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventMint();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.classId = reader.string();
-          break;
-        case 2:
-          message.to = reader.string();
-          break;
-        case 3:
-          message.amount = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): EventMint {
-    return {
-      classId: isSet(object.classId) ? String(object.classId) : "",
-      to: isSet(object.to) ? String(object.to) : "",
-      amount: isSet(object.amount) ? String(object.amount) : "",
-    };
-  },
-
-  toJSON(message: EventMint): unknown {
-    const obj: any = {};
-    message.classId !== undefined && (obj.classId = message.classId);
-    message.to !== undefined && (obj.to = message.to);
-    message.amount !== undefined && (obj.amount = message.amount);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<EventMint>, I>>(
-    object: I
-  ): EventMint {
-    const message = createBaseEventMint();
-    message.classId = object.classId ?? "";
-    message.to = object.to ?? "";
-    message.amount = object.amount ?? "";
-    return message;
-  },
-};
-
-function createBaseEventBurn(): EventBurn {
-  return { classId: "", from: "", amount: "" };
-}
-
-export const EventBurn = {
-  encode(
-    message: EventBurn,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.classId !== "") {
-      writer.uint32(10).string(message.classId);
+    if (message.operator !== "") {
+      writer.uint32(18).string(message.operator);
     }
     if (message.from !== "") {
-      writer.uint32(18).string(message.from);
+      writer.uint32(26).string(message.from);
     }
     if (message.amount !== "") {
-      writer.uint32(26).string(message.amount);
+      writer.uint32(34).string(message.amount);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): EventBurn {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventBurned {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventBurn();
+    const message = createBaseEventBurned();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.classId = reader.string();
+          message.contractId = reader.string();
           break;
         case 2:
-          message.from = reader.string();
+          message.operator = reader.string();
           break;
         case 3:
+          message.from = reader.string();
+          break;
+        case 4:
           message.amount = reader.string();
           break;
         default:
@@ -539,69 +1011,72 @@ export const EventBurn = {
     return message;
   },
 
-  fromJSON(object: any): EventBurn {
+  fromJSON(object: any): EventBurned {
     return {
-      classId: isSet(object.classId) ? String(object.classId) : "",
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      operator: isSet(object.operator) ? String(object.operator) : "",
       from: isSet(object.from) ? String(object.from) : "",
       amount: isSet(object.amount) ? String(object.amount) : "",
     };
   },
 
-  toJSON(message: EventBurn): unknown {
+  toJSON(message: EventBurned): unknown {
     const obj: any = {};
-    message.classId !== undefined && (obj.classId = message.classId);
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.operator !== undefined && (obj.operator = message.operator);
     message.from !== undefined && (obj.from = message.from);
     message.amount !== undefined && (obj.amount = message.amount);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<EventBurn>, I>>(
+  fromPartial<I extends Exact<DeepPartial<EventBurned>, I>>(
     object: I
-  ): EventBurn {
-    const message = createBaseEventBurn();
-    message.classId = object.classId ?? "";
+  ): EventBurned {
+    const message = createBaseEventBurned();
+    message.contractId = object.contractId ?? "";
+    message.operator = object.operator ?? "";
     message.from = object.from ?? "";
     message.amount = object.amount ?? "";
     return message;
   },
 };
 
-function createBaseEventModify(): EventModify {
-  return { classId: "", key: "", value: "" };
+function createBaseEventModified(): EventModified {
+  return { contractId: "", operator: "", changes: [] };
 }
 
-export const EventModify = {
+export const EventModified = {
   encode(
-    message: EventModify,
+    message: EventModified,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.classId !== "") {
-      writer.uint32(10).string(message.classId);
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
     }
-    if (message.key !== "") {
-      writer.uint32(18).string(message.key);
+    if (message.operator !== "") {
+      writer.uint32(18).string(message.operator);
     }
-    if (message.value !== "") {
-      writer.uint32(26).string(message.value);
+    for (const v of message.changes) {
+      Pair.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): EventModify {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventModified {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventModify();
+    const message = createBaseEventModified();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.classId = reader.string();
+          message.contractId = reader.string();
           break;
         case 2:
-          message.key = reader.string();
+          message.operator = reader.string();
           break;
         case 3:
-          message.value = reader.string();
+          message.changes.push(Pair.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -611,29 +1086,37 @@ export const EventModify = {
     return message;
   },
 
-  fromJSON(object: any): EventModify {
+  fromJSON(object: any): EventModified {
     return {
-      classId: isSet(object.classId) ? String(object.classId) : "",
-      key: isSet(object.key) ? String(object.key) : "",
-      value: isSet(object.value) ? String(object.value) : "",
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      operator: isSet(object.operator) ? String(object.operator) : "",
+      changes: Array.isArray(object?.changes)
+        ? object.changes.map((e: any) => Pair.fromJSON(e))
+        : [],
     };
   },
 
-  toJSON(message: EventModify): unknown {
+  toJSON(message: EventModified): unknown {
     const obj: any = {};
-    message.classId !== undefined && (obj.classId = message.classId);
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.operator !== undefined && (obj.operator = message.operator);
+    if (message.changes) {
+      obj.changes = message.changes.map((e) =>
+        e ? Pair.toJSON(e) : undefined
+      );
+    } else {
+      obj.changes = [];
+    }
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<EventModify>, I>>(
+  fromPartial<I extends Exact<DeepPartial<EventModified>, I>>(
     object: I
-  ): EventModify {
-    const message = createBaseEventModify();
-    message.classId = object.classId ?? "";
-    message.key = object.key ?? "";
-    message.value = object.value ?? "";
+  ): EventModified {
+    const message = createBaseEventModified();
+    message.contractId = object.contractId ?? "";
+    message.operator = object.operator ?? "";
+    message.changes = object.changes?.map((e) => Pair.fromPartial(e)) || [];
     return message;
   },
 };

@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
-import _m0 from "protobufjs/minimal";
-import { Validator } from "../../ostracon/types/validator";
+import { Validator } from "./validator";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "ostracon.types";
 
@@ -55,7 +55,7 @@ export const VoterSet = {
         ? object.voters.map((e: any) => Validator.fromJSON(e))
         : [],
       totalVotingPower: isSet(object.totalVotingPower)
-        ? Long.fromString(object.totalVotingPower)
+        ? Long.fromValue(object.totalVotingPower)
         : Long.ZERO,
     };
   },

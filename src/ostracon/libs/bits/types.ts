@@ -1,6 +1,6 @@
 /* eslint-disable */
 import Long from "long";
-import _m0 from "protobufjs/minimal";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "ostracon.libs.bits";
 
@@ -59,9 +59,9 @@ export const BitArray = {
 
   fromJSON(object: any): BitArray {
     return {
-      bits: isSet(object.bits) ? Long.fromString(object.bits) : Long.ZERO,
+      bits: isSet(object.bits) ? Long.fromValue(object.bits) : Long.ZERO,
       elems: Array.isArray(object?.elems)
-        ? object.elems.map((e: any) => Long.fromString(e))
+        ? object.elems.map((e: any) => Long.fromValue(e))
         : [],
     };
   },

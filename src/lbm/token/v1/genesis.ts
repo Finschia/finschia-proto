@@ -1,7 +1,7 @@
 /* eslint-disable */
+import { Params, TokenClass, Authorization, Grant } from "./token";
 import Long from "long";
-import _m0 from "protobufjs/minimal";
-import { Params, Token, Grant, Approve, FT } from "../../../lbm/token/v1/token";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.token.v1";
 
@@ -12,19 +12,19 @@ export interface GenesisState {
   /** class_state is the class keeper's genesis state. */
   classState?: ClassGenesisState;
   /** balances is an array containing the balances of all the accounts. */
-  balances: Balance[];
+  balances: ContractBalances[];
   /** classes defines the metadata of the differents tokens. */
-  classes: Token[];
+  classes: TokenClass[];
   /** grants defines the grant information. */
-  grants: Grant[];
-  /** approves defines the approve information. */
-  approves: Approve[];
+  grants: ContractGrants[];
+  /** authorizations defines the approve information. */
+  authorizations: ContractAuthorizations[];
   /** supplies represents the total supplies of tokens. */
-  supplies: FT[];
+  supplies: ContractCoin[];
   /** mints represents the total mints of tokens. */
-  mints: FT[];
+  mints: ContractCoin[];
   /** burns represents the total burns of tokens. */
-  burns: FT[];
+  burns: ContractCoin[];
 }
 
 /** ClassGenesisState defines the classs keeper's genesis state. */
@@ -36,12 +36,45 @@ export interface ClassGenesisState {
 }
 
 /**
- * Balance defines an account address and balance pair used in the token module's
+ * ContractBalances defines balances belong to a contract.
  * genesis state.
  */
+export interface ContractBalances {
+  /** contract id associated with the token class. */
+  contractId: string;
+  /** balances of the contract. */
+  balances: Balance[];
+}
+
+/** Balance defines a balance of an address. */
 export interface Balance {
+  /** address of the holder. */
   address: string;
-  tokens: FT[];
+  /** amount of the balance. */
+  amount: string;
+}
+
+/** ContractAuthorizations defines authorizations belong to a contract. */
+export interface ContractAuthorizations {
+  /** contract id associated with the token class. */
+  contractId: string;
+  /** authorizations of the contract. */
+  authorizations: Authorization[];
+}
+
+/** ContractGrant defines grants belong to a contract. */
+export interface ContractGrants {
+  /** contract id associated with the token class. */
+  contractId: string;
+  /** grants of the contract. */
+  grants: Grant[];
+}
+
+export interface ContractCoin {
+  /** contract id associated with the token class. */
+  contractId: string;
+  /** amount of the token. */
+  amount: string;
 }
 
 function createBaseGenesisState(): GenesisState {
@@ -51,7 +84,7 @@ function createBaseGenesisState(): GenesisState {
     balances: [],
     classes: [],
     grants: [],
-    approves: [],
+    authorizations: [],
     supplies: [],
     mints: [],
     burns: [],
@@ -73,25 +106,25 @@ export const GenesisState = {
       ).ldelim();
     }
     for (const v of message.balances) {
-      Balance.encode(v!, writer.uint32(26).fork()).ldelim();
+      ContractBalances.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     for (const v of message.classes) {
-      Token.encode(v!, writer.uint32(34).fork()).ldelim();
+      TokenClass.encode(v!, writer.uint32(34).fork()).ldelim();
     }
     for (const v of message.grants) {
-      Grant.encode(v!, writer.uint32(42).fork()).ldelim();
+      ContractGrants.encode(v!, writer.uint32(42).fork()).ldelim();
     }
-    for (const v of message.approves) {
-      Approve.encode(v!, writer.uint32(50).fork()).ldelim();
+    for (const v of message.authorizations) {
+      ContractAuthorizations.encode(v!, writer.uint32(50).fork()).ldelim();
     }
     for (const v of message.supplies) {
-      FT.encode(v!, writer.uint32(58).fork()).ldelim();
+      ContractCoin.encode(v!, writer.uint32(58).fork()).ldelim();
     }
     for (const v of message.mints) {
-      FT.encode(v!, writer.uint32(66).fork()).ldelim();
+      ContractCoin.encode(v!, writer.uint32(66).fork()).ldelim();
     }
     for (const v of message.burns) {
-      FT.encode(v!, writer.uint32(74).fork()).ldelim();
+      ContractCoin.encode(v!, writer.uint32(74).fork()).ldelim();
     }
     return writer;
   },
@@ -113,25 +146,29 @@ export const GenesisState = {
           );
           break;
         case 3:
-          message.balances.push(Balance.decode(reader, reader.uint32()));
+          message.balances.push(
+            ContractBalances.decode(reader, reader.uint32())
+          );
           break;
         case 4:
-          message.classes.push(Token.decode(reader, reader.uint32()));
+          message.classes.push(TokenClass.decode(reader, reader.uint32()));
           break;
         case 5:
-          message.grants.push(Grant.decode(reader, reader.uint32()));
+          message.grants.push(ContractGrants.decode(reader, reader.uint32()));
           break;
         case 6:
-          message.approves.push(Approve.decode(reader, reader.uint32()));
+          message.authorizations.push(
+            ContractAuthorizations.decode(reader, reader.uint32())
+          );
           break;
         case 7:
-          message.supplies.push(FT.decode(reader, reader.uint32()));
+          message.supplies.push(ContractCoin.decode(reader, reader.uint32()));
           break;
         case 8:
-          message.mints.push(FT.decode(reader, reader.uint32()));
+          message.mints.push(ContractCoin.decode(reader, reader.uint32()));
           break;
         case 9:
-          message.burns.push(FT.decode(reader, reader.uint32()));
+          message.burns.push(ContractCoin.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -148,25 +185,27 @@ export const GenesisState = {
         ? ClassGenesisState.fromJSON(object.classState)
         : undefined,
       balances: Array.isArray(object?.balances)
-        ? object.balances.map((e: any) => Balance.fromJSON(e))
+        ? object.balances.map((e: any) => ContractBalances.fromJSON(e))
         : [],
       classes: Array.isArray(object?.classes)
-        ? object.classes.map((e: any) => Token.fromJSON(e))
+        ? object.classes.map((e: any) => TokenClass.fromJSON(e))
         : [],
       grants: Array.isArray(object?.grants)
-        ? object.grants.map((e: any) => Grant.fromJSON(e))
+        ? object.grants.map((e: any) => ContractGrants.fromJSON(e))
         : [],
-      approves: Array.isArray(object?.approves)
-        ? object.approves.map((e: any) => Approve.fromJSON(e))
+      authorizations: Array.isArray(object?.authorizations)
+        ? object.authorizations.map((e: any) =>
+            ContractAuthorizations.fromJSON(e)
+          )
         : [],
       supplies: Array.isArray(object?.supplies)
-        ? object.supplies.map((e: any) => FT.fromJSON(e))
+        ? object.supplies.map((e: any) => ContractCoin.fromJSON(e))
         : [],
       mints: Array.isArray(object?.mints)
-        ? object.mints.map((e: any) => FT.fromJSON(e))
+        ? object.mints.map((e: any) => ContractCoin.fromJSON(e))
         : [],
       burns: Array.isArray(object?.burns)
-        ? object.burns.map((e: any) => FT.fromJSON(e))
+        ? object.burns.map((e: any) => ContractCoin.fromJSON(e))
         : [],
     };
   },
@@ -181,44 +220,50 @@ export const GenesisState = {
         : undefined);
     if (message.balances) {
       obj.balances = message.balances.map((e) =>
-        e ? Balance.toJSON(e) : undefined
+        e ? ContractBalances.toJSON(e) : undefined
       );
     } else {
       obj.balances = [];
     }
     if (message.classes) {
       obj.classes = message.classes.map((e) =>
-        e ? Token.toJSON(e) : undefined
+        e ? TokenClass.toJSON(e) : undefined
       );
     } else {
       obj.classes = [];
     }
     if (message.grants) {
-      obj.grants = message.grants.map((e) => (e ? Grant.toJSON(e) : undefined));
+      obj.grants = message.grants.map((e) =>
+        e ? ContractGrants.toJSON(e) : undefined
+      );
     } else {
       obj.grants = [];
     }
-    if (message.approves) {
-      obj.approves = message.approves.map((e) =>
-        e ? Approve.toJSON(e) : undefined
+    if (message.authorizations) {
+      obj.authorizations = message.authorizations.map((e) =>
+        e ? ContractAuthorizations.toJSON(e) : undefined
       );
     } else {
-      obj.approves = [];
+      obj.authorizations = [];
     }
     if (message.supplies) {
       obj.supplies = message.supplies.map((e) =>
-        e ? FT.toJSON(e) : undefined
+        e ? ContractCoin.toJSON(e) : undefined
       );
     } else {
       obj.supplies = [];
     }
     if (message.mints) {
-      obj.mints = message.mints.map((e) => (e ? FT.toJSON(e) : undefined));
+      obj.mints = message.mints.map((e) =>
+        e ? ContractCoin.toJSON(e) : undefined
+      );
     } else {
       obj.mints = [];
     }
     if (message.burns) {
-      obj.burns = message.burns.map((e) => (e ? FT.toJSON(e) : undefined));
+      obj.burns = message.burns.map((e) =>
+        e ? ContractCoin.toJSON(e) : undefined
+      );
     } else {
       obj.burns = [];
     }
@@ -238,14 +283,19 @@ export const GenesisState = {
         ? ClassGenesisState.fromPartial(object.classState)
         : undefined;
     message.balances =
-      object.balances?.map((e) => Balance.fromPartial(e)) || [];
-    message.classes = object.classes?.map((e) => Token.fromPartial(e)) || [];
-    message.grants = object.grants?.map((e) => Grant.fromPartial(e)) || [];
-    message.approves =
-      object.approves?.map((e) => Approve.fromPartial(e)) || [];
-    message.supplies = object.supplies?.map((e) => FT.fromPartial(e)) || [];
-    message.mints = object.mints?.map((e) => FT.fromPartial(e)) || [];
-    message.burns = object.burns?.map((e) => FT.fromPartial(e)) || [];
+      object.balances?.map((e) => ContractBalances.fromPartial(e)) || [];
+    message.classes =
+      object.classes?.map((e) => TokenClass.fromPartial(e)) || [];
+    message.grants =
+      object.grants?.map((e) => ContractGrants.fromPartial(e)) || [];
+    message.authorizations =
+      object.authorizations?.map((e) =>
+        ContractAuthorizations.fromPartial(e)
+      ) || [];
+    message.supplies =
+      object.supplies?.map((e) => ContractCoin.fromPartial(e)) || [];
+    message.mints = object.mints?.map((e) => ContractCoin.fromPartial(e)) || [];
+    message.burns = object.burns?.map((e) => ContractCoin.fromPartial(e)) || [];
     return message;
   },
 };
@@ -319,8 +369,80 @@ export const ClassGenesisState = {
   },
 };
 
+function createBaseContractBalances(): ContractBalances {
+  return { contractId: "", balances: [] };
+}
+
+export const ContractBalances = {
+  encode(
+    message: ContractBalances,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
+    }
+    for (const v of message.balances) {
+      Balance.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ContractBalances {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseContractBalances();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.contractId = reader.string();
+          break;
+        case 2:
+          message.balances.push(Balance.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ContractBalances {
+    return {
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      balances: Array.isArray(object?.balances)
+        ? object.balances.map((e: any) => Balance.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ContractBalances): unknown {
+    const obj: any = {};
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    if (message.balances) {
+      obj.balances = message.balances.map((e) =>
+        e ? Balance.toJSON(e) : undefined
+      );
+    } else {
+      obj.balances = [];
+    }
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ContractBalances>, I>>(
+    object: I
+  ): ContractBalances {
+    const message = createBaseContractBalances();
+    message.contractId = object.contractId ?? "";
+    message.balances =
+      object.balances?.map((e) => Balance.fromPartial(e)) || [];
+    return message;
+  },
+};
+
 function createBaseBalance(): Balance {
-  return { address: "", tokens: [] };
+  return { address: "", amount: "" };
 }
 
 export const Balance = {
@@ -331,8 +453,8 @@ export const Balance = {
     if (message.address !== "") {
       writer.uint32(10).string(message.address);
     }
-    for (const v of message.tokens) {
-      FT.encode(v!, writer.uint32(18).fork()).ldelim();
+    if (message.amount !== "") {
+      writer.uint32(18).string(message.amount);
     }
     return writer;
   },
@@ -348,7 +470,7 @@ export const Balance = {
           message.address = reader.string();
           break;
         case 2:
-          message.tokens.push(FT.decode(reader, reader.uint32()));
+          message.amount = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -361,27 +483,230 @@ export const Balance = {
   fromJSON(object: any): Balance {
     return {
       address: isSet(object.address) ? String(object.address) : "",
-      tokens: Array.isArray(object?.tokens)
-        ? object.tokens.map((e: any) => FT.fromJSON(e))
-        : [],
+      amount: isSet(object.amount) ? String(object.amount) : "",
     };
   },
 
   toJSON(message: Balance): unknown {
     const obj: any = {};
     message.address !== undefined && (obj.address = message.address);
-    if (message.tokens) {
-      obj.tokens = message.tokens.map((e) => (e ? FT.toJSON(e) : undefined));
-    } else {
-      obj.tokens = [];
-    }
+    message.amount !== undefined && (obj.amount = message.amount);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<Balance>, I>>(object: I): Balance {
     const message = createBaseBalance();
     message.address = object.address ?? "";
-    message.tokens = object.tokens?.map((e) => FT.fromPartial(e)) || [];
+    message.amount = object.amount ?? "";
+    return message;
+  },
+};
+
+function createBaseContractAuthorizations(): ContractAuthorizations {
+  return { contractId: "", authorizations: [] };
+}
+
+export const ContractAuthorizations = {
+  encode(
+    message: ContractAuthorizations,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
+    }
+    for (const v of message.authorizations) {
+      Authorization.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): ContractAuthorizations {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseContractAuthorizations();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.contractId = reader.string();
+          break;
+        case 2:
+          message.authorizations.push(
+            Authorization.decode(reader, reader.uint32())
+          );
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ContractAuthorizations {
+    return {
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      authorizations: Array.isArray(object?.authorizations)
+        ? object.authorizations.map((e: any) => Authorization.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ContractAuthorizations): unknown {
+    const obj: any = {};
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    if (message.authorizations) {
+      obj.authorizations = message.authorizations.map((e) =>
+        e ? Authorization.toJSON(e) : undefined
+      );
+    } else {
+      obj.authorizations = [];
+    }
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ContractAuthorizations>, I>>(
+    object: I
+  ): ContractAuthorizations {
+    const message = createBaseContractAuthorizations();
+    message.contractId = object.contractId ?? "";
+    message.authorizations =
+      object.authorizations?.map((e) => Authorization.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseContractGrants(): ContractGrants {
+  return { contractId: "", grants: [] };
+}
+
+export const ContractGrants = {
+  encode(
+    message: ContractGrants,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
+    }
+    for (const v of message.grants) {
+      Grant.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ContractGrants {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseContractGrants();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.contractId = reader.string();
+          break;
+        case 2:
+          message.grants.push(Grant.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ContractGrants {
+    return {
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      grants: Array.isArray(object?.grants)
+        ? object.grants.map((e: any) => Grant.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ContractGrants): unknown {
+    const obj: any = {};
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    if (message.grants) {
+      obj.grants = message.grants.map((e) => (e ? Grant.toJSON(e) : undefined));
+    } else {
+      obj.grants = [];
+    }
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ContractGrants>, I>>(
+    object: I
+  ): ContractGrants {
+    const message = createBaseContractGrants();
+    message.contractId = object.contractId ?? "";
+    message.grants = object.grants?.map((e) => Grant.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseContractCoin(): ContractCoin {
+  return { contractId: "", amount: "" };
+}
+
+export const ContractCoin = {
+  encode(
+    message: ContractCoin,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
+    }
+    if (message.amount !== "") {
+      writer.uint32(18).string(message.amount);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ContractCoin {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseContractCoin();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.contractId = reader.string();
+          break;
+        case 2:
+          message.amount = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ContractCoin {
+    return {
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      amount: isSet(object.amount) ? String(object.amount) : "",
+    };
+  },
+
+  toJSON(message: ContractCoin): unknown {
+    const obj: any = {};
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.amount !== undefined && (obj.amount = message.amount);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ContractCoin>, I>>(
+    object: I
+  ): ContractCoin {
+    const message = createBaseContractCoin();
+    message.contractId = object.contractId ?? "";
+    message.amount = object.amount ?? "";
     return message;
   },
 };

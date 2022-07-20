@@ -1,7 +1,7 @@
 /* eslint-disable */
+import { Coin } from "../../base/v1beta1/coin";
 import Long from "long";
-import _m0 from "protobufjs/minimal";
-import { Coin } from "../../../cosmos/base/v1beta1/coin";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "cosmos.staking.v1beta1";
 
@@ -53,8 +53,9 @@ export function authorizationTypeToJSON(object: AuthorizationType): string {
       return "AUTHORIZATION_TYPE_UNDELEGATE";
     case AuthorizationType.AUTHORIZATION_TYPE_REDELEGATE:
       return "AUTHORIZATION_TYPE_REDELEGATE";
+    case AuthorizationType.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 

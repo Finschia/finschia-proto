@@ -1,7 +1,7 @@
 /* eslint-disable */
+import { MerklePrefix } from "../../commitment/v1/commitment";
 import Long from "long";
-import _m0 from "protobufjs/minimal";
-import { MerklePrefix } from "../../../../ibc/core/commitment/v1/commitment";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "ibc.core.connection.v1";
 
@@ -55,8 +55,9 @@ export function stateToJSON(object: State): string {
       return "STATE_TRYOPEN";
     case State.STATE_OPEN:
       return "STATE_OPEN";
+    case State.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -225,7 +226,7 @@ export const ConnectionEnd = {
         ? Counterparty.fromJSON(object.counterparty)
         : undefined,
       delayPeriod: isSet(object.delayPeriod)
-        ? Long.fromString(object.delayPeriod)
+        ? Long.fromValue(object.delayPeriod)
         : Long.UZERO,
     };
   },
@@ -358,7 +359,7 @@ export const IdentifiedConnection = {
         ? Counterparty.fromJSON(object.counterparty)
         : undefined,
       delayPeriod: isSet(object.delayPeriod)
-        ? Long.fromString(object.delayPeriod)
+        ? Long.fromValue(object.delayPeriod)
         : Long.UZERO,
     };
   },
