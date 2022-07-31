@@ -1,11 +1,6 @@
 /* eslint-disable */
-import {
-  Permission,
-  Pair,
-  permissionFromJSON,
-  permissionToJSON,
-} from "./token";
 import Long from "long";
+import { Pair } from "./token";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.token.v1";
@@ -26,7 +21,7 @@ export const protobufPackage = "lbm.token.v1";
 export interface MsgSend {
   /** contract id associated with the token class. */
   contractId: string;
-  /** holder whose tokens are being sent. */
+  /** approver whose tokens are being sent. */
   from: string;
   /** recipient of the tokens. */
   to: string;
@@ -38,50 +33,22 @@ export interface MsgSend {
 export interface MsgSendResponse {}
 
 /**
- * MsgOperatorSend defines the Msg/OperatorSend request type.
- *
+ * MsgTransferFrom defines the Msg/TransferFrom request type.
  * Throws:
  * - ErrInvalidAddress
- *   - `operator` is of invalid format.
+ *   - `proxy` is of invalid format.
  *   - `from` is of invalid format.
  *   - `to` is of invalid format.
  * - ErrInvalidRequest
  *   - `contract_id` is of invalid format.
  *   - `amount` is not positive.
  *
- * Signer: `operator`
- *
- * Since: 0.46.0 (finschia)
- */
-export interface MsgOperatorSend {
-  /** contract id associated with the token class. */
-  contractId: string;
-  /** address which triggers the send. */
-  operator: string;
-  /** holder whose tokens are being sent. */
-  from: string;
-  /** recipient of the tokens. */
-  to: string;
-  /** number of tokens to send. */
-  amount: string;
-}
-
-/**
- * MsgOperatorSendResponse defines the Msg/OperatorSend response type.
- *
- * Since: 0.46.0 (finschia)
- */
-export interface MsgOperatorSendResponse {}
-
-/**
- * MsgTransferFrom defines the Msg/TransferFrom request type.
- *
- * Note: deprecated (use MsgOperatorSend)
+ * Signer: `proxy`
  */
 export interface MsgTransferFrom {
   /** contract id associated with the token class. */
   contractId: string;
-  /** the address of the operator. */
+  /** the address of the proxy. */
   proxy: string;
   /** the address which the transfer is from. */
   from: string;
@@ -91,42 +58,8 @@ export interface MsgTransferFrom {
   amount: string;
 }
 
-/**
- * MsgTransferFromResponse defines the Msg/TransferFrom response type.
- *
- * Note: deprecated
- */
+/** MsgTransferFromResponse defines the Msg/TransferFrom response type. */
 export interface MsgTransferFromResponse {}
-
-/**
- * MsgAuthorizeOperator defines the Msg/AuthorizeOperator request type.
- *
- * Throws:
- * - ErrInvalidAddress
- *   - `holder` is of invalid format.
- *   - `operator` is of invalid format.
- * - ErrInvalidRequest
- *   - `contract_id` is of invalid format.
- *
- * Signer: `holder`
- *
- * Since: 0.46.0 (finschia)
- */
-export interface MsgAuthorizeOperator {
-  /** contract id associated with the token class. */
-  contractId: string;
-  /** address of a holder which authorizes the `operator` address as an operator. */
-  holder: string;
-  /** address to set as an operator for `holder`. */
-  operator: string;
-}
-
-/**
- * MsgAuthorizeOperatorResponse defines the Msg/AuthorizeOperator response type.
- *
- * Since: 0.46.0 (finschia)
- */
-export interface MsgAuthorizeOperatorResponse {}
 
 /**
  * MsgRevokeOperator defines the Msg/RevokeOperator request type.
@@ -161,22 +94,25 @@ export interface MsgRevokeOperatorResponse {}
 /**
  * MsgApprove defines the Msg/Approve request type.
  *
- * Note: deprecated (use MsgAuthorizeOperator)
+ * Throws:
+ * - ErrInvalidAddress
+ *   - `approver` is of invalid format.
+ *   - `proxy` is of invalid format.
+ * - ErrInvalidRequest
+ *   - `contract_id` is of invalid format.
+ *
+ * Signer: `approver`
  */
 export interface MsgApprove {
   /** contract id associated with the token class. */
   contractId: string;
-  /** address of the token holder which approves the authorization. */
+  /** address of the token approver which approves the authorization. */
   approver: string;
-  /** address of the operator which the authorization is granted to. */
+  /** address of the proxy which the authorization is granted to. */
   proxy: string;
 }
 
-/**
- * MsgApproveResponse defines the Msg/Approve response type.
- *
- * Note: deprecated
- */
+/** MsgApproveResponse defines the Msg/Approve response type. */
 export interface MsgApproveResponse {}
 
 /**
@@ -225,7 +161,7 @@ export interface MsgIssueResponse {
 }
 
 /**
- * MsgGrant defines the Msg/Grant request type.
+ * MsgGrantPermission defines the Msg/GrantPermission request type.
  *
  * Throws:
  * - ErrInvalidAddress
@@ -236,61 +172,6 @@ export interface MsgIssueResponse {
  *   - `permission` is not a valid permission.
  *
  * Signer: `granter`
- *
- * Since: 0.46.0 (finschia)
- */
-export interface MsgGrant {
-  /** contract id associated with the token class. */
-  contractId: string;
-  /** address of the granter which must have the permission to give. */
-  granter: string;
-  /** address of the grantee. */
-  grantee: string;
-  /** permission on the token class. */
-  permission: Permission;
-}
-
-/**
- * MsgGrantResponse defines the Msg/Grant response type.
- *
- * Since: 0.46.0 (finschia)
- */
-export interface MsgGrantResponse {}
-
-/**
- * MsgAbandon defines the Msg/Abandon request type.
- *
- * Throws:
- * - ErrInvalidAddress
- *   - `grantee` is of invalid format.
- * - ErrInvalidRequest
- *   - `contract_id` is of invalid format.
- *   - `permission` is not a valid permission.
- *
- * Signer: `grantee`
- *
- * Since: 0.46.0 (finschia)
- */
-export interface MsgAbandon {
-  /** contract id associated with the token class. */
-  contractId: string;
-  /** address of the grantee which abandons the permission. */
-  grantee: string;
-  /** permission on the token class. */
-  permission: Permission;
-}
-
-/**
- * MsgAbandonResponse defines the Msg/Abandon response type.
- *
- * Since: 0.46.0 (finschia)
- */
-export interface MsgAbandonResponse {}
-
-/**
- * MsgGrantPermission defines the Msg/GrantPermission request type.
- *
- * Note: deprecated (use MsgGrant)
  */
 export interface MsgGrantPermission {
   /** contract id associated with the token class. */
@@ -303,17 +184,20 @@ export interface MsgGrantPermission {
   permission: string;
 }
 
-/**
- * MsgGrantPermissionResponse defines the Msg/GrantPermission response type.
- *
- * Note: deprecated
- */
+/** MsgGrantPermissionResponse defines the Msg/GrantPermission response type. */
 export interface MsgGrantPermissionResponse {}
 
 /**
  * MsgRevokePermission defines the Msg/RevokePermission request type.
  *
- * Note: deprecated (use MsgAbandon)
+ * Throws:
+ * - ErrInvalidAddress
+ *   - `grantee` is of invalid format.
+ * - ErrInvalidRequest
+ *   - `contract_id` is of invalid format.
+ *   - `permission` is not a valid permission.
+ *
+ * Signer: `grantee`
  */
 export interface MsgRevokePermission {
   /** contract id associated with the token class. */
@@ -324,11 +208,7 @@ export interface MsgRevokePermission {
   permission: string;
 }
 
-/**
- * MsgRevokePermissionResponse defines the Msg/RevokePermission response type.
- *
- * Note: deprecated
- */
+/** MsgRevokePermissionResponse defines the Msg/RevokePermission response type. */
 export interface MsgRevokePermissionResponse {}
 
 /**
@@ -373,7 +253,7 @@ export interface MsgMintResponse {}
 export interface MsgBurn {
   /** contract id associated with the token class. */
   contractId: string;
-  /** holder whose tokens are being burned. */
+  /** address whose tokens are being burned. */
   from: string;
   /** number of tokens to burn. */
   amount: string;
@@ -383,42 +263,17 @@ export interface MsgBurn {
 export interface MsgBurnResponse {}
 
 /**
- * MsgOperatorBurn defines the Msg/OperatorBurn request type.
+ * MsgBurnFrom defines the Msg/BurnFrom request type.
  *
  * Throws:
  * - ErrInvalidAddress
- *   - `operator` is of invalid format.
+ *   - `proxy` is of invalid format.
  *   - `from` is of invalid format.
  * - ErrInvalidRequest
  *   - `contract_id` is of invalid format.
  *   - `amount` is not positive.
  *
- * Signer: `operator`
- *
- * Since: 0.46.0 (finschia)
- */
-export interface MsgOperatorBurn {
-  /** contract id associated with the token class. */
-  contractId: string;
-  /** address which triggers the burn. */
-  operator: string;
-  /** holder whose tokens are being burned. */
-  from: string;
-  /** number of tokens to burn. */
-  amount: string;
-}
-
-/**
- * MsgOperatorBurnResponse defines the Msg/OperatorBurn response type.
- *
- * Since: 0.46.0 (finschia)
- */
-export interface MsgOperatorBurnResponse {}
-
-/**
- * MsgBurnFrom defines the Msg/BurnFrom request type.
- *
- * Note: deprecated (use MsgOperatorBurn)
+ * Signer: `proxy`
  */
 export interface MsgBurnFrom {
   /** contract id associated with the token class. */
@@ -431,11 +286,7 @@ export interface MsgBurnFrom {
   amount: string;
 }
 
-/**
- * MsgBurnFromResponse defines the Msg/BurnFrom response type.
- *
- * Note: deprecated
- */
+/** MsgBurnFromResponse defines the Msg/BurnFrom response type. */
 export interface MsgBurnFromResponse {}
 
 /**
@@ -587,143 +438,6 @@ export const MsgSendResponse = {
   },
 };
 
-function createBaseMsgOperatorSend(): MsgOperatorSend {
-  return { contractId: "", operator: "", from: "", to: "", amount: "" };
-}
-
-export const MsgOperatorSend = {
-  encode(
-    message: MsgOperatorSend,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.contractId !== "") {
-      writer.uint32(10).string(message.contractId);
-    }
-    if (message.operator !== "") {
-      writer.uint32(18).string(message.operator);
-    }
-    if (message.from !== "") {
-      writer.uint32(26).string(message.from);
-    }
-    if (message.to !== "") {
-      writer.uint32(34).string(message.to);
-    }
-    if (message.amount !== "") {
-      writer.uint32(42).string(message.amount);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgOperatorSend {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgOperatorSend();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.contractId = reader.string();
-          break;
-        case 2:
-          message.operator = reader.string();
-          break;
-        case 3:
-          message.from = reader.string();
-          break;
-        case 4:
-          message.to = reader.string();
-          break;
-        case 5:
-          message.amount = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MsgOperatorSend {
-    return {
-      contractId: isSet(object.contractId) ? String(object.contractId) : "",
-      operator: isSet(object.operator) ? String(object.operator) : "",
-      from: isSet(object.from) ? String(object.from) : "",
-      to: isSet(object.to) ? String(object.to) : "",
-      amount: isSet(object.amount) ? String(object.amount) : "",
-    };
-  },
-
-  toJSON(message: MsgOperatorSend): unknown {
-    const obj: any = {};
-    message.contractId !== undefined && (obj.contractId = message.contractId);
-    message.operator !== undefined && (obj.operator = message.operator);
-    message.from !== undefined && (obj.from = message.from);
-    message.to !== undefined && (obj.to = message.to);
-    message.amount !== undefined && (obj.amount = message.amount);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgOperatorSend>, I>>(
-    object: I
-  ): MsgOperatorSend {
-    const message = createBaseMsgOperatorSend();
-    message.contractId = object.contractId ?? "";
-    message.operator = object.operator ?? "";
-    message.from = object.from ?? "";
-    message.to = object.to ?? "";
-    message.amount = object.amount ?? "";
-    return message;
-  },
-};
-
-function createBaseMsgOperatorSendResponse(): MsgOperatorSendResponse {
-  return {};
-}
-
-export const MsgOperatorSendResponse = {
-  encode(
-    _: MsgOperatorSendResponse,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): MsgOperatorSendResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgOperatorSendResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(_: any): MsgOperatorSendResponse {
-    return {};
-  },
-
-  toJSON(_: MsgOperatorSendResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgOperatorSendResponse>, I>>(
-    _: I
-  ): MsgOperatorSendResponse {
-    const message = createBaseMsgOperatorSendResponse();
-    return message;
-  },
-};
-
 function createBaseMsgTransferFrom(): MsgTransferFrom {
   return { contractId: "", proxy: "", from: "", to: "", amount: "" };
 }
@@ -857,128 +571,6 @@ export const MsgTransferFromResponse = {
     _: I
   ): MsgTransferFromResponse {
     const message = createBaseMsgTransferFromResponse();
-    return message;
-  },
-};
-
-function createBaseMsgAuthorizeOperator(): MsgAuthorizeOperator {
-  return { contractId: "", holder: "", operator: "" };
-}
-
-export const MsgAuthorizeOperator = {
-  encode(
-    message: MsgAuthorizeOperator,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.contractId !== "") {
-      writer.uint32(10).string(message.contractId);
-    }
-    if (message.holder !== "") {
-      writer.uint32(18).string(message.holder);
-    }
-    if (message.operator !== "") {
-      writer.uint32(26).string(message.operator);
-    }
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): MsgAuthorizeOperator {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgAuthorizeOperator();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.contractId = reader.string();
-          break;
-        case 2:
-          message.holder = reader.string();
-          break;
-        case 3:
-          message.operator = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MsgAuthorizeOperator {
-    return {
-      contractId: isSet(object.contractId) ? String(object.contractId) : "",
-      holder: isSet(object.holder) ? String(object.holder) : "",
-      operator: isSet(object.operator) ? String(object.operator) : "",
-    };
-  },
-
-  toJSON(message: MsgAuthorizeOperator): unknown {
-    const obj: any = {};
-    message.contractId !== undefined && (obj.contractId = message.contractId);
-    message.holder !== undefined && (obj.holder = message.holder);
-    message.operator !== undefined && (obj.operator = message.operator);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgAuthorizeOperator>, I>>(
-    object: I
-  ): MsgAuthorizeOperator {
-    const message = createBaseMsgAuthorizeOperator();
-    message.contractId = object.contractId ?? "";
-    message.holder = object.holder ?? "";
-    message.operator = object.operator ?? "";
-    return message;
-  },
-};
-
-function createBaseMsgAuthorizeOperatorResponse(): MsgAuthorizeOperatorResponse {
-  return {};
-}
-
-export const MsgAuthorizeOperatorResponse = {
-  encode(
-    _: MsgAuthorizeOperatorResponse,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): MsgAuthorizeOperatorResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgAuthorizeOperatorResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(_: any): MsgAuthorizeOperatorResponse {
-    return {};
-  },
-
-  toJSON(_: MsgAuthorizeOperatorResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgAuthorizeOperatorResponse>, I>>(
-    _: I
-  ): MsgAuthorizeOperatorResponse {
-    const message = createBaseMsgAuthorizeOperatorResponse();
     return message;
   },
 };
@@ -1403,251 +995,6 @@ export const MsgIssueResponse = {
   ): MsgIssueResponse {
     const message = createBaseMsgIssueResponse();
     message.id = object.id ?? "";
-    return message;
-  },
-};
-
-function createBaseMsgGrant(): MsgGrant {
-  return { contractId: "", granter: "", grantee: "", permission: 0 };
-}
-
-export const MsgGrant = {
-  encode(
-    message: MsgGrant,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.contractId !== "") {
-      writer.uint32(10).string(message.contractId);
-    }
-    if (message.granter !== "") {
-      writer.uint32(18).string(message.granter);
-    }
-    if (message.grantee !== "") {
-      writer.uint32(26).string(message.grantee);
-    }
-    if (message.permission !== 0) {
-      writer.uint32(32).int32(message.permission);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgGrant {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgGrant();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.contractId = reader.string();
-          break;
-        case 2:
-          message.granter = reader.string();
-          break;
-        case 3:
-          message.grantee = reader.string();
-          break;
-        case 4:
-          message.permission = reader.int32() as any;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MsgGrant {
-    return {
-      contractId: isSet(object.contractId) ? String(object.contractId) : "",
-      granter: isSet(object.granter) ? String(object.granter) : "",
-      grantee: isSet(object.grantee) ? String(object.grantee) : "",
-      permission: isSet(object.permission)
-        ? permissionFromJSON(object.permission)
-        : 0,
-    };
-  },
-
-  toJSON(message: MsgGrant): unknown {
-    const obj: any = {};
-    message.contractId !== undefined && (obj.contractId = message.contractId);
-    message.granter !== undefined && (obj.granter = message.granter);
-    message.grantee !== undefined && (obj.grantee = message.grantee);
-    message.permission !== undefined &&
-      (obj.permission = permissionToJSON(message.permission));
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgGrant>, I>>(object: I): MsgGrant {
-    const message = createBaseMsgGrant();
-    message.contractId = object.contractId ?? "";
-    message.granter = object.granter ?? "";
-    message.grantee = object.grantee ?? "";
-    message.permission = object.permission ?? 0;
-    return message;
-  },
-};
-
-function createBaseMsgGrantResponse(): MsgGrantResponse {
-  return {};
-}
-
-export const MsgGrantResponse = {
-  encode(
-    _: MsgGrantResponse,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgGrantResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgGrantResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(_: any): MsgGrantResponse {
-    return {};
-  },
-
-  toJSON(_: MsgGrantResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgGrantResponse>, I>>(
-    _: I
-  ): MsgGrantResponse {
-    const message = createBaseMsgGrantResponse();
-    return message;
-  },
-};
-
-function createBaseMsgAbandon(): MsgAbandon {
-  return { contractId: "", grantee: "", permission: 0 };
-}
-
-export const MsgAbandon = {
-  encode(
-    message: MsgAbandon,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.contractId !== "") {
-      writer.uint32(10).string(message.contractId);
-    }
-    if (message.grantee !== "") {
-      writer.uint32(18).string(message.grantee);
-    }
-    if (message.permission !== 0) {
-      writer.uint32(24).int32(message.permission);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgAbandon {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgAbandon();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.contractId = reader.string();
-          break;
-        case 2:
-          message.grantee = reader.string();
-          break;
-        case 3:
-          message.permission = reader.int32() as any;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MsgAbandon {
-    return {
-      contractId: isSet(object.contractId) ? String(object.contractId) : "",
-      grantee: isSet(object.grantee) ? String(object.grantee) : "",
-      permission: isSet(object.permission)
-        ? permissionFromJSON(object.permission)
-        : 0,
-    };
-  },
-
-  toJSON(message: MsgAbandon): unknown {
-    const obj: any = {};
-    message.contractId !== undefined && (obj.contractId = message.contractId);
-    message.grantee !== undefined && (obj.grantee = message.grantee);
-    message.permission !== undefined &&
-      (obj.permission = permissionToJSON(message.permission));
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgAbandon>, I>>(
-    object: I
-  ): MsgAbandon {
-    const message = createBaseMsgAbandon();
-    message.contractId = object.contractId ?? "";
-    message.grantee = object.grantee ?? "";
-    message.permission = object.permission ?? 0;
-    return message;
-  },
-};
-
-function createBaseMsgAbandonResponse(): MsgAbandonResponse {
-  return {};
-}
-
-export const MsgAbandonResponse = {
-  encode(
-    _: MsgAbandonResponse,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgAbandonResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgAbandonResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(_: any): MsgAbandonResponse {
-    return {};
-  },
-
-  toJSON(_: MsgAbandonResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgAbandonResponse>, I>>(
-    _: I
-  ): MsgAbandonResponse {
-    const message = createBaseMsgAbandonResponse();
     return message;
   },
 };
@@ -2136,134 +1483,6 @@ export const MsgBurnResponse = {
   },
 };
 
-function createBaseMsgOperatorBurn(): MsgOperatorBurn {
-  return { contractId: "", operator: "", from: "", amount: "" };
-}
-
-export const MsgOperatorBurn = {
-  encode(
-    message: MsgOperatorBurn,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.contractId !== "") {
-      writer.uint32(10).string(message.contractId);
-    }
-    if (message.operator !== "") {
-      writer.uint32(18).string(message.operator);
-    }
-    if (message.from !== "") {
-      writer.uint32(26).string(message.from);
-    }
-    if (message.amount !== "") {
-      writer.uint32(34).string(message.amount);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgOperatorBurn {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgOperatorBurn();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.contractId = reader.string();
-          break;
-        case 2:
-          message.operator = reader.string();
-          break;
-        case 3:
-          message.from = reader.string();
-          break;
-        case 4:
-          message.amount = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MsgOperatorBurn {
-    return {
-      contractId: isSet(object.contractId) ? String(object.contractId) : "",
-      operator: isSet(object.operator) ? String(object.operator) : "",
-      from: isSet(object.from) ? String(object.from) : "",
-      amount: isSet(object.amount) ? String(object.amount) : "",
-    };
-  },
-
-  toJSON(message: MsgOperatorBurn): unknown {
-    const obj: any = {};
-    message.contractId !== undefined && (obj.contractId = message.contractId);
-    message.operator !== undefined && (obj.operator = message.operator);
-    message.from !== undefined && (obj.from = message.from);
-    message.amount !== undefined && (obj.amount = message.amount);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgOperatorBurn>, I>>(
-    object: I
-  ): MsgOperatorBurn {
-    const message = createBaseMsgOperatorBurn();
-    message.contractId = object.contractId ?? "";
-    message.operator = object.operator ?? "";
-    message.from = object.from ?? "";
-    message.amount = object.amount ?? "";
-    return message;
-  },
-};
-
-function createBaseMsgOperatorBurnResponse(): MsgOperatorBurnResponse {
-  return {};
-}
-
-export const MsgOperatorBurnResponse = {
-  encode(
-    _: MsgOperatorBurnResponse,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): MsgOperatorBurnResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgOperatorBurnResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(_: any): MsgOperatorBurnResponse {
-    return {};
-  },
-
-  toJSON(_: MsgOperatorBurnResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgOperatorBurnResponse>, I>>(
-    _: I
-  ): MsgOperatorBurnResponse {
-    const message = createBaseMsgOperatorBurnResponse();
-    return message;
-  },
-};
-
 function createBaseMsgBurnFrom(): MsgBurnFrom {
   return { contractId: "", proxy: "", from: "", amount: "" };
 }
@@ -2521,44 +1740,23 @@ export interface Msg {
    * - EventSent
    * - transfer (deprecated, not typed)
    * Throws:
-   * - ErrInsufficientFunds:
+   * - ErrInvalidRequest:
    *   - the balance of `from` does not have enough tokens to spend.
    */
   Send(request: MsgSend): Promise<MsgSendResponse>;
   /**
-   * OperatorSend defines a method to send tokens from one account to another account by the operator.
+   * TransferFrom defines a method to send tokens from one account to another account by the proxy.
    * Fires:
    * - EventSent
    * - transfer_from (deprecated, not typed)
    * Throws:
    * - ErrUnauthorized:
-   *   - the holder has not authorized the operator.
-   * - ErrInsufficientFunds:
+   *   - the approver has not authorized the proxy.
+   * - ErrInvalidRequest:
    *   - the balance of `from` does not have enough tokens to spend.
-   * Since: 0.46.0 (finschia)
-   */
-  OperatorSend(request: MsgOperatorSend): Promise<MsgOperatorSendResponse>;
-  /**
-   * TransferFrom defines a method to send tokens from one account to another account by the operator.
    * Note: the approval has no value of limit (not ERC20 compliant).
-   * Note: deprecated (use OperatorSend)
    */
   TransferFrom(request: MsgTransferFrom): Promise<MsgTransferFromResponse>;
-  /**
-   * AuthorizeOperator allows one to send tokens on behalf of the holder.
-   * Fires:
-   * - EventAuthorizedOperator
-   * - approve_token (deprecated, not typed)
-   * Throws:
-   * - ErrNotFound:
-   *   - there is no token class of `contract_id`.
-   * - ErrInvalidRequest:
-   *   - `holder` has already authorized `operator`.
-   * Since: 0.46.0 (finschia)
-   */
-  AuthorizeOperator(
-    request: MsgAuthorizeOperator
-  ): Promise<MsgAuthorizeOperatorResponse>;
   /**
    * RevokeOperator revoke the authorization of the operator to send the holder's tokens.
    * Fires:
@@ -2574,8 +1772,15 @@ export interface Msg {
     request: MsgRevokeOperator
   ): Promise<MsgRevokeOperatorResponse>;
   /**
-   * Approve allows one to send tokens on behalf of the holder.
-   * Note: deprecated (use AuthorizeOperator)
+   * Approve allows one to send tokens on behalf of the approver.
+   * Fires:
+   * - EventAuthorizedOperator
+   * - approve_token (deprecated, not typed)
+   * Throws:
+   * - ErrNotFound:
+   *   - there is no token class of `contract_id`.
+   * - ErrInvalidRequest:
+   *   - `approver` has already authorized `proxy`.
    */
   Approve(request: MsgApprove): Promise<MsgApproveResponse>;
   /**
@@ -2588,7 +1793,7 @@ export interface Msg {
    */
   Issue(request: MsgIssue): Promise<MsgIssueResponse>;
   /**
-   * Grant allows one to mint or burn tokens or modify a token metadata.
+   * GrantPermission allows one to mint or burn tokens or modify a token metadata.
    * Fires:
    * - EventGrant
    * - grant_perm (deprecated, not typed)
@@ -2597,30 +1802,18 @@ export interface Msg {
    *   - `granter` does not have `permission`.
    * - ErrInvalidRequest
    *   - `grantee` already has `permission`.
-   * Since: 0.46.0 (finschia)
-   */
-  Grant(request: MsgGrant): Promise<MsgGrantResponse>;
-  /**
-   * Abandon abandons a permission.
-   * Fires:
-   * - EventAbandon
-   * - revoke_perm (deprecated, not typed)
-   * Throws:
-   * - ErrUnauthorized
-   *   - `grantee` does not have `permission`.
-   * Since: 0.46.0 (finschia)
-   */
-  Abandon(request: MsgAbandon): Promise<MsgAbandonResponse>;
-  /**
-   * GrantPermission allows one to mint or burn tokens or modify a token metadata.
-   * Note: deprecated (use Grant)
    */
   GrantPermission(
     request: MsgGrantPermission
   ): Promise<MsgGrantPermissionResponse>;
   /**
    * RevokePermission abandons a permission.
-   * Note: deprecated (use Abandon)
+   * Fires:
+   * - EventAbandon
+   * - revoke_perm (deprecated, not typed)
+   * Throws:
+   * - ErrUnauthorized
+   *   - `grantee` does not have `permission`.
    */
   RevokePermission(
     request: MsgRevokePermission
@@ -2643,27 +1836,21 @@ export interface Msg {
    * Throws:
    * - ErrUnauthorized
    *   - `from` does not have `burn` permission.
-   * - ErrInsufficientFunds:
+   * - ErrInvalidRequest:
    *   - the balance of `from` does not have enough tokens to burn.
    */
   Burn(request: MsgBurn): Promise<MsgBurnResponse>;
   /**
-   * OperatorBurn defines a method to burn tokens by the operator.
+   * BurnFrom defines a method to burn tokens by the proxy.
    * Fires:
    * - EventBurned
    * - burn_from (deprecated, not typed)
    * Throws:
    * - ErrUnauthorized
-   *   - `operator` does not have `burn` permission.
-   *   - the holder has not authorized `operator`.
-   * - ErrInsufficientFunds:
+   *   - `proxy` does not have `burn` permission.
+   *   - the approver has not authorized `proxy`.
+   * - ErrInvalidRequest:
    *   - the balance of `from` does not have enough tokens to burn.
-   * Since: 0.46.0 (finschia)
-   */
-  OperatorBurn(request: MsgOperatorBurn): Promise<MsgOperatorBurnResponse>;
-  /**
-   * BurnFrom defines a method to burn tokens by the operator.
-   * Note: deprecated (use OperatorBurn)
    */
   BurnFrom(request: MsgBurnFrom): Promise<MsgBurnFromResponse>;
   /**
@@ -2673,7 +1860,7 @@ export interface Msg {
    * - modify_token (deprecated, not typed)
    * Throws:
    * - ErrUnauthorized
-   *   - the operator does not have `modify` permission.
+   *   - the proxy does not have `modify` permission.
    * - ErrNotFound
    *   - there is no token class of `contract_id`.
    */
@@ -2685,19 +1872,14 @@ export class MsgClientImpl implements Msg {
   constructor(rpc: Rpc) {
     this.rpc = rpc;
     this.Send = this.Send.bind(this);
-    this.OperatorSend = this.OperatorSend.bind(this);
     this.TransferFrom = this.TransferFrom.bind(this);
-    this.AuthorizeOperator = this.AuthorizeOperator.bind(this);
     this.RevokeOperator = this.RevokeOperator.bind(this);
     this.Approve = this.Approve.bind(this);
     this.Issue = this.Issue.bind(this);
-    this.Grant = this.Grant.bind(this);
-    this.Abandon = this.Abandon.bind(this);
     this.GrantPermission = this.GrantPermission.bind(this);
     this.RevokePermission = this.RevokePermission.bind(this);
     this.Mint = this.Mint.bind(this);
     this.Burn = this.Burn.bind(this);
-    this.OperatorBurn = this.OperatorBurn.bind(this);
     this.BurnFrom = this.BurnFrom.bind(this);
     this.Modify = this.Modify.bind(this);
   }
@@ -2707,33 +1889,11 @@ export class MsgClientImpl implements Msg {
     return promise.then((data) => MsgSendResponse.decode(new _m0.Reader(data)));
   }
 
-  OperatorSend(request: MsgOperatorSend): Promise<MsgOperatorSendResponse> {
-    const data = MsgOperatorSend.encode(request).finish();
-    const promise = this.rpc.request("lbm.token.v1.Msg", "OperatorSend", data);
-    return promise.then((data) =>
-      MsgOperatorSendResponse.decode(new _m0.Reader(data))
-    );
-  }
-
   TransferFrom(request: MsgTransferFrom): Promise<MsgTransferFromResponse> {
     const data = MsgTransferFrom.encode(request).finish();
     const promise = this.rpc.request("lbm.token.v1.Msg", "TransferFrom", data);
     return promise.then((data) =>
       MsgTransferFromResponse.decode(new _m0.Reader(data))
-    );
-  }
-
-  AuthorizeOperator(
-    request: MsgAuthorizeOperator
-  ): Promise<MsgAuthorizeOperatorResponse> {
-    const data = MsgAuthorizeOperator.encode(request).finish();
-    const promise = this.rpc.request(
-      "lbm.token.v1.Msg",
-      "AuthorizeOperator",
-      data
-    );
-    return promise.then((data) =>
-      MsgAuthorizeOperatorResponse.decode(new _m0.Reader(data))
     );
   }
 
@@ -2764,22 +1924,6 @@ export class MsgClientImpl implements Msg {
     const promise = this.rpc.request("lbm.token.v1.Msg", "Issue", data);
     return promise.then((data) =>
       MsgIssueResponse.decode(new _m0.Reader(data))
-    );
-  }
-
-  Grant(request: MsgGrant): Promise<MsgGrantResponse> {
-    const data = MsgGrant.encode(request).finish();
-    const promise = this.rpc.request("lbm.token.v1.Msg", "Grant", data);
-    return promise.then((data) =>
-      MsgGrantResponse.decode(new _m0.Reader(data))
-    );
-  }
-
-  Abandon(request: MsgAbandon): Promise<MsgAbandonResponse> {
-    const data = MsgAbandon.encode(request).finish();
-    const promise = this.rpc.request("lbm.token.v1.Msg", "Abandon", data);
-    return promise.then((data) =>
-      MsgAbandonResponse.decode(new _m0.Reader(data))
     );
   }
 
@@ -2821,14 +1965,6 @@ export class MsgClientImpl implements Msg {
     const data = MsgBurn.encode(request).finish();
     const promise = this.rpc.request("lbm.token.v1.Msg", "Burn", data);
     return promise.then((data) => MsgBurnResponse.decode(new _m0.Reader(data)));
-  }
-
-  OperatorBurn(request: MsgOperatorBurn): Promise<MsgOperatorBurnResponse> {
-    const data = MsgOperatorBurn.encode(request).finish();
-    const promise = this.rpc.request("lbm.token.v1.Msg", "OperatorBurn", data);
-    return promise.then((data) =>
-      MsgOperatorBurnResponse.decode(new _m0.Reader(data))
-    );
   }
 
   BurnFrom(request: MsgBurnFrom): Promise<MsgBurnFromResponse> {

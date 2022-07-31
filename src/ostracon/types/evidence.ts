@@ -16,9 +16,13 @@ export interface Evidence {
 export interface DuplicateVoteEvidence {
   voteA?: Vote;
   voteB?: Vote;
+  /** total voting weight */
   totalVotingPower: Long;
+  /** voting power */
   validatorPower: Long;
   timestamp?: Timestamp;
+  /** ** Ostracon Extended Fields *** */
+  votingWeight: Long;
 }
 
 /** LightClientAttackEvidence contains evidence of a set of validators attempting to mislead a light client. */
@@ -26,6 +30,7 @@ export interface LightClientAttackEvidence {
   conflictingBlock?: LightBlock;
   commonHeight: Long;
   byzantineValidators: Validator[];
+  /** total voting weight */
   totalVotingPower: Long;
   timestamp?: Timestamp;
 }
@@ -137,6 +142,7 @@ function createBaseDuplicateVoteEvidence(): DuplicateVoteEvidence {
     totalVotingPower: Long.ZERO,
     validatorPower: Long.ZERO,
     timestamp: undefined,
+    votingWeight: Long.ZERO,
   };
 }
 
@@ -159,6 +165,9 @@ export const DuplicateVoteEvidence = {
     }
     if (message.timestamp !== undefined) {
       Timestamp.encode(message.timestamp, writer.uint32(42).fork()).ldelim();
+    }
+    if (!message.votingWeight.isZero()) {
+      writer.uint32(8000).int64(message.votingWeight);
     }
     return writer;
   },
@@ -188,6 +197,9 @@ export const DuplicateVoteEvidence = {
         case 5:
           message.timestamp = Timestamp.decode(reader, reader.uint32());
           break;
+        case 1000:
+          message.votingWeight = reader.int64() as Long;
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -209,6 +221,9 @@ export const DuplicateVoteEvidence = {
       timestamp: isSet(object.timestamp)
         ? fromJsonTimestamp(object.timestamp)
         : undefined,
+      votingWeight: isSet(object.votingWeight)
+        ? Long.fromValue(object.votingWeight)
+        : Long.ZERO,
     };
   },
 
@@ -226,6 +241,8 @@ export const DuplicateVoteEvidence = {
       (obj.validatorPower = (message.validatorPower || Long.ZERO).toString());
     message.timestamp !== undefined &&
       (obj.timestamp = fromTimestamp(message.timestamp).toISOString());
+    message.votingWeight !== undefined &&
+      (obj.votingWeight = (message.votingWeight || Long.ZERO).toString());
     return obj;
   },
 
@@ -253,6 +270,10 @@ export const DuplicateVoteEvidence = {
       object.timestamp !== undefined && object.timestamp !== null
         ? Timestamp.fromPartial(object.timestamp)
         : undefined;
+    message.votingWeight =
+      object.votingWeight !== undefined && object.votingWeight !== null
+        ? Long.fromValue(object.votingWeight)
+        : Long.ZERO;
     return message;
   },
 };

@@ -616,6 +616,30 @@ export interface EventDetached {
   subject: string;
 }
 
+/**
+ * EventOwnerChanged is emitted when the owner of token is changed by operation applied to its ancestor.
+ *
+ * Since: 0.46.0 (finschia)
+ */
+export interface EventOwnerChanged {
+  /** contract id associated with the contract. */
+  contractId: string;
+  /** token id associated with the token. */
+  tokenId: string;
+}
+
+/**
+ * EventRootChanged is emitted when the root of token is changed by operation applied to its ancestor.
+ *
+ * Since: 0.46.0 (finschia)
+ */
+export interface EventRootChanged {
+  /** contract id associated with the contract. */
+  contractId: string;
+  /** token id associated with the token. */
+  tokenId: string;
+}
+
 function createBaseEventSent(): EventSent {
   return { contractId: "", operator: "", from: "", to: "", amount: [] };
 }
@@ -1991,6 +2015,132 @@ export const EventDetached = {
     message.operator = object.operator ?? "";
     message.holder = object.holder ?? "";
     message.subject = object.subject ?? "";
+    return message;
+  },
+};
+
+function createBaseEventOwnerChanged(): EventOwnerChanged {
+  return { contractId: "", tokenId: "" };
+}
+
+export const EventOwnerChanged = {
+  encode(
+    message: EventOwnerChanged,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
+    }
+    if (message.tokenId !== "") {
+      writer.uint32(18).string(message.tokenId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventOwnerChanged {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEventOwnerChanged();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.contractId = reader.string();
+          break;
+        case 2:
+          message.tokenId = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EventOwnerChanged {
+    return {
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      tokenId: isSet(object.tokenId) ? String(object.tokenId) : "",
+    };
+  },
+
+  toJSON(message: EventOwnerChanged): unknown {
+    const obj: any = {};
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.tokenId !== undefined && (obj.tokenId = message.tokenId);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EventOwnerChanged>, I>>(
+    object: I
+  ): EventOwnerChanged {
+    const message = createBaseEventOwnerChanged();
+    message.contractId = object.contractId ?? "";
+    message.tokenId = object.tokenId ?? "";
+    return message;
+  },
+};
+
+function createBaseEventRootChanged(): EventRootChanged {
+  return { contractId: "", tokenId: "" };
+}
+
+export const EventRootChanged = {
+  encode(
+    message: EventRootChanged,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
+    }
+    if (message.tokenId !== "") {
+      writer.uint32(18).string(message.tokenId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventRootChanged {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEventRootChanged();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.contractId = reader.string();
+          break;
+        case 2:
+          message.tokenId = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EventRootChanged {
+    return {
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      tokenId: isSet(object.tokenId) ? String(object.tokenId) : "",
+    };
+  },
+
+  toJSON(message: EventRootChanged): unknown {
+    const obj: any = {};
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.tokenId !== undefined && (obj.tokenId = message.tokenId);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EventRootChanged>, I>>(
+    object: I
+  ): EventRootChanged {
+    const message = createBaseEventRootChanged();
+    message.contractId = object.contractId ?? "";
+    message.tokenId = object.tokenId ?? "";
     return message;
   },
 };

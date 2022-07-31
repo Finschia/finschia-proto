@@ -506,6 +506,8 @@ export interface Validator {
   address: Uint8Array;
   /** PubKey pub_key = 2 [(gogoproto.nullable)=false]; */
   power: Long;
+  /** ** Ostracon Extended Fields *** */
+  votingWeight: Long;
 }
 
 /** ValidatorUpdate */
@@ -4334,7 +4336,11 @@ export const TxResult = {
 };
 
 function createBaseValidator(): Validator {
-  return { address: new Uint8Array(), power: Long.ZERO };
+  return {
+    address: new Uint8Array(),
+    power: Long.ZERO,
+    votingWeight: Long.ZERO,
+  };
 }
 
 export const Validator = {
@@ -4347,6 +4353,9 @@ export const Validator = {
     }
     if (!message.power.isZero()) {
       writer.uint32(24).int64(message.power);
+    }
+    if (!message.votingWeight.isZero()) {
+      writer.uint32(8000).int64(message.votingWeight);
     }
     return writer;
   },
@@ -4364,6 +4373,9 @@ export const Validator = {
         case 3:
           message.power = reader.int64() as Long;
           break;
+        case 1000:
+          message.votingWeight = reader.int64() as Long;
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -4378,6 +4390,9 @@ export const Validator = {
         ? bytesFromBase64(object.address)
         : new Uint8Array(),
       power: isSet(object.power) ? Long.fromValue(object.power) : Long.ZERO,
+      votingWeight: isSet(object.votingWeight)
+        ? Long.fromValue(object.votingWeight)
+        : Long.ZERO,
     };
   },
 
@@ -4389,6 +4404,8 @@ export const Validator = {
       ));
     message.power !== undefined &&
       (obj.power = (message.power || Long.ZERO).toString());
+    message.votingWeight !== undefined &&
+      (obj.votingWeight = (message.votingWeight || Long.ZERO).toString());
     return obj;
   },
 
@@ -4400,6 +4417,10 @@ export const Validator = {
     message.power =
       object.power !== undefined && object.power !== null
         ? Long.fromValue(object.power)
+        : Long.ZERO;
+    message.votingWeight =
+      object.votingWeight !== undefined && object.votingWeight !== null
+        ? Long.fromValue(object.votingWeight)
         : Long.ZERO;
     return message;
   },

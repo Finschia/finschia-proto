@@ -7,11 +7,11 @@ export const protobufPackage = "ostracon.types";
 
 export interface VoterSet {
   voters: Validator[];
-  totalVotingPower: Long;
+  totalVotingWeight: Long;
 }
 
 function createBaseVoterSet(): VoterSet {
-  return { voters: [], totalVotingPower: Long.ZERO };
+  return { voters: [], totalVotingWeight: Long.ZERO };
 }
 
 export const VoterSet = {
@@ -22,8 +22,8 @@ export const VoterSet = {
     for (const v of message.voters) {
       Validator.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if (!message.totalVotingPower.isZero()) {
-      writer.uint32(16).int64(message.totalVotingPower);
+    if (!message.totalVotingWeight.isZero()) {
+      writer.uint32(16).int64(message.totalVotingWeight);
     }
     return writer;
   },
@@ -39,7 +39,7 @@ export const VoterSet = {
           message.voters.push(Validator.decode(reader, reader.uint32()));
           break;
         case 2:
-          message.totalVotingPower = reader.int64() as Long;
+          message.totalVotingWeight = reader.int64() as Long;
           break;
         default:
           reader.skipType(tag & 7);
@@ -54,8 +54,8 @@ export const VoterSet = {
       voters: Array.isArray(object?.voters)
         ? object.voters.map((e: any) => Validator.fromJSON(e))
         : [],
-      totalVotingPower: isSet(object.totalVotingPower)
-        ? Long.fromValue(object.totalVotingPower)
+      totalVotingWeight: isSet(object.totalVotingWeight)
+        ? Long.fromValue(object.totalVotingWeight)
         : Long.ZERO,
     };
   },
@@ -69,9 +69,9 @@ export const VoterSet = {
     } else {
       obj.voters = [];
     }
-    message.totalVotingPower !== undefined &&
-      (obj.totalVotingPower = (
-        message.totalVotingPower || Long.ZERO
+    message.totalVotingWeight !== undefined &&
+      (obj.totalVotingWeight = (
+        message.totalVotingWeight || Long.ZERO
       ).toString());
     return obj;
   },
@@ -79,9 +79,10 @@ export const VoterSet = {
   fromPartial<I extends Exact<DeepPartial<VoterSet>, I>>(object: I): VoterSet {
     const message = createBaseVoterSet();
     message.voters = object.voters?.map((e) => Validator.fromPartial(e)) || [];
-    message.totalVotingPower =
-      object.totalVotingPower !== undefined && object.totalVotingPower !== null
-        ? Long.fromValue(object.totalVotingPower)
+    message.totalVotingWeight =
+      object.totalVotingWeight !== undefined &&
+      object.totalVotingWeight !== null
+        ? Long.fromValue(object.totalVotingWeight)
         : Long.ZERO;
     return message;
   },
