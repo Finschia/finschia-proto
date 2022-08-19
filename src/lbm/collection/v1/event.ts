@@ -410,6 +410,8 @@ export interface EventRevokedOperator {
  * Since: 0.46.0 (finschia)
  */
 export interface EventCreatedContract {
+  /** address which created the contract. */
+  creator: string;
   /** contract id associated with the contract. */
   contractId: string;
   /** name of the contract. */
@@ -428,6 +430,8 @@ export interface EventCreatedContract {
 export interface EventCreatedFTClass {
   /** contract id associated with the contract. */
   contractId: string;
+  /** address which triggered the create. */
+  operator: string;
   /** class id associated with the token class. */
   classId: string;
   /** name of the token class. */
@@ -448,6 +452,8 @@ export interface EventCreatedFTClass {
 export interface EventCreatedNFTClass {
   /** contract id associated with the contract. */
   contractId: string;
+  /** address which triggered the create. */
+  operator: string;
   /** class id associated with the token class. */
   classId: string;
   /** name of the token class. */
@@ -457,13 +463,13 @@ export interface EventCreatedNFTClass {
 }
 
 /**
- * EventGrant is emitted when a granter grants its permission to a grantee.
+ * EventGranted is emitted when a granter grants its permission to a grantee.
  *
  * Info: `granter` would be empty if the permission is granted by an issuance.
  *
  * Since: 0.46.0 (finschia)
  */
-export interface EventGrant {
+export interface EventGranted {
   /** contract id associated with the contract. */
   contractId: string;
   /** address of the granter which grants the permission. */
@@ -475,11 +481,11 @@ export interface EventGrant {
 }
 
 /**
- * EventAbandon is emitted when a grantee abandons its permission.
+ * EventRenounced is emitted when a grantee renounced its permission.
  *
  * Since: 0.46.0 (finschia)
  */
-export interface EventAbandon {
+export interface EventRenounced {
   /** contract id associated with the contract. */
   contractId: string;
   /** address of the grantee which abandons its grant. */
@@ -564,6 +570,8 @@ export interface EventModifiedTokenClass {
   classId: string;
   /** changes of the attributes applied. */
   changes: Attribute[];
+  /** type name of the token class. */
+  typeName: string;
 }
 
 /**
@@ -614,6 +622,8 @@ export interface EventDetached {
   holder: string;
   /** token being detached. */
   subject: string;
+  /** parent token before the detach. */
+  previousParent: string;
 }
 
 /**
@@ -626,6 +636,10 @@ export interface EventOwnerChanged {
   contractId: string;
   /** token id associated with the token. */
   tokenId: string;
+  /** address of the previous owner before the change. */
+  from: string;
+  /** address of the new owner. */
+  to: string;
 }
 
 /**
@@ -638,6 +652,10 @@ export interface EventRootChanged {
   contractId: string;
   /** token id associated with the token. */
   tokenId: string;
+  /** token id of the previous root before the change. */
+  from: string;
+  /** token id of the new root. */
+  to: string;
 }
 
 function createBaseEventSent(): EventSent {
@@ -887,7 +905,7 @@ export const EventRevokedOperator = {
 };
 
 function createBaseEventCreatedContract(): EventCreatedContract {
-  return { contractId: "", name: "", meta: "", baseImgUri: "" };
+  return { creator: "", contractId: "", name: "", meta: "", baseImgUri: "" };
 }
 
 export const EventCreatedContract = {
@@ -895,17 +913,20 @@ export const EventCreatedContract = {
     message: EventCreatedContract,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
     if (message.contractId !== "") {
-      writer.uint32(10).string(message.contractId);
+      writer.uint32(18).string(message.contractId);
     }
     if (message.name !== "") {
-      writer.uint32(18).string(message.name);
+      writer.uint32(26).string(message.name);
     }
     if (message.meta !== "") {
-      writer.uint32(26).string(message.meta);
+      writer.uint32(34).string(message.meta);
     }
     if (message.baseImgUri !== "") {
-      writer.uint32(34).string(message.baseImgUri);
+      writer.uint32(42).string(message.baseImgUri);
     }
     return writer;
   },
@@ -921,15 +942,18 @@ export const EventCreatedContract = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.contractId = reader.string();
+          message.creator = reader.string();
           break;
         case 2:
-          message.name = reader.string();
+          message.contractId = reader.string();
           break;
         case 3:
-          message.meta = reader.string();
+          message.name = reader.string();
           break;
         case 4:
+          message.meta = reader.string();
+          break;
+        case 5:
           message.baseImgUri = reader.string();
           break;
         default:
@@ -942,6 +966,7 @@ export const EventCreatedContract = {
 
   fromJSON(object: any): EventCreatedContract {
     return {
+      creator: isSet(object.creator) ? String(object.creator) : "",
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
       name: isSet(object.name) ? String(object.name) : "",
       meta: isSet(object.meta) ? String(object.meta) : "",
@@ -951,6 +976,7 @@ export const EventCreatedContract = {
 
   toJSON(message: EventCreatedContract): unknown {
     const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
     message.contractId !== undefined && (obj.contractId = message.contractId);
     message.name !== undefined && (obj.name = message.name);
     message.meta !== undefined && (obj.meta = message.meta);
@@ -962,6 +988,7 @@ export const EventCreatedContract = {
     object: I
   ): EventCreatedContract {
     const message = createBaseEventCreatedContract();
+    message.creator = object.creator ?? "";
     message.contractId = object.contractId ?? "";
     message.name = object.name ?? "";
     message.meta = object.meta ?? "";
@@ -973,6 +1000,7 @@ export const EventCreatedContract = {
 function createBaseEventCreatedFTClass(): EventCreatedFTClass {
   return {
     contractId: "",
+    operator: "",
     classId: "",
     name: "",
     meta: "",
@@ -989,20 +1017,23 @@ export const EventCreatedFTClass = {
     if (message.contractId !== "") {
       writer.uint32(10).string(message.contractId);
     }
+    if (message.operator !== "") {
+      writer.uint32(18).string(message.operator);
+    }
     if (message.classId !== "") {
-      writer.uint32(18).string(message.classId);
+      writer.uint32(26).string(message.classId);
     }
     if (message.name !== "") {
-      writer.uint32(26).string(message.name);
+      writer.uint32(34).string(message.name);
     }
     if (message.meta !== "") {
-      writer.uint32(34).string(message.meta);
+      writer.uint32(42).string(message.meta);
     }
     if (message.decimals !== 0) {
-      writer.uint32(40).int32(message.decimals);
+      writer.uint32(48).int32(message.decimals);
     }
     if (message.mintable === true) {
-      writer.uint32(48).bool(message.mintable);
+      writer.uint32(56).bool(message.mintable);
     }
     return writer;
   },
@@ -1018,18 +1049,21 @@ export const EventCreatedFTClass = {
           message.contractId = reader.string();
           break;
         case 2:
-          message.classId = reader.string();
+          message.operator = reader.string();
           break;
         case 3:
-          message.name = reader.string();
+          message.classId = reader.string();
           break;
         case 4:
-          message.meta = reader.string();
+          message.name = reader.string();
           break;
         case 5:
-          message.decimals = reader.int32();
+          message.meta = reader.string();
           break;
         case 6:
+          message.decimals = reader.int32();
+          break;
+        case 7:
           message.mintable = reader.bool();
           break;
         default:
@@ -1043,6 +1077,7 @@ export const EventCreatedFTClass = {
   fromJSON(object: any): EventCreatedFTClass {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      operator: isSet(object.operator) ? String(object.operator) : "",
       classId: isSet(object.classId) ? String(object.classId) : "",
       name: isSet(object.name) ? String(object.name) : "",
       meta: isSet(object.meta) ? String(object.meta) : "",
@@ -1054,6 +1089,7 @@ export const EventCreatedFTClass = {
   toJSON(message: EventCreatedFTClass): unknown {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.operator !== undefined && (obj.operator = message.operator);
     message.classId !== undefined && (obj.classId = message.classId);
     message.name !== undefined && (obj.name = message.name);
     message.meta !== undefined && (obj.meta = message.meta);
@@ -1068,6 +1104,7 @@ export const EventCreatedFTClass = {
   ): EventCreatedFTClass {
     const message = createBaseEventCreatedFTClass();
     message.contractId = object.contractId ?? "";
+    message.operator = object.operator ?? "";
     message.classId = object.classId ?? "";
     message.name = object.name ?? "";
     message.meta = object.meta ?? "";
@@ -1078,7 +1115,7 @@ export const EventCreatedFTClass = {
 };
 
 function createBaseEventCreatedNFTClass(): EventCreatedNFTClass {
-  return { contractId: "", classId: "", name: "", meta: "" };
+  return { contractId: "", operator: "", classId: "", name: "", meta: "" };
 }
 
 export const EventCreatedNFTClass = {
@@ -1089,14 +1126,17 @@ export const EventCreatedNFTClass = {
     if (message.contractId !== "") {
       writer.uint32(10).string(message.contractId);
     }
+    if (message.operator !== "") {
+      writer.uint32(18).string(message.operator);
+    }
     if (message.classId !== "") {
-      writer.uint32(18).string(message.classId);
+      writer.uint32(26).string(message.classId);
     }
     if (message.name !== "") {
-      writer.uint32(26).string(message.name);
+      writer.uint32(34).string(message.name);
     }
     if (message.meta !== "") {
-      writer.uint32(34).string(message.meta);
+      writer.uint32(42).string(message.meta);
     }
     return writer;
   },
@@ -1115,12 +1155,15 @@ export const EventCreatedNFTClass = {
           message.contractId = reader.string();
           break;
         case 2:
-          message.classId = reader.string();
+          message.operator = reader.string();
           break;
         case 3:
-          message.name = reader.string();
+          message.classId = reader.string();
           break;
         case 4:
+          message.name = reader.string();
+          break;
+        case 5:
           message.meta = reader.string();
           break;
         default:
@@ -1134,6 +1177,7 @@ export const EventCreatedNFTClass = {
   fromJSON(object: any): EventCreatedNFTClass {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      operator: isSet(object.operator) ? String(object.operator) : "",
       classId: isSet(object.classId) ? String(object.classId) : "",
       name: isSet(object.name) ? String(object.name) : "",
       meta: isSet(object.meta) ? String(object.meta) : "",
@@ -1143,6 +1187,7 @@ export const EventCreatedNFTClass = {
   toJSON(message: EventCreatedNFTClass): unknown {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.operator !== undefined && (obj.operator = message.operator);
     message.classId !== undefined && (obj.classId = message.classId);
     message.name !== undefined && (obj.name = message.name);
     message.meta !== undefined && (obj.meta = message.meta);
@@ -1154,6 +1199,7 @@ export const EventCreatedNFTClass = {
   ): EventCreatedNFTClass {
     const message = createBaseEventCreatedNFTClass();
     message.contractId = object.contractId ?? "";
+    message.operator = object.operator ?? "";
     message.classId = object.classId ?? "";
     message.name = object.name ?? "";
     message.meta = object.meta ?? "";
@@ -1161,13 +1207,13 @@ export const EventCreatedNFTClass = {
   },
 };
 
-function createBaseEventGrant(): EventGrant {
+function createBaseEventGranted(): EventGranted {
   return { contractId: "", granter: "", grantee: "", permission: 0 };
 }
 
-export const EventGrant = {
+export const EventGranted = {
   encode(
-    message: EventGrant,
+    message: EventGranted,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.contractId !== "") {
@@ -1185,10 +1231,10 @@ export const EventGrant = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): EventGrant {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventGranted {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventGrant();
+    const message = createBaseEventGranted();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1212,7 +1258,7 @@ export const EventGrant = {
     return message;
   },
 
-  fromJSON(object: any): EventGrant {
+  fromJSON(object: any): EventGranted {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
       granter: isSet(object.granter) ? String(object.granter) : "",
@@ -1223,7 +1269,7 @@ export const EventGrant = {
     };
   },
 
-  toJSON(message: EventGrant): unknown {
+  toJSON(message: EventGranted): unknown {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
     message.granter !== undefined && (obj.granter = message.granter);
@@ -1233,10 +1279,10 @@ export const EventGrant = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<EventGrant>, I>>(
+  fromPartial<I extends Exact<DeepPartial<EventGranted>, I>>(
     object: I
-  ): EventGrant {
-    const message = createBaseEventGrant();
+  ): EventGranted {
+    const message = createBaseEventGranted();
     message.contractId = object.contractId ?? "";
     message.granter = object.granter ?? "";
     message.grantee = object.grantee ?? "";
@@ -1245,13 +1291,13 @@ export const EventGrant = {
   },
 };
 
-function createBaseEventAbandon(): EventAbandon {
+function createBaseEventRenounced(): EventRenounced {
   return { contractId: "", grantee: "", permission: 0 };
 }
 
-export const EventAbandon = {
+export const EventRenounced = {
   encode(
-    message: EventAbandon,
+    message: EventRenounced,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.contractId !== "") {
@@ -1266,10 +1312,10 @@ export const EventAbandon = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): EventAbandon {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventRenounced {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventAbandon();
+    const message = createBaseEventRenounced();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1290,7 +1336,7 @@ export const EventAbandon = {
     return message;
   },
 
-  fromJSON(object: any): EventAbandon {
+  fromJSON(object: any): EventRenounced {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
       grantee: isSet(object.grantee) ? String(object.grantee) : "",
@@ -1300,7 +1346,7 @@ export const EventAbandon = {
     };
   },
 
-  toJSON(message: EventAbandon): unknown {
+  toJSON(message: EventRenounced): unknown {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
     message.grantee !== undefined && (obj.grantee = message.grantee);
@@ -1309,10 +1355,10 @@ export const EventAbandon = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<EventAbandon>, I>>(
+  fromPartial<I extends Exact<DeepPartial<EventRenounced>, I>>(
     object: I
-  ): EventAbandon {
-    const message = createBaseEventAbandon();
+  ): EventRenounced {
+    const message = createBaseEventRenounced();
     message.contractId = object.contractId ?? "";
     message.grantee = object.grantee ?? "";
     message.permission = object.permission ?? 0;
@@ -1666,7 +1712,13 @@ export const EventModifiedContract = {
 };
 
 function createBaseEventModifiedTokenClass(): EventModifiedTokenClass {
-  return { contractId: "", operator: "", classId: "", changes: [] };
+  return {
+    contractId: "",
+    operator: "",
+    classId: "",
+    changes: [],
+    typeName: "",
+  };
 }
 
 export const EventModifiedTokenClass = {
@@ -1685,6 +1737,9 @@ export const EventModifiedTokenClass = {
     }
     for (const v of message.changes) {
       Attribute.encode(v!, writer.uint32(34).fork()).ldelim();
+    }
+    if (message.typeName !== "") {
+      writer.uint32(42).string(message.typeName);
     }
     return writer;
   },
@@ -1711,6 +1766,9 @@ export const EventModifiedTokenClass = {
         case 4:
           message.changes.push(Attribute.decode(reader, reader.uint32()));
           break;
+        case 5:
+          message.typeName = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1727,6 +1785,7 @@ export const EventModifiedTokenClass = {
       changes: Array.isArray(object?.changes)
         ? object.changes.map((e: any) => Attribute.fromJSON(e))
         : [],
+      typeName: isSet(object.typeName) ? String(object.typeName) : "",
     };
   },
 
@@ -1742,6 +1801,7 @@ export const EventModifiedTokenClass = {
     } else {
       obj.changes = [];
     }
+    message.typeName !== undefined && (obj.typeName = message.typeName);
     return obj;
   },
 
@@ -1754,6 +1814,7 @@ export const EventModifiedTokenClass = {
     message.classId = object.classId ?? "";
     message.changes =
       object.changes?.map((e) => Attribute.fromPartial(e)) || [];
+    message.typeName = object.typeName ?? "";
     return message;
   },
 };
@@ -1939,7 +2000,13 @@ export const EventAttached = {
 };
 
 function createBaseEventDetached(): EventDetached {
-  return { contractId: "", operator: "", holder: "", subject: "" };
+  return {
+    contractId: "",
+    operator: "",
+    holder: "",
+    subject: "",
+    previousParent: "",
+  };
 }
 
 export const EventDetached = {
@@ -1958,6 +2025,9 @@ export const EventDetached = {
     }
     if (message.subject !== "") {
       writer.uint32(34).string(message.subject);
+    }
+    if (message.previousParent !== "") {
+      writer.uint32(42).string(message.previousParent);
     }
     return writer;
   },
@@ -1981,6 +2051,9 @@ export const EventDetached = {
         case 4:
           message.subject = reader.string();
           break;
+        case 5:
+          message.previousParent = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1995,6 +2068,9 @@ export const EventDetached = {
       operator: isSet(object.operator) ? String(object.operator) : "",
       holder: isSet(object.holder) ? String(object.holder) : "",
       subject: isSet(object.subject) ? String(object.subject) : "",
+      previousParent: isSet(object.previousParent)
+        ? String(object.previousParent)
+        : "",
     };
   },
 
@@ -2004,6 +2080,8 @@ export const EventDetached = {
     message.operator !== undefined && (obj.operator = message.operator);
     message.holder !== undefined && (obj.holder = message.holder);
     message.subject !== undefined && (obj.subject = message.subject);
+    message.previousParent !== undefined &&
+      (obj.previousParent = message.previousParent);
     return obj;
   },
 
@@ -2015,12 +2093,13 @@ export const EventDetached = {
     message.operator = object.operator ?? "";
     message.holder = object.holder ?? "";
     message.subject = object.subject ?? "";
+    message.previousParent = object.previousParent ?? "";
     return message;
   },
 };
 
 function createBaseEventOwnerChanged(): EventOwnerChanged {
-  return { contractId: "", tokenId: "" };
+  return { contractId: "", tokenId: "", from: "", to: "" };
 }
 
 export const EventOwnerChanged = {
@@ -2033,6 +2112,12 @@ export const EventOwnerChanged = {
     }
     if (message.tokenId !== "") {
       writer.uint32(18).string(message.tokenId);
+    }
+    if (message.from !== "") {
+      writer.uint32(26).string(message.from);
+    }
+    if (message.to !== "") {
+      writer.uint32(34).string(message.to);
     }
     return writer;
   },
@@ -2050,6 +2135,12 @@ export const EventOwnerChanged = {
         case 2:
           message.tokenId = reader.string();
           break;
+        case 3:
+          message.from = reader.string();
+          break;
+        case 4:
+          message.to = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -2062,6 +2153,8 @@ export const EventOwnerChanged = {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
       tokenId: isSet(object.tokenId) ? String(object.tokenId) : "",
+      from: isSet(object.from) ? String(object.from) : "",
+      to: isSet(object.to) ? String(object.to) : "",
     };
   },
 
@@ -2069,6 +2162,8 @@ export const EventOwnerChanged = {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
     message.tokenId !== undefined && (obj.tokenId = message.tokenId);
+    message.from !== undefined && (obj.from = message.from);
+    message.to !== undefined && (obj.to = message.to);
     return obj;
   },
 
@@ -2078,12 +2173,14 @@ export const EventOwnerChanged = {
     const message = createBaseEventOwnerChanged();
     message.contractId = object.contractId ?? "";
     message.tokenId = object.tokenId ?? "";
+    message.from = object.from ?? "";
+    message.to = object.to ?? "";
     return message;
   },
 };
 
 function createBaseEventRootChanged(): EventRootChanged {
-  return { contractId: "", tokenId: "" };
+  return { contractId: "", tokenId: "", from: "", to: "" };
 }
 
 export const EventRootChanged = {
@@ -2096,6 +2193,12 @@ export const EventRootChanged = {
     }
     if (message.tokenId !== "") {
       writer.uint32(18).string(message.tokenId);
+    }
+    if (message.from !== "") {
+      writer.uint32(26).string(message.from);
+    }
+    if (message.to !== "") {
+      writer.uint32(34).string(message.to);
     }
     return writer;
   },
@@ -2113,6 +2216,12 @@ export const EventRootChanged = {
         case 2:
           message.tokenId = reader.string();
           break;
+        case 3:
+          message.from = reader.string();
+          break;
+        case 4:
+          message.to = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -2125,6 +2234,8 @@ export const EventRootChanged = {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
       tokenId: isSet(object.tokenId) ? String(object.tokenId) : "",
+      from: isSet(object.from) ? String(object.from) : "",
+      to: isSet(object.to) ? String(object.to) : "",
     };
   },
 
@@ -2132,6 +2243,8 @@ export const EventRootChanged = {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
     message.tokenId !== undefined && (obj.tokenId = message.tokenId);
+    message.from !== undefined && (obj.from = message.from);
+    message.to !== undefined && (obj.to = message.to);
     return obj;
   },
 
@@ -2141,6 +2254,8 @@ export const EventRootChanged = {
     const message = createBaseEventRootChanged();
     message.contractId = object.contractId ?? "";
     message.tokenId = object.tokenId ?? "";
+    message.from = object.from ?? "";
+    message.to = object.to ?? "";
     return message;
   },
 };

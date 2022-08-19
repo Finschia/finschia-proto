@@ -261,11 +261,13 @@ export interface EventRevokedOperator {
 }
 
 /**
- * EventIssue is emitted when a new token class is created.
+ * EventIssued is emitted when a new token class is created.
  *
  * Since: 0.46.0 (finschia)
  */
-export interface EventIssue {
+export interface EventIssued {
+  /** address which created the contract. */
+  creator: string;
   /** contract id associated with the token class. */
   contractId: string;
   /** name defines the human-readable name of the token class. */
@@ -283,13 +285,13 @@ export interface EventIssue {
 }
 
 /**
- * EventGrant is emitted when a granter grants its permission to a grantee.
+ * EventGranted is emitted when a granter grants its permission to a grantee.
  *
  * Info: `granter` would be empty if the permission is granted by an issuance.
  *
  * Since: 0.46.0 (finschia)
  */
-export interface EventGrant {
+export interface EventGranted {
   /** contract id associated with the token class. */
   contractId: string;
   /**
@@ -304,11 +306,11 @@ export interface EventGrant {
 }
 
 /**
- * EventAbandon is emitted when a grantee abandons its permission.
+ * EventRenounced is emitted when a grantee renounces its permission.
  *
  * Since: 0.46.0 (finschia)
  */
-export interface EventAbandon {
+export interface EventRenounced {
   /** contract id associated with the token class. */
   contractId: string;
   /** address of the grantee which abandons its grant. */
@@ -603,8 +605,9 @@ export const EventRevokedOperator = {
   },
 };
 
-function createBaseEventIssue(): EventIssue {
+function createBaseEventIssued(): EventIssued {
   return {
+    creator: "",
     contractId: "",
     name: "",
     symbol: "",
@@ -615,61 +618,67 @@ function createBaseEventIssue(): EventIssue {
   };
 }
 
-export const EventIssue = {
+export const EventIssued = {
   encode(
-    message: EventIssue,
+    message: EventIssued,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
     if (message.contractId !== "") {
-      writer.uint32(10).string(message.contractId);
+      writer.uint32(18).string(message.contractId);
     }
     if (message.name !== "") {
-      writer.uint32(18).string(message.name);
+      writer.uint32(26).string(message.name);
     }
     if (message.symbol !== "") {
-      writer.uint32(26).string(message.symbol);
+      writer.uint32(34).string(message.symbol);
     }
     if (message.uri !== "") {
-      writer.uint32(34).string(message.uri);
+      writer.uint32(42).string(message.uri);
     }
     if (message.meta !== "") {
-      writer.uint32(42).string(message.meta);
+      writer.uint32(50).string(message.meta);
     }
     if (message.decimals !== 0) {
-      writer.uint32(48).int32(message.decimals);
+      writer.uint32(56).int32(message.decimals);
     }
     if (message.mintable === true) {
-      writer.uint32(56).bool(message.mintable);
+      writer.uint32(64).bool(message.mintable);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): EventIssue {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventIssued {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventIssue();
+    const message = createBaseEventIssued();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.contractId = reader.string();
+          message.creator = reader.string();
           break;
         case 2:
-          message.name = reader.string();
+          message.contractId = reader.string();
           break;
         case 3:
-          message.symbol = reader.string();
+          message.name = reader.string();
           break;
         case 4:
-          message.uri = reader.string();
+          message.symbol = reader.string();
           break;
         case 5:
-          message.meta = reader.string();
+          message.uri = reader.string();
           break;
         case 6:
-          message.decimals = reader.int32();
+          message.meta = reader.string();
           break;
         case 7:
+          message.decimals = reader.int32();
+          break;
+        case 8:
           message.mintable = reader.bool();
           break;
         default:
@@ -680,8 +689,9 @@ export const EventIssue = {
     return message;
   },
 
-  fromJSON(object: any): EventIssue {
+  fromJSON(object: any): EventIssued {
     return {
+      creator: isSet(object.creator) ? String(object.creator) : "",
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
       name: isSet(object.name) ? String(object.name) : "",
       symbol: isSet(object.symbol) ? String(object.symbol) : "",
@@ -692,8 +702,9 @@ export const EventIssue = {
     };
   },
 
-  toJSON(message: EventIssue): unknown {
+  toJSON(message: EventIssued): unknown {
     const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
     message.contractId !== undefined && (obj.contractId = message.contractId);
     message.name !== undefined && (obj.name = message.name);
     message.symbol !== undefined && (obj.symbol = message.symbol);
@@ -705,10 +716,11 @@ export const EventIssue = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<EventIssue>, I>>(
+  fromPartial<I extends Exact<DeepPartial<EventIssued>, I>>(
     object: I
-  ): EventIssue {
-    const message = createBaseEventIssue();
+  ): EventIssued {
+    const message = createBaseEventIssued();
+    message.creator = object.creator ?? "";
     message.contractId = object.contractId ?? "";
     message.name = object.name ?? "";
     message.symbol = object.symbol ?? "";
@@ -720,13 +732,13 @@ export const EventIssue = {
   },
 };
 
-function createBaseEventGrant(): EventGrant {
+function createBaseEventGranted(): EventGranted {
   return { contractId: "", granter: "", grantee: "", permission: 0 };
 }
 
-export const EventGrant = {
+export const EventGranted = {
   encode(
-    message: EventGrant,
+    message: EventGranted,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.contractId !== "") {
@@ -744,10 +756,10 @@ export const EventGrant = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): EventGrant {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventGranted {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventGrant();
+    const message = createBaseEventGranted();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -771,7 +783,7 @@ export const EventGrant = {
     return message;
   },
 
-  fromJSON(object: any): EventGrant {
+  fromJSON(object: any): EventGranted {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
       granter: isSet(object.granter) ? String(object.granter) : "",
@@ -782,7 +794,7 @@ export const EventGrant = {
     };
   },
 
-  toJSON(message: EventGrant): unknown {
+  toJSON(message: EventGranted): unknown {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
     message.granter !== undefined && (obj.granter = message.granter);
@@ -792,10 +804,10 @@ export const EventGrant = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<EventGrant>, I>>(
+  fromPartial<I extends Exact<DeepPartial<EventGranted>, I>>(
     object: I
-  ): EventGrant {
-    const message = createBaseEventGrant();
+  ): EventGranted {
+    const message = createBaseEventGranted();
     message.contractId = object.contractId ?? "";
     message.granter = object.granter ?? "";
     message.grantee = object.grantee ?? "";
@@ -804,13 +816,13 @@ export const EventGrant = {
   },
 };
 
-function createBaseEventAbandon(): EventAbandon {
+function createBaseEventRenounced(): EventRenounced {
   return { contractId: "", grantee: "", permission: 0 };
 }
 
-export const EventAbandon = {
+export const EventRenounced = {
   encode(
-    message: EventAbandon,
+    message: EventRenounced,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.contractId !== "") {
@@ -825,10 +837,10 @@ export const EventAbandon = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): EventAbandon {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventRenounced {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventAbandon();
+    const message = createBaseEventRenounced();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -849,7 +861,7 @@ export const EventAbandon = {
     return message;
   },
 
-  fromJSON(object: any): EventAbandon {
+  fromJSON(object: any): EventRenounced {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
       grantee: isSet(object.grantee) ? String(object.grantee) : "",
@@ -859,7 +871,7 @@ export const EventAbandon = {
     };
   },
 
-  toJSON(message: EventAbandon): unknown {
+  toJSON(message: EventRenounced): unknown {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
     message.grantee !== undefined && (obj.grantee = message.grantee);
@@ -868,10 +880,10 @@ export const EventAbandon = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<EventAbandon>, I>>(
+  fromPartial<I extends Exact<DeepPartial<EventRenounced>, I>>(
     object: I
-  ): EventAbandon {
-    const message = createBaseEventAbandon();
+  ): EventRenounced {
+    const message = createBaseEventRenounced();
     message.contractId = object.contractId ?? "";
     message.grantee = object.grantee ?? "";
     message.permission = object.permission ?? 0;

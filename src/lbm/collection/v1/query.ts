@@ -140,6 +140,28 @@ export interface QueryContractResponse {
   contract?: Contract;
 }
 
+/**
+ * QueryTokenClassTypeNameRequest is the request type for the Query/TokenClassTypeName RPC method.
+ *
+ * Since: 0.46.0 (finschia)
+ */
+export interface QueryTokenClassTypeNameRequest {
+  /** contract id associated with the contract. */
+  contractId: string;
+  /** class id associated with the token class. */
+  classId: string;
+}
+
+/**
+ * QueryTokenClassTypeNameResponse is the response type for the Query/TokenClassTypeName RPC method.
+ *
+ * Since: 0.46.0 (finschia)
+ */
+export interface QueryTokenClassTypeNameResponse {
+  /** type name of the token class. */
+  name: string;
+}
+
 /** QueryTokenTypeRequest is the request type for the Query/TokenType RPC method. */
 export interface QueryTokenTypeRequest {
   /** contract id associated with the contract. */
@@ -1477,6 +1499,129 @@ export const QueryContractResponse = {
       object.contract !== undefined && object.contract !== null
         ? Contract.fromPartial(object.contract)
         : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryTokenClassTypeNameRequest(): QueryTokenClassTypeNameRequest {
+  return { contractId: "", classId: "" };
+}
+
+export const QueryTokenClassTypeNameRequest = {
+  encode(
+    message: QueryTokenClassTypeNameRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
+    }
+    if (message.classId !== "") {
+      writer.uint32(18).string(message.classId);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryTokenClassTypeNameRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryTokenClassTypeNameRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.contractId = reader.string();
+          break;
+        case 2:
+          message.classId = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryTokenClassTypeNameRequest {
+    return {
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      classId: isSet(object.classId) ? String(object.classId) : "",
+    };
+  },
+
+  toJSON(message: QueryTokenClassTypeNameRequest): unknown {
+    const obj: any = {};
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.classId !== undefined && (obj.classId = message.classId);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryTokenClassTypeNameRequest>, I>>(
+    object: I
+  ): QueryTokenClassTypeNameRequest {
+    const message = createBaseQueryTokenClassTypeNameRequest();
+    message.contractId = object.contractId ?? "";
+    message.classId = object.classId ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryTokenClassTypeNameResponse(): QueryTokenClassTypeNameResponse {
+  return { name: "" };
+}
+
+export const QueryTokenClassTypeNameResponse = {
+  encode(
+    message: QueryTokenClassTypeNameResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.name !== "") {
+      writer.uint32(10).string(message.name);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryTokenClassTypeNameResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryTokenClassTypeNameResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.name = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryTokenClassTypeNameResponse {
+    return {
+      name: isSet(object.name) ? String(object.name) : "",
+    };
+  },
+
+  toJSON(message: QueryTokenClassTypeNameResponse): unknown {
+    const obj: any = {};
+    message.name !== undefined && (obj.name = message.name);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryTokenClassTypeNameResponse>, I>>(
+    object: I
+  ): QueryTokenClassTypeNameResponse {
+    const message = createBaseQueryTokenClassTypeNameResponse();
+    message.name = object.name ?? "";
     return message;
   },
 };
@@ -3176,6 +3321,19 @@ export interface Query {
    */
   Contract(request: QueryContractRequest): Promise<QueryContractResponse>;
   /**
+   * TokenClassTypeName queries the fully qualified message type name of a token class from its class id.
+   * Throws:
+   * - ErrInvalidRequest
+   *   - `contract_id` is of invalid format.
+   *   - `class_id` is of invalid format.
+   * - ErrNotFound
+   *   - there is no token class of `class_id`.
+   * Since: 0.46.0 (finschia)
+   */
+  TokenClassTypeName(
+    request: QueryTokenClassTypeNameRequest
+  ): Promise<QueryTokenClassTypeNameResponse>;
+  /**
    * TokenType queries metadata of a token type.
    * Throws:
    * - ErrInvalidRequest
@@ -3301,6 +3459,7 @@ export class QueryClientImpl implements Query {
     this.NFTMinted = this.NFTMinted.bind(this);
     this.NFTBurnt = this.NFTBurnt.bind(this);
     this.Contract = this.Contract.bind(this);
+    this.TokenClassTypeName = this.TokenClassTypeName.bind(this);
     this.TokenType = this.TokenType.bind(this);
     this.TokenTypes = this.TokenTypes.bind(this);
     this.Token = this.Token.bind(this);
@@ -3420,6 +3579,20 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryContractResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  TokenClassTypeName(
+    request: QueryTokenClassTypeNameRequest
+  ): Promise<QueryTokenClassTypeNameResponse> {
+    const data = QueryTokenClassTypeNameRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "lbm.collection.v1.Query",
+      "TokenClassTypeName",
+      data
+    );
+    return promise.then((data) =>
+      QueryTokenClassTypeNameResponse.decode(new _m0.Reader(data))
     );
   }
 

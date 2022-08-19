@@ -12,7 +12,7 @@ import {
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = "lbm.wasm.v1";
+export const protobufPackage = "cosmwasm.wasm.v1";
 
 /** QueryContractInfoRequest is the request type for the Query/ContractInfo RPC method */
 export interface QueryContractInfoRequest {
@@ -1656,7 +1656,11 @@ export class QueryClientImpl implements Query {
     request: QueryContractInfoRequest
   ): Promise<QueryContractInfoResponse> {
     const data = QueryContractInfoRequest.encode(request).finish();
-    const promise = this.rpc.request("lbm.wasm.v1.Query", "ContractInfo", data);
+    const promise = this.rpc.request(
+      "cosmwasm.wasm.v1.Query",
+      "ContractInfo",
+      data
+    );
     return promise.then((data) =>
       QueryContractInfoResponse.decode(new _m0.Reader(data))
     );
@@ -1667,7 +1671,7 @@ export class QueryClientImpl implements Query {
   ): Promise<QueryContractHistoryResponse> {
     const data = QueryContractHistoryRequest.encode(request).finish();
     const promise = this.rpc.request(
-      "lbm.wasm.v1.Query",
+      "cosmwasm.wasm.v1.Query",
       "ContractHistory",
       data
     );
@@ -1681,7 +1685,7 @@ export class QueryClientImpl implements Query {
   ): Promise<QueryContractsByCodeResponse> {
     const data = QueryContractsByCodeRequest.encode(request).finish();
     const promise = this.rpc.request(
-      "lbm.wasm.v1.Query",
+      "cosmwasm.wasm.v1.Query",
       "ContractsByCode",
       data
     );
@@ -1695,7 +1699,7 @@ export class QueryClientImpl implements Query {
   ): Promise<QueryAllContractStateResponse> {
     const data = QueryAllContractStateRequest.encode(request).finish();
     const promise = this.rpc.request(
-      "lbm.wasm.v1.Query",
+      "cosmwasm.wasm.v1.Query",
       "AllContractState",
       data
     );
@@ -1709,7 +1713,7 @@ export class QueryClientImpl implements Query {
   ): Promise<QueryRawContractStateResponse> {
     const data = QueryRawContractStateRequest.encode(request).finish();
     const promise = this.rpc.request(
-      "lbm.wasm.v1.Query",
+      "cosmwasm.wasm.v1.Query",
       "RawContractState",
       data
     );
@@ -1723,7 +1727,7 @@ export class QueryClientImpl implements Query {
   ): Promise<QuerySmartContractStateResponse> {
     const data = QuerySmartContractStateRequest.encode(request).finish();
     const promise = this.rpc.request(
-      "lbm.wasm.v1.Query",
+      "cosmwasm.wasm.v1.Query",
       "SmartContractState",
       data
     );
@@ -1734,7 +1738,7 @@ export class QueryClientImpl implements Query {
 
   Code(request: QueryCodeRequest): Promise<QueryCodeResponse> {
     const data = QueryCodeRequest.encode(request).finish();
-    const promise = this.rpc.request("lbm.wasm.v1.Query", "Code", data);
+    const promise = this.rpc.request("cosmwasm.wasm.v1.Query", "Code", data);
     return promise.then((data) =>
       QueryCodeResponse.decode(new _m0.Reader(data))
     );
@@ -1742,7 +1746,7 @@ export class QueryClientImpl implements Query {
 
   Codes(request: QueryCodesRequest): Promise<QueryCodesResponse> {
     const data = QueryCodesRequest.encode(request).finish();
-    const promise = this.rpc.request("lbm.wasm.v1.Query", "Codes", data);
+    const promise = this.rpc.request("cosmwasm.wasm.v1.Query", "Codes", data);
     return promise.then((data) =>
       QueryCodesResponse.decode(new _m0.Reader(data))
     );
@@ -1752,7 +1756,11 @@ export class QueryClientImpl implements Query {
     request: QueryPinnedCodesRequest
   ): Promise<QueryPinnedCodesResponse> {
     const data = QueryPinnedCodesRequest.encode(request).finish();
-    const promise = this.rpc.request("lbm.wasm.v1.Query", "PinnedCodes", data);
+    const promise = this.rpc.request(
+      "cosmwasm.wasm.v1.Query",
+      "PinnedCodes",
+      data
+    );
     return promise.then((data) =>
       QueryPinnedCodesResponse.decode(new _m0.Reader(data))
     );
