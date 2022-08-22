@@ -16,6 +16,7 @@
     "ibc",
     "lbm",
     "ostracon",
+    "cosmwasm",
     "*.md"
   ],
   "publishConfig": {
