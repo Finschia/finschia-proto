@@ -9,7 +9,7 @@ import Long from "long";
 import { Coin } from "../../../cosmos/base/v1beta1/coin";
 import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = "lbm.wasm.v1";
+export const protobufPackage = "cosmwasm.wasm.v1";
 
 /** StoreCodeProposal gov proposal content type to submit WASM code to the system */
 export interface StoreCodeProposal {

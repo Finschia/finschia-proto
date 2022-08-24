@@ -12,17 +12,26 @@ export const protobufPackage = "cosmos.slashing.v1beta1";
  */
 export interface ValidatorSigningInfo {
   address: string;
-  /** timestamp validator cannot be unjailed until */
+  /** Height at which validator was first a candidate OR was unjailed */
+  startHeight: Long;
+  /**
+   * Index which is incremented each time the validator was a bonded
+   * in a block and may have signed a precommit or not. This in conjunction with the
+   * `SignedBlocksWindow` param determines the index in the `MissedBlocksBitArray`.
+   */
+  indexOffset: Long;
+  /** Timestamp until which the validator is jailed due to liveness downtime. */
   jailedUntil?: Timestamp;
   /**
-   * whether or not a validator has been tombstoned (killed out of validator
-   * set)
+   * Whether or not a validator has been tombstoned (killed out of validator set). It is set
+   * once the validator commits an equivocation or for any other configured misbehiavor.
    */
   tombstoned: boolean;
-  /** missed blocks counter (to avoid scanning the array every time) */
+  /**
+   * A counter kept to avoid unnecessary array reads.
+   * Note that `Sum(MissedBlocksBitArray)` always equals `MissedBlocksCounter`.
+   */
   missedBlocksCounter: Long;
-  /** how many times the validator joined to voter set */
-  voterSetCounter: Long;
 }
 
 /** Params represents the parameters used for by the slashing module. */
@@ -37,10 +46,11 @@ export interface Params {
 function createBaseValidatorSigningInfo(): ValidatorSigningInfo {
   return {
     address: "",
+    startHeight: Long.ZERO,
+    indexOffset: Long.ZERO,
     jailedUntil: undefined,
     tombstoned: false,
     missedBlocksCounter: Long.ZERO,
-    voterSetCounter: Long.ZERO,
   };
 }
 
@@ -52,17 +62,20 @@ export const ValidatorSigningInfo = {
     if (message.address !== "") {
       writer.uint32(10).string(message.address);
     }
+    if (!message.startHeight.isZero()) {
+      writer.uint32(16).int64(message.startHeight);
+    }
+    if (!message.indexOffset.isZero()) {
+      writer.uint32(24).int64(message.indexOffset);
+    }
     if (message.jailedUntil !== undefined) {
-      Timestamp.encode(message.jailedUntil, writer.uint32(18).fork()).ldelim();
+      Timestamp.encode(message.jailedUntil, writer.uint32(34).fork()).ldelim();
     }
     if (message.tombstoned === true) {
-      writer.uint32(24).bool(message.tombstoned);
+      writer.uint32(40).bool(message.tombstoned);
     }
     if (!message.missedBlocksCounter.isZero()) {
-      writer.uint32(32).int64(message.missedBlocksCounter);
-    }
-    if (!message.voterSetCounter.isZero()) {
-      writer.uint32(40).int64(message.voterSetCounter);
+      writer.uint32(48).int64(message.missedBlocksCounter);
     }
     return writer;
   },
@@ -81,16 +94,19 @@ export const ValidatorSigningInfo = {
           message.address = reader.string();
           break;
         case 2:
-          message.jailedUntil = Timestamp.decode(reader, reader.uint32());
+          message.startHeight = reader.int64() as Long;
           break;
         case 3:
-          message.tombstoned = reader.bool();
+          message.indexOffset = reader.int64() as Long;
           break;
         case 4:
-          message.missedBlocksCounter = reader.int64() as Long;
+          message.jailedUntil = Timestamp.decode(reader, reader.uint32());
           break;
         case 5:
-          message.voterSetCounter = reader.int64() as Long;
+          message.tombstoned = reader.bool();
+          break;
+        case 6:
+          message.missedBlocksCounter = reader.int64() as Long;
           break;
         default:
           reader.skipType(tag & 7);
@@ -103,6 +119,12 @@ export const ValidatorSigningInfo = {
   fromJSON(object: any): ValidatorSigningInfo {
     return {
       address: isSet(object.address) ? String(object.address) : "",
+      startHeight: isSet(object.startHeight)
+        ? Long.fromValue(object.startHeight)
+        : Long.ZERO,
+      indexOffset: isSet(object.indexOffset)
+        ? Long.fromValue(object.indexOffset)
+        : Long.ZERO,
       jailedUntil: isSet(object.jailedUntil)
         ? fromJsonTimestamp(object.jailedUntil)
         : undefined,
@@ -110,15 +132,16 @@ export const ValidatorSigningInfo = {
       missedBlocksCounter: isSet(object.missedBlocksCounter)
         ? Long.fromValue(object.missedBlocksCounter)
         : Long.ZERO,
-      voterSetCounter: isSet(object.voterSetCounter)
-        ? Long.fromValue(object.voterSetCounter)
-        : Long.ZERO,
     };
   },
 
   toJSON(message: ValidatorSigningInfo): unknown {
     const obj: any = {};
     message.address !== undefined && (obj.address = message.address);
+    message.startHeight !== undefined &&
+      (obj.startHeight = (message.startHeight || Long.ZERO).toString());
+    message.indexOffset !== undefined &&
+      (obj.indexOffset = (message.indexOffset || Long.ZERO).toString());
     message.jailedUntil !== undefined &&
       (obj.jailedUntil = fromTimestamp(message.jailedUntil).toISOString());
     message.tombstoned !== undefined && (obj.tombstoned = message.tombstoned);
@@ -126,8 +149,6 @@ export const ValidatorSigningInfo = {
       (obj.missedBlocksCounter = (
         message.missedBlocksCounter || Long.ZERO
       ).toString());
-    message.voterSetCounter !== undefined &&
-      (obj.voterSetCounter = (message.voterSetCounter || Long.ZERO).toString());
     return obj;
   },
 
@@ -136,6 +157,14 @@ export const ValidatorSigningInfo = {
   ): ValidatorSigningInfo {
     const message = createBaseValidatorSigningInfo();
     message.address = object.address ?? "";
+    message.startHeight =
+      object.startHeight !== undefined && object.startHeight !== null
+        ? Long.fromValue(object.startHeight)
+        : Long.ZERO;
+    message.indexOffset =
+      object.indexOffset !== undefined && object.indexOffset !== null
+        ? Long.fromValue(object.indexOffset)
+        : Long.ZERO;
     message.jailedUntil =
       object.jailedUntil !== undefined && object.jailedUntil !== null
         ? Timestamp.fromPartial(object.jailedUntil)
@@ -145,10 +174,6 @@ export const ValidatorSigningInfo = {
       object.missedBlocksCounter !== undefined &&
       object.missedBlocksCounter !== null
         ? Long.fromValue(object.missedBlocksCounter)
-        : Long.ZERO;
-    message.voterSetCounter =
-      object.voterSetCounter !== undefined && object.voterSetCounter !== null
-        ? Long.fromValue(object.voterSetCounter)
         : Long.ZERO;
     return message;
   },

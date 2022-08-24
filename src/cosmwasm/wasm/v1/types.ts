@@ -3,7 +3,7 @@ import { Any } from "../../../google/protobuf/any";
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = "lbm.wasm.v1";
+export const protobufPackage = "cosmwasm.wasm.v1";
 
 /** AccessType permission types */
 export enum AccessType {
@@ -199,13 +199,13 @@ export interface ContractInfo {
    */
   created?: AbsoluteTxPosition;
   ibcPortId: string;
-  /** Status is a status of a contract */
-  status: ContractStatus;
   /**
    * Extension is an extension point to store custom metadata within the
    * persistence model.
    */
   extension?: Any;
+  /** Status is a status of a contract */
+  status: ContractStatus;
 }
 
 /** ContractCodeHistoryEntry metadata to a contract. */
@@ -595,8 +595,8 @@ function createBaseContractInfo(): ContractInfo {
     label: "",
     created: undefined,
     ibcPortId: "",
-    status: 0,
     extension: undefined,
+    status: 0,
   };
 }
 
@@ -626,11 +626,11 @@ export const ContractInfo = {
     if (message.ibcPortId !== "") {
       writer.uint32(50).string(message.ibcPortId);
     }
-    if (message.status !== 0) {
-      writer.uint32(56).int32(message.status);
-    }
     if (message.extension !== undefined) {
-      Any.encode(message.extension, writer.uint32(66).fork()).ldelim();
+      Any.encode(message.extension, writer.uint32(58).fork()).ldelim();
+    }
+    if (message.status !== 0) {
+      writer.uint32(64).int32(message.status);
     }
     return writer;
   },
@@ -661,10 +661,10 @@ export const ContractInfo = {
           message.ibcPortId = reader.string();
           break;
         case 7:
-          message.status = reader.int32() as any;
+          message.extension = Any.decode(reader, reader.uint32());
           break;
         case 8:
-          message.extension = Any.decode(reader, reader.uint32());
+          message.status = reader.int32() as any;
           break;
         default:
           reader.skipType(tag & 7);
@@ -684,10 +684,10 @@ export const ContractInfo = {
         ? AbsoluteTxPosition.fromJSON(object.created)
         : undefined,
       ibcPortId: isSet(object.ibcPortId) ? String(object.ibcPortId) : "",
-      status: isSet(object.status) ? contractStatusFromJSON(object.status) : 0,
       extension: isSet(object.extension)
         ? Any.fromJSON(object.extension)
         : undefined,
+      status: isSet(object.status) ? contractStatusFromJSON(object.status) : 0,
     };
   },
 
@@ -703,12 +703,12 @@ export const ContractInfo = {
         ? AbsoluteTxPosition.toJSON(message.created)
         : undefined);
     message.ibcPortId !== undefined && (obj.ibcPortId = message.ibcPortId);
-    message.status !== undefined &&
-      (obj.status = contractStatusToJSON(message.status));
     message.extension !== undefined &&
       (obj.extension = message.extension
         ? Any.toJSON(message.extension)
         : undefined);
+    message.status !== undefined &&
+      (obj.status = contractStatusToJSON(message.status));
     return obj;
   },
 
@@ -728,11 +728,11 @@ export const ContractInfo = {
         ? AbsoluteTxPosition.fromPartial(object.created)
         : undefined;
     message.ibcPortId = object.ibcPortId ?? "";
-    message.status = object.status ?? 0;
     message.extension =
       object.extension !== undefined && object.extension !== null
         ? Any.fromPartial(object.extension)
         : undefined;
+    message.status = object.status ?? 0;
     return message;
   },
 };

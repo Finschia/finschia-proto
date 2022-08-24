@@ -4,7 +4,7 @@ import Long from "long";
 import { MsgStoreCode, MsgInstantiateContract, MsgExecuteContract } from "./tx";
 import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = "lbm.wasm.v1";
+export const protobufPackage = "cosmwasm.wasm.v1";
 
 /** GenesisState - genesis state of x/wasm */
 export interface GenesisState {

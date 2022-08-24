@@ -3718,7 +3718,7 @@ export interface Msg {
   /**
    * GrantPermission allows one to mint or burn tokens or modify metadata.
    * Fires:
-   * - EventGrant
+   * - EventGranted
    * - grant_perm (deprecated, not typed)
    * Throws:
    * - ErrUnauthorized
@@ -3732,7 +3732,7 @@ export interface Msg {
   /**
    * RevokePermission abandons a permission.
    * Fires:
-   * - EventAbandon
+   * - EventRenounced
    * - revoke_perm (deprecated, not typed)
    * Throws:
    * - ErrUnauthorized
