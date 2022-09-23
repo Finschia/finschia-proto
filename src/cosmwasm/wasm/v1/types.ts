@@ -55,49 +55,6 @@ export function accessTypeToJSON(object: AccessType): string {
   }
 }
 
-/** ContractStatus types */
-export enum ContractStatus {
-  /** CONTRACT_STATUS_UNSPECIFIED - ContractStatus unspecified */
-  CONTRACT_STATUS_UNSPECIFIED = 0,
-  /** CONTRACT_STATUS_ACTIVE - ContractStatus active */
-  CONTRACT_STATUS_ACTIVE = 1,
-  /** CONTRACT_STATUS_INACTIVE - ContractStatus inactive */
-  CONTRACT_STATUS_INACTIVE = 2,
-  UNRECOGNIZED = -1,
-}
-
-export function contractStatusFromJSON(object: any): ContractStatus {
-  switch (object) {
-    case 0:
-    case "CONTRACT_STATUS_UNSPECIFIED":
-      return ContractStatus.CONTRACT_STATUS_UNSPECIFIED;
-    case 1:
-    case "CONTRACT_STATUS_ACTIVE":
-      return ContractStatus.CONTRACT_STATUS_ACTIVE;
-    case 2:
-    case "CONTRACT_STATUS_INACTIVE":
-      return ContractStatus.CONTRACT_STATUS_INACTIVE;
-    case -1:
-    case "UNRECOGNIZED":
-    default:
-      return ContractStatus.UNRECOGNIZED;
-  }
-}
-
-export function contractStatusToJSON(object: ContractStatus): string {
-  switch (object) {
-    case ContractStatus.CONTRACT_STATUS_UNSPECIFIED:
-      return "CONTRACT_STATUS_UNSPECIFIED";
-    case ContractStatus.CONTRACT_STATUS_ACTIVE:
-      return "CONTRACT_STATUS_ACTIVE";
-    case ContractStatus.CONTRACT_STATUS_INACTIVE:
-      return "CONTRACT_STATUS_INACTIVE";
-    case ContractStatus.UNRECOGNIZED:
-    default:
-      return "UNRECOGNIZED";
-  }
-}
-
 /** ContractCodeHistoryOperationType actions that caused a code change */
 export enum ContractCodeHistoryOperationType {
   /** CONTRACT_CODE_HISTORY_OPERATION_TYPE_UNSPECIFIED - ContractCodeHistoryOperationTypeUnspecified placeholder for empty value */
@@ -204,8 +161,6 @@ export interface ContractInfo {
    * persistence model.
    */
   extension?: Any;
-  /** Status is a status of a contract */
-  status: ContractStatus;
 }
 
 /** ContractCodeHistoryEntry metadata to a contract. */
@@ -596,7 +551,6 @@ function createBaseContractInfo(): ContractInfo {
     created: undefined,
     ibcPortId: "",
     extension: undefined,
-    status: 0,
   };
 }
 
@@ -629,9 +583,6 @@ export const ContractInfo = {
     if (message.extension !== undefined) {
       Any.encode(message.extension, writer.uint32(58).fork()).ldelim();
     }
-    if (message.status !== 0) {
-      writer.uint32(64).int32(message.status);
-    }
     return writer;
   },
 
@@ -663,9 +614,6 @@ export const ContractInfo = {
         case 7:
           message.extension = Any.decode(reader, reader.uint32());
           break;
-        case 8:
-          message.status = reader.int32() as any;
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -687,7 +635,6 @@ export const ContractInfo = {
       extension: isSet(object.extension)
         ? Any.fromJSON(object.extension)
         : undefined,
-      status: isSet(object.status) ? contractStatusFromJSON(object.status) : 0,
     };
   },
 
@@ -707,8 +654,6 @@ export const ContractInfo = {
       (obj.extension = message.extension
         ? Any.toJSON(message.extension)
         : undefined);
-    message.status !== undefined &&
-      (obj.status = contractStatusToJSON(message.status));
     return obj;
   },
 
@@ -732,7 +677,6 @@ export const ContractInfo = {
       object.extension !== undefined && object.extension !== null
         ? Any.fromPartial(object.extension)
         : undefined;
-    message.status = object.status ?? 0;
     return message;
   },
 };
