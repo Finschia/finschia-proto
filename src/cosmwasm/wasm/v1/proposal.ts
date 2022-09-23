@@ -1,10 +1,5 @@
 /* eslint-disable */
-import {
-  AccessConfig,
-  ContractStatus,
-  contractStatusFromJSON,
-  contractStatusToJSON,
-} from "./types";
+import { AccessConfig } from "./types";
 import Long from "long";
 import { Coin } from "../../../cosmos/base/v1beta1/coin";
 import * as _m0 from "protobufjs/minimal";
@@ -130,18 +125,6 @@ export interface UnpinCodesProposal {
   description: string;
   /** CodeIDs references the WASM codes */
   codeIds: Long[];
-}
-
-/** UpdateStatusProposal gov proposal content type to update the contract status. */
-export interface UpdateContractStatusProposal {
-  /** Title is a short summary */
-  title: string;
-  /** Description is a human readable text */
-  description: string;
-  /** Contract is the address of the smart contract */
-  contract: string;
-  /** Status to be set */
-  status: ContractStatus;
 }
 
 /**
@@ -1074,92 +1057,6 @@ export const UnpinCodesProposal = {
     message.title = object.title ?? "";
     message.description = object.description ?? "";
     message.codeIds = object.codeIds?.map((e) => Long.fromValue(e)) || [];
-    return message;
-  },
-};
-
-function createBaseUpdateContractStatusProposal(): UpdateContractStatusProposal {
-  return { title: "", description: "", contract: "", status: 0 };
-}
-
-export const UpdateContractStatusProposal = {
-  encode(
-    message: UpdateContractStatusProposal,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.title !== "") {
-      writer.uint32(10).string(message.title);
-    }
-    if (message.description !== "") {
-      writer.uint32(18).string(message.description);
-    }
-    if (message.contract !== "") {
-      writer.uint32(26).string(message.contract);
-    }
-    if (message.status !== 0) {
-      writer.uint32(32).int32(message.status);
-    }
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): UpdateContractStatusProposal {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUpdateContractStatusProposal();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.title = reader.string();
-          break;
-        case 2:
-          message.description = reader.string();
-          break;
-        case 3:
-          message.contract = reader.string();
-          break;
-        case 4:
-          message.status = reader.int32() as any;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): UpdateContractStatusProposal {
-    return {
-      title: isSet(object.title) ? String(object.title) : "",
-      description: isSet(object.description) ? String(object.description) : "",
-      contract: isSet(object.contract) ? String(object.contract) : "",
-      status: isSet(object.status) ? contractStatusFromJSON(object.status) : 0,
-    };
-  },
-
-  toJSON(message: UpdateContractStatusProposal): unknown {
-    const obj: any = {};
-    message.title !== undefined && (obj.title = message.title);
-    message.description !== undefined &&
-      (obj.description = message.description);
-    message.contract !== undefined && (obj.contract = message.contract);
-    message.status !== undefined &&
-      (obj.status = contractStatusToJSON(message.status));
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<UpdateContractStatusProposal>, I>>(
-    object: I
-  ): UpdateContractStatusProposal {
-    const message = createBaseUpdateContractStatusProposal();
-    message.title = object.title ?? "";
-    message.description = object.description ?? "";
-    message.contract = object.contract ?? "";
-    message.status = object.status ?? 0;
     return message;
   },
 };
