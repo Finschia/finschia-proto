@@ -5,7 +5,7 @@ import { Channel } from "../../../core/channel/v1/channel";
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = "ibc.lightclients.solomachine.v1";
+export const protobufPackage = "ibc.lightclients.solomachine.v2";
 
 /**
  * DataType defines the type of solo machine proof being created. This is done
@@ -110,7 +110,7 @@ export interface ClientState {
   /** latest sequence of the client state */
   sequence: Long;
   /** frozen sequence of the solo machine */
-  frozenSequence: Long;
+  isFrozen: boolean;
   consensusState?: ConsensusState;
   /**
    * when set to true, will allow governance to update a solo machine client.
@@ -267,7 +267,7 @@ export interface NextSequenceRecvData {
 function createBaseClientState(): ClientState {
   return {
     sequence: Long.UZERO,
-    frozenSequence: Long.UZERO,
+    isFrozen: false,
     consensusState: undefined,
     allowUpdateAfterProposal: false,
   };
@@ -281,8 +281,8 @@ export const ClientState = {
     if (!message.sequence.isZero()) {
       writer.uint32(8).uint64(message.sequence);
     }
-    if (!message.frozenSequence.isZero()) {
-      writer.uint32(16).uint64(message.frozenSequence);
+    if (message.isFrozen === true) {
+      writer.uint32(16).bool(message.isFrozen);
     }
     if (message.consensusState !== undefined) {
       ConsensusState.encode(
@@ -307,7 +307,7 @@ export const ClientState = {
           message.sequence = reader.uint64() as Long;
           break;
         case 2:
-          message.frozenSequence = reader.uint64() as Long;
+          message.isFrozen = reader.bool();
           break;
         case 3:
           message.consensusState = ConsensusState.decode(
@@ -331,9 +331,7 @@ export const ClientState = {
       sequence: isSet(object.sequence)
         ? Long.fromValue(object.sequence)
         : Long.UZERO,
-      frozenSequence: isSet(object.frozenSequence)
-        ? Long.fromValue(object.frozenSequence)
-        : Long.UZERO,
+      isFrozen: isSet(object.isFrozen) ? Boolean(object.isFrozen) : false,
       consensusState: isSet(object.consensusState)
         ? ConsensusState.fromJSON(object.consensusState)
         : undefined,
@@ -347,8 +345,7 @@ export const ClientState = {
     const obj: any = {};
     message.sequence !== undefined &&
       (obj.sequence = (message.sequence || Long.UZERO).toString());
-    message.frozenSequence !== undefined &&
-      (obj.frozenSequence = (message.frozenSequence || Long.UZERO).toString());
+    message.isFrozen !== undefined && (obj.isFrozen = message.isFrozen);
     message.consensusState !== undefined &&
       (obj.consensusState = message.consensusState
         ? ConsensusState.toJSON(message.consensusState)
@@ -366,10 +363,7 @@ export const ClientState = {
       object.sequence !== undefined && object.sequence !== null
         ? Long.fromValue(object.sequence)
         : Long.UZERO;
-    message.frozenSequence =
-      object.frozenSequence !== undefined && object.frozenSequence !== null
-        ? Long.fromValue(object.frozenSequence)
-        : Long.UZERO;
+    message.isFrozen = object.isFrozen ?? false;
     message.consensusState =
       object.consensusState !== undefined && object.consensusState !== null
         ? ConsensusState.fromPartial(object.consensusState)

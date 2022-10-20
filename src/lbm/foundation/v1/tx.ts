@@ -1,11 +1,12 @@
 /* eslint-disable */
-import { Any } from "../../../google/protobuf/any";
 import {
+  Params,
   VoteOption,
-  Member,
+  MemberRequest,
   voteOptionFromJSON,
   voteOptionToJSON,
 } from "./foundation";
+import { Any } from "../../../google/protobuf/any";
 import Long from "long";
 import { Coin } from "../../../cosmos/base/v1beta1/coin";
 import * as _m0 from "protobufjs/minimal";
@@ -56,23 +57,38 @@ export function execToJSON(object: Exec): string {
   }
 }
 
-/** MsgFundTreasury represents a message to fund the treasury. */
+/** MsgUpdateParams is the Msg/UpdateParams request type. */
+export interface MsgUpdateParams {
+  /** authority is the address of the operator account. */
+  authority: string;
+  /**
+   * params defines the x/foundation parameters to update.
+   *
+   * NOTE: All parameters must be supplied.
+   */
+  params?: Params;
+}
+
+/** MsgUpdateParamsResponse is the Msg/UpdateParams response type. */
+export interface MsgUpdateParamsResponse {}
+
+/** MsgFundTreasury is the Msg/FundTreasury request type. */
 export interface MsgFundTreasury {
   from: string;
   amount: Coin[];
 }
 
-/** MsgFundTreasuryResponse defines the Msg/FundTreasury response type. */
+/** MsgFundTreasuryResponse is the Msg/FundTreasury response type. */
 export interface MsgFundTreasuryResponse {}
 
-/** MsgWithdrawFromTreasury represents a message to withdraw coins from the treasury. */
+/** MsgWithdrawFromTreasury is the Msg/WithdrawFromTreasury request type. */
 export interface MsgWithdrawFromTreasury {
   operator: string;
   to: string;
   amount: Coin[];
 }
 
-/** MsgWithdrawFromTreasuryResponse defines the Msg/WithdrawFromTreasury response type. */
+/** MsgWithdrawFromTreasuryResponse is the Msg/WithdrawFromTreasury response type. */
 export interface MsgWithdrawFromTreasuryResponse {}
 
 /** MsgUpdateMembers is the Msg/UpdateMembers request type. */
@@ -81,9 +97,9 @@ export interface MsgUpdateMembers {
   operator: string;
   /**
    * member_updates is the list of members to update,
-   * set participating to false to remove a member.
+   * set remove to true to remove a member.
    */
-  memberUpdates: Member[];
+  memberUpdates: MemberRequest[];
 }
 
 /** MsgUpdateMembersResponse is the Msg/UpdateMembers response type. */
@@ -177,7 +193,7 @@ export interface MsgLeaveFoundation {
 export interface MsgLeaveFoundationResponse {}
 
 /**
- * MsgGrant is a request type for Grant method. It declares authorization to the grantee
+ * MsgGrant is the Msg/Grant request type.
  * on behalf of the foundation.
  */
 export interface MsgGrant {
@@ -186,21 +202,141 @@ export interface MsgGrant {
   authorization?: Any;
 }
 
-/** MsgGrantResponse defines the Msg/MsgGrant response type. */
+/** MsgGrantResponse is the Msg/MsgGrant response type. */
 export interface MsgGrantResponse {}
 
-/**
- * MsgRevoke revokes any authorization with the provided sdk.Msg type
- * to the grantee on behalf of the foundation.
- */
+/** MsgRevoke is the Msg/Revoke request type. */
 export interface MsgRevoke {
   operator: string;
   grantee: string;
   msgTypeUrl: string;
 }
 
-/** MsgRevokeResponse defines the Msg/MsgRevokeResponse response type. */
+/** MsgRevokeResponse is the Msg/MsgRevokeResponse response type. */
 export interface MsgRevokeResponse {}
+
+/** MsgGovMint is the Msg/GovMint request type. */
+export interface MsgGovMint {
+  operator: string;
+  amount: Coin[];
+}
+
+/** MsgGovMintResponse is the Msg/GovMint response type. */
+export interface MsgGovMintResponse {}
+
+function createBaseMsgUpdateParams(): MsgUpdateParams {
+  return { authority: "", params: undefined };
+}
+
+export const MsgUpdateParams = {
+  encode(
+    message: MsgUpdateParams,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.authority !== "") {
+      writer.uint32(10).string(message.authority);
+    }
+    if (message.params !== undefined) {
+      Params.encode(message.params, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgUpdateParams {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgUpdateParams();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.authority = reader.string();
+          break;
+        case 2:
+          message.params = Params.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgUpdateParams {
+    return {
+      authority: isSet(object.authority) ? String(object.authority) : "",
+      params: isSet(object.params) ? Params.fromJSON(object.params) : undefined,
+    };
+  },
+
+  toJSON(message: MsgUpdateParams): unknown {
+    const obj: any = {};
+    message.authority !== undefined && (obj.authority = message.authority);
+    message.params !== undefined &&
+      (obj.params = message.params ? Params.toJSON(message.params) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgUpdateParams>, I>>(
+    object: I
+  ): MsgUpdateParams {
+    const message = createBaseMsgUpdateParams();
+    message.authority = object.authority ?? "";
+    message.params =
+      object.params !== undefined && object.params !== null
+        ? Params.fromPartial(object.params)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseMsgUpdateParamsResponse(): MsgUpdateParamsResponse {
+  return {};
+}
+
+export const MsgUpdateParamsResponse = {
+  encode(
+    _: MsgUpdateParamsResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): MsgUpdateParamsResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgUpdateParamsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgUpdateParamsResponse {
+    return {};
+  },
+
+  toJSON(_: MsgUpdateParamsResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgUpdateParamsResponse>, I>>(
+    _: I
+  ): MsgUpdateParamsResponse {
+    const message = createBaseMsgUpdateParamsResponse();
+    return message;
+  },
+};
 
 function createBaseMsgFundTreasury(): MsgFundTreasury {
   return { from: "", amount: [] };
@@ -459,7 +595,7 @@ export const MsgUpdateMembers = {
       writer.uint32(10).string(message.operator);
     }
     for (const v of message.memberUpdates) {
-      Member.encode(v!, writer.uint32(18).fork()).ldelim();
+      MemberRequest.encode(v!, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -475,7 +611,9 @@ export const MsgUpdateMembers = {
           message.operator = reader.string();
           break;
         case 2:
-          message.memberUpdates.push(Member.decode(reader, reader.uint32()));
+          message.memberUpdates.push(
+            MemberRequest.decode(reader, reader.uint32())
+          );
           break;
         default:
           reader.skipType(tag & 7);
@@ -489,7 +627,7 @@ export const MsgUpdateMembers = {
     return {
       operator: isSet(object.operator) ? String(object.operator) : "",
       memberUpdates: Array.isArray(object?.memberUpdates)
-        ? object.memberUpdates.map((e: any) => Member.fromJSON(e))
+        ? object.memberUpdates.map((e: any) => MemberRequest.fromJSON(e))
         : [],
     };
   },
@@ -499,7 +637,7 @@ export const MsgUpdateMembers = {
     message.operator !== undefined && (obj.operator = message.operator);
     if (message.memberUpdates) {
       obj.memberUpdates = message.memberUpdates.map((e) =>
-        e ? Member.toJSON(e) : undefined
+        e ? MemberRequest.toJSON(e) : undefined
       );
     } else {
       obj.memberUpdates = [];
@@ -513,7 +651,7 @@ export const MsgUpdateMembers = {
     const message = createBaseMsgUpdateMembers();
     message.operator = object.operator ?? "";
     message.memberUpdates =
-      object.memberUpdates?.map((e) => Member.fromPartial(e)) || [];
+      object.memberUpdates?.map((e) => MemberRequest.fromPartial(e)) || [];
     return message;
   },
 };
@@ -1555,8 +1693,126 @@ export const MsgRevokeResponse = {
   },
 };
 
+function createBaseMsgGovMint(): MsgGovMint {
+  return { operator: "", amount: [] };
+}
+
+export const MsgGovMint = {
+  encode(
+    message: MsgGovMint,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.operator !== "") {
+      writer.uint32(10).string(message.operator);
+    }
+    for (const v of message.amount) {
+      Coin.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgGovMint {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgGovMint();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.operator = reader.string();
+          break;
+        case 2:
+          message.amount.push(Coin.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgGovMint {
+    return {
+      operator: isSet(object.operator) ? String(object.operator) : "",
+      amount: Array.isArray(object?.amount)
+        ? object.amount.map((e: any) => Coin.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: MsgGovMint): unknown {
+    const obj: any = {};
+    message.operator !== undefined && (obj.operator = message.operator);
+    if (message.amount) {
+      obj.amount = message.amount.map((e) => (e ? Coin.toJSON(e) : undefined));
+    } else {
+      obj.amount = [];
+    }
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgGovMint>, I>>(
+    object: I
+  ): MsgGovMint {
+    const message = createBaseMsgGovMint();
+    message.operator = object.operator ?? "";
+    message.amount = object.amount?.map((e) => Coin.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseMsgGovMintResponse(): MsgGovMintResponse {
+  return {};
+}
+
+export const MsgGovMintResponse = {
+  encode(
+    _: MsgGovMintResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgGovMintResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgGovMintResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgGovMintResponse {
+    return {};
+  },
+
+  toJSON(_: MsgGovMintResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgGovMintResponse>, I>>(
+    _: I
+  ): MsgGovMintResponse {
+    const message = createBaseMsgGovMintResponse();
+    return message;
+  },
+};
+
 /** Msg defines the foundation Msg service. */
 export interface Msg {
+  /**
+   * UpdateParams defines an operation for updating the x/foundation module
+   * parameters.
+   */
+  UpdateParams(request: MsgUpdateParams): Promise<MsgUpdateParamsResponse>;
   /** FundTreasury defines a method to fund the treasury. */
   FundTreasury(request: MsgFundTreasury): Promise<MsgFundTreasuryResponse>;
   /** WithdrawFromTreasury defines a method to withdraw coins from the treasury. */
@@ -1588,20 +1844,23 @@ export interface Msg {
   /**
    * Grant grants the provided authorization to the grantee with authority of
    * the foundation. If there is already a grant for the given
-   * (granter, grantee, Authorization) tuple, then the grant will be overwritten.
+   * (grantee, Authorization) tuple, then the grant will be overwritten.
    */
   Grant(request: MsgGrant): Promise<MsgGrantResponse>;
   /**
-   * Revoke revokes any authorization corresponding to the provided method name on the
-   * granter that has been granted to the grantee.
+   * Revoke revokes any authorization corresponding to the provided method name
+   * that has been granted to the grantee.
    */
   Revoke(request: MsgRevoke): Promise<MsgRevokeResponse>;
+  /** GovMint defines a gov mint coins to the treasury. */
+  GovMint(request: MsgGovMint): Promise<MsgGovMintResponse>;
 }
 
 export class MsgClientImpl implements Msg {
   private readonly rpc: Rpc;
   constructor(rpc: Rpc) {
     this.rpc = rpc;
+    this.UpdateParams = this.UpdateParams.bind(this);
     this.FundTreasury = this.FundTreasury.bind(this);
     this.WithdrawFromTreasury = this.WithdrawFromTreasury.bind(this);
     this.UpdateMembers = this.UpdateMembers.bind(this);
@@ -1613,7 +1872,20 @@ export class MsgClientImpl implements Msg {
     this.LeaveFoundation = this.LeaveFoundation.bind(this);
     this.Grant = this.Grant.bind(this);
     this.Revoke = this.Revoke.bind(this);
+    this.GovMint = this.GovMint.bind(this);
   }
+  UpdateParams(request: MsgUpdateParams): Promise<MsgUpdateParamsResponse> {
+    const data = MsgUpdateParams.encode(request).finish();
+    const promise = this.rpc.request(
+      "lbm.foundation.v1.Msg",
+      "UpdateParams",
+      data
+    );
+    return promise.then((data) =>
+      MsgUpdateParamsResponse.decode(new _m0.Reader(data))
+    );
+  }
+
   FundTreasury(request: MsgFundTreasury): Promise<MsgFundTreasuryResponse> {
     const data = MsgFundTreasury.encode(request).finish();
     const promise = this.rpc.request(
@@ -1733,6 +2005,14 @@ export class MsgClientImpl implements Msg {
     const promise = this.rpc.request("lbm.foundation.v1.Msg", "Revoke", data);
     return promise.then((data) =>
       MsgRevokeResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  GovMint(request: MsgGovMint): Promise<MsgGovMintResponse> {
+    const data = MsgGovMint.encode(request).finish();
+    const promise = this.rpc.request("lbm.foundation.v1.Msg", "GovMint", data);
+    return promise.then((data) =>
+      MsgGovMintResponse.decode(new _m0.Reader(data))
     );
   }
 }

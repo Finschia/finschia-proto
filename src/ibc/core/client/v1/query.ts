@@ -112,36 +112,66 @@ export interface QueryConsensusStatesResponse {
   pagination?: PageResponse;
 }
 
-/** QueryClientParamsRequest is the request type for the Query/ClientParams RPC method. */
+/**
+ * QueryClientStatusRequest is the request type for the Query/ClientStatus RPC
+ * method
+ */
+export interface QueryClientStatusRequest {
+  /** client unique identifier */
+  clientId: string;
+}
+
+/**
+ * QueryClientStatusResponse is the response type for the Query/ClientStatus RPC
+ * method. It returns the current status of the IBC client.
+ */
+export interface QueryClientStatusResponse {
+  status: string;
+}
+
+/**
+ * QueryClientParamsRequest is the request type for the Query/ClientParams RPC
+ * method.
+ */
 export interface QueryClientParamsRequest {}
 
-/** QueryClientParamsResponse is the response type for the Query/ClientParams RPC method. */
+/**
+ * QueryClientParamsResponse is the response type for the Query/ClientParams RPC
+ * method.
+ */
 export interface QueryClientParamsResponse {
   /** params defines the parameters of the module. */
   params?: Params;
 }
 
 /**
- * QueryUpgradedClientStateRequest is the request type for the Query/UpgradedClientState RPC
- * method
+ * QueryUpgradedClientStateRequest is the request type for the
+ * Query/UpgradedClientState RPC method
  */
-export interface QueryUpgradedClientStateRequest {
-  /** client state unique identifier */
-  clientId: string;
-  /**
-   * plan height of the current chain must be sent in request
-   * as this is the height under which upgraded client state is stored
-   */
-  planHeight: Long;
-}
+export interface QueryUpgradedClientStateRequest {}
 
 /**
- * QueryUpgradedClientStateResponse is the response type for the Query/UpgradedClientState RPC
- * method.
+ * QueryUpgradedClientStateResponse is the response type for the
+ * Query/UpgradedClientState RPC method.
  */
 export interface QueryUpgradedClientStateResponse {
   /** client state associated with the request identifier */
   upgradedClientState?: Any;
+}
+
+/**
+ * QueryUpgradedConsensusStateRequest is the request type for the
+ * Query/UpgradedConsensusState RPC method
+ */
+export interface QueryUpgradedConsensusStateRequest {}
+
+/**
+ * QueryUpgradedConsensusStateResponse is the response type for the
+ * Query/UpgradedConsensusState RPC method.
+ */
+export interface QueryUpgradedConsensusStateResponse {
+  /** Consensus state associated with the request identifier */
+  upgradedConsensusState?: Any;
 }
 
 function createBaseQueryClientStateRequest(): QueryClientStateRequest {
@@ -825,6 +855,120 @@ export const QueryConsensusStatesResponse = {
   },
 };
 
+function createBaseQueryClientStatusRequest(): QueryClientStatusRequest {
+  return { clientId: "" };
+}
+
+export const QueryClientStatusRequest = {
+  encode(
+    message: QueryClientStatusRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.clientId !== "") {
+      writer.uint32(10).string(message.clientId);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryClientStatusRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryClientStatusRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clientId = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryClientStatusRequest {
+    return {
+      clientId: isSet(object.clientId) ? String(object.clientId) : "",
+    };
+  },
+
+  toJSON(message: QueryClientStatusRequest): unknown {
+    const obj: any = {};
+    message.clientId !== undefined && (obj.clientId = message.clientId);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryClientStatusRequest>, I>>(
+    object: I
+  ): QueryClientStatusRequest {
+    const message = createBaseQueryClientStatusRequest();
+    message.clientId = object.clientId ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryClientStatusResponse(): QueryClientStatusResponse {
+  return { status: "" };
+}
+
+export const QueryClientStatusResponse = {
+  encode(
+    message: QueryClientStatusResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.status !== "") {
+      writer.uint32(10).string(message.status);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryClientStatusResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryClientStatusResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.status = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryClientStatusResponse {
+    return {
+      status: isSet(object.status) ? String(object.status) : "",
+    };
+  },
+
+  toJSON(message: QueryClientStatusResponse): unknown {
+    const obj: any = {};
+    message.status !== undefined && (obj.status = message.status);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryClientStatusResponse>, I>>(
+    object: I
+  ): QueryClientStatusResponse {
+    const message = createBaseQueryClientStatusResponse();
+    message.status = object.status ?? "";
+    return message;
+  },
+};
+
 function createBaseQueryClientParamsRequest(): QueryClientParamsRequest {
   return {};
 }
@@ -934,20 +1078,14 @@ export const QueryClientParamsResponse = {
 };
 
 function createBaseQueryUpgradedClientStateRequest(): QueryUpgradedClientStateRequest {
-  return { clientId: "", planHeight: Long.ZERO };
+  return {};
 }
 
 export const QueryUpgradedClientStateRequest = {
   encode(
-    message: QueryUpgradedClientStateRequest,
+    _: QueryUpgradedClientStateRequest,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.clientId !== "") {
-      writer.uint32(10).string(message.clientId);
-    }
-    if (!message.planHeight.isZero()) {
-      writer.uint32(16).int64(message.planHeight);
-    }
     return writer;
   },
 
@@ -961,12 +1099,6 @@ export const QueryUpgradedClientStateRequest = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
-          message.clientId = reader.string();
-          break;
-        case 2:
-          message.planHeight = reader.int64() as Long;
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -975,32 +1107,19 @@ export const QueryUpgradedClientStateRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryUpgradedClientStateRequest {
-    return {
-      clientId: isSet(object.clientId) ? String(object.clientId) : "",
-      planHeight: isSet(object.planHeight)
-        ? Long.fromValue(object.planHeight)
-        : Long.ZERO,
-    };
+  fromJSON(_: any): QueryUpgradedClientStateRequest {
+    return {};
   },
 
-  toJSON(message: QueryUpgradedClientStateRequest): unknown {
+  toJSON(_: QueryUpgradedClientStateRequest): unknown {
     const obj: any = {};
-    message.clientId !== undefined && (obj.clientId = message.clientId);
-    message.planHeight !== undefined &&
-      (obj.planHeight = (message.planHeight || Long.ZERO).toString());
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<QueryUpgradedClientStateRequest>, I>>(
-    object: I
+    _: I
   ): QueryUpgradedClientStateRequest {
     const message = createBaseQueryUpgradedClientStateRequest();
-    message.clientId = object.clientId ?? "";
-    message.planHeight =
-      object.planHeight !== undefined && object.planHeight !== null
-        ? Long.fromValue(object.planHeight)
-        : Long.ZERO;
     return message;
   },
 };
@@ -1074,6 +1193,122 @@ export const QueryUpgradedClientStateResponse = {
   },
 };
 
+function createBaseQueryUpgradedConsensusStateRequest(): QueryUpgradedConsensusStateRequest {
+  return {};
+}
+
+export const QueryUpgradedConsensusStateRequest = {
+  encode(
+    _: QueryUpgradedConsensusStateRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryUpgradedConsensusStateRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryUpgradedConsensusStateRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): QueryUpgradedConsensusStateRequest {
+    return {};
+  },
+
+  toJSON(_: QueryUpgradedConsensusStateRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<DeepPartial<QueryUpgradedConsensusStateRequest>, I>
+  >(_: I): QueryUpgradedConsensusStateRequest {
+    const message = createBaseQueryUpgradedConsensusStateRequest();
+    return message;
+  },
+};
+
+function createBaseQueryUpgradedConsensusStateResponse(): QueryUpgradedConsensusStateResponse {
+  return { upgradedConsensusState: undefined };
+}
+
+export const QueryUpgradedConsensusStateResponse = {
+  encode(
+    message: QueryUpgradedConsensusStateResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.upgradedConsensusState !== undefined) {
+      Any.encode(
+        message.upgradedConsensusState,
+        writer.uint32(10).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryUpgradedConsensusStateResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryUpgradedConsensusStateResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.upgradedConsensusState = Any.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryUpgradedConsensusStateResponse {
+    return {
+      upgradedConsensusState: isSet(object.upgradedConsensusState)
+        ? Any.fromJSON(object.upgradedConsensusState)
+        : undefined,
+    };
+  },
+
+  toJSON(message: QueryUpgradedConsensusStateResponse): unknown {
+    const obj: any = {};
+    message.upgradedConsensusState !== undefined &&
+      (obj.upgradedConsensusState = message.upgradedConsensusState
+        ? Any.toJSON(message.upgradedConsensusState)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<DeepPartial<QueryUpgradedConsensusStateResponse>, I>
+  >(object: I): QueryUpgradedConsensusStateResponse {
+    const message = createBaseQueryUpgradedConsensusStateResponse();
+    message.upgradedConsensusState =
+      object.upgradedConsensusState !== undefined &&
+      object.upgradedConsensusState !== null
+        ? Any.fromPartial(object.upgradedConsensusState)
+        : undefined;
+    return message;
+  },
+};
+
 /** Query provides defines the gRPC querier service */
 export interface Query {
   /** ClientState queries an IBC light client. */
@@ -1098,6 +1333,10 @@ export interface Query {
   ConsensusStates(
     request: QueryConsensusStatesRequest
   ): Promise<QueryConsensusStatesResponse>;
+  /** Status queries the status of an IBC client. */
+  ClientStatus(
+    request: QueryClientStatusRequest
+  ): Promise<QueryClientStatusResponse>;
   /** ClientParams queries all parameters of the ibc client. */
   ClientParams(
     request: QueryClientParamsRequest
@@ -1106,6 +1345,10 @@ export interface Query {
   UpgradedClientState(
     request: QueryUpgradedClientStateRequest
   ): Promise<QueryUpgradedClientStateResponse>;
+  /** UpgradedConsensusState queries an Upgraded IBC consensus state. */
+  UpgradedConsensusState(
+    request: QueryUpgradedConsensusStateRequest
+  ): Promise<QueryUpgradedConsensusStateResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -1116,8 +1359,10 @@ export class QueryClientImpl implements Query {
     this.ClientStates = this.ClientStates.bind(this);
     this.ConsensusState = this.ConsensusState.bind(this);
     this.ConsensusStates = this.ConsensusStates.bind(this);
+    this.ClientStatus = this.ClientStatus.bind(this);
     this.ClientParams = this.ClientParams.bind(this);
     this.UpgradedClientState = this.UpgradedClientState.bind(this);
+    this.UpgradedConsensusState = this.UpgradedConsensusState.bind(this);
   }
   ClientState(
     request: QueryClientStateRequest
@@ -1175,6 +1420,20 @@ export class QueryClientImpl implements Query {
     );
   }
 
+  ClientStatus(
+    request: QueryClientStatusRequest
+  ): Promise<QueryClientStatusResponse> {
+    const data = QueryClientStatusRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "ibc.core.client.v1.Query",
+      "ClientStatus",
+      data
+    );
+    return promise.then((data) =>
+      QueryClientStatusResponse.decode(new _m0.Reader(data))
+    );
+  }
+
   ClientParams(
     request: QueryClientParamsRequest
   ): Promise<QueryClientParamsResponse> {
@@ -1200,6 +1459,20 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryUpgradedClientStateResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  UpgradedConsensusState(
+    request: QueryUpgradedConsensusStateRequest
+  ): Promise<QueryUpgradedConsensusStateResponse> {
+    const data = QueryUpgradedConsensusStateRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "ibc.core.client.v1.Query",
+      "UpgradedConsensusState",
+      data
+    );
+    return promise.then((data) =>
+      QueryUpgradedConsensusStateResponse.decode(new _m0.Reader(data))
     );
   }
 }

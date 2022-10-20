@@ -3,6 +3,7 @@ import { Timestamp } from "../../../google/protobuf/timestamp";
 import { Duration } from "../../../google/protobuf/duration";
 import { Any } from "../../../google/protobuf/any";
 import Long from "long";
+import { DecCoin } from "../../../cosmos/base/v1beta1/coin";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.foundation.v1";
@@ -68,17 +69,28 @@ export function voteOptionToJSON(object: VoteOption): string {
 export enum ProposalStatus {
   /** PROPOSAL_STATUS_UNSPECIFIED - An empty value is invalid and not allowed. */
   PROPOSAL_STATUS_UNSPECIFIED = 0,
-  /** PROPOSAL_STATUS_SUBMITTED - Initial status of a proposal when persisted. */
+  /** PROPOSAL_STATUS_SUBMITTED - Initial status of a proposal when submitted. */
   PROPOSAL_STATUS_SUBMITTED = 1,
-  /** PROPOSAL_STATUS_CLOSED - Final status of a proposal when the final tally was executed. */
-  PROPOSAL_STATUS_CLOSED = 2,
-  /** PROPOSAL_STATUS_ABORTED - Final status of a proposal when the group was modified before the final tally. */
-  PROPOSAL_STATUS_ABORTED = 3,
   /**
-   * PROPOSAL_STATUS_WITHDRAWN - A proposal can be deleted before the voting start time by the owner. When this happens the final status
-   * is Withdrawn.
+   * PROPOSAL_STATUS_ACCEPTED - Final status of a proposal when the final tally is done and the outcome
+   * passes the foundation's decision policy.
    */
-  PROPOSAL_STATUS_WITHDRAWN = 4,
+  PROPOSAL_STATUS_ACCEPTED = 2,
+  /**
+   * PROPOSAL_STATUS_REJECTED - Final status of a proposal when the final tally is done and the outcome
+   * is rejected by the foundation's decision policy.
+   */
+  PROPOSAL_STATUS_REJECTED = 3,
+  /**
+   * PROPOSAL_STATUS_ABORTED - Final status of a proposal when the decision policy is modified before the
+   * final tally.
+   */
+  PROPOSAL_STATUS_ABORTED = 4,
+  /**
+   * PROPOSAL_STATUS_WITHDRAWN - A proposal can be withdrawn before the voting start time by the owner.
+   * When this happens the final status is Withdrawn.
+   */
+  PROPOSAL_STATUS_WITHDRAWN = 5,
   UNRECOGNIZED = -1,
 }
 
@@ -91,12 +103,15 @@ export function proposalStatusFromJSON(object: any): ProposalStatus {
     case "PROPOSAL_STATUS_SUBMITTED":
       return ProposalStatus.PROPOSAL_STATUS_SUBMITTED;
     case 2:
-    case "PROPOSAL_STATUS_CLOSED":
-      return ProposalStatus.PROPOSAL_STATUS_CLOSED;
+    case "PROPOSAL_STATUS_ACCEPTED":
+      return ProposalStatus.PROPOSAL_STATUS_ACCEPTED;
     case 3:
+    case "PROPOSAL_STATUS_REJECTED":
+      return ProposalStatus.PROPOSAL_STATUS_REJECTED;
+    case 4:
     case "PROPOSAL_STATUS_ABORTED":
       return ProposalStatus.PROPOSAL_STATUS_ABORTED;
-    case 4:
+    case 5:
     case "PROPOSAL_STATUS_WITHDRAWN":
       return ProposalStatus.PROPOSAL_STATUS_WITHDRAWN;
     case -1:
@@ -112,63 +127,15 @@ export function proposalStatusToJSON(object: ProposalStatus): string {
       return "PROPOSAL_STATUS_UNSPECIFIED";
     case ProposalStatus.PROPOSAL_STATUS_SUBMITTED:
       return "PROPOSAL_STATUS_SUBMITTED";
-    case ProposalStatus.PROPOSAL_STATUS_CLOSED:
-      return "PROPOSAL_STATUS_CLOSED";
+    case ProposalStatus.PROPOSAL_STATUS_ACCEPTED:
+      return "PROPOSAL_STATUS_ACCEPTED";
+    case ProposalStatus.PROPOSAL_STATUS_REJECTED:
+      return "PROPOSAL_STATUS_REJECTED";
     case ProposalStatus.PROPOSAL_STATUS_ABORTED:
       return "PROPOSAL_STATUS_ABORTED";
     case ProposalStatus.PROPOSAL_STATUS_WITHDRAWN:
       return "PROPOSAL_STATUS_WITHDRAWN";
     case ProposalStatus.UNRECOGNIZED:
-    default:
-      return "UNRECOGNIZED";
-  }
-}
-
-/** ProposalResult defines types of proposal results. */
-export enum ProposalResult {
-  /** PROPOSAL_RESULT_UNSPECIFIED - An empty value is invalid and not allowed */
-  PROPOSAL_RESULT_UNSPECIFIED = 0,
-  /** PROPOSAL_RESULT_UNFINALIZED - Until a final tally has happened the status is unfinalized */
-  PROPOSAL_RESULT_UNFINALIZED = 1,
-  /** PROPOSAL_RESULT_ACCEPTED - Final result of the tally */
-  PROPOSAL_RESULT_ACCEPTED = 2,
-  /** PROPOSAL_RESULT_REJECTED - Final result of the tally */
-  PROPOSAL_RESULT_REJECTED = 3,
-  UNRECOGNIZED = -1,
-}
-
-export function proposalResultFromJSON(object: any): ProposalResult {
-  switch (object) {
-    case 0:
-    case "PROPOSAL_RESULT_UNSPECIFIED":
-      return ProposalResult.PROPOSAL_RESULT_UNSPECIFIED;
-    case 1:
-    case "PROPOSAL_RESULT_UNFINALIZED":
-      return ProposalResult.PROPOSAL_RESULT_UNFINALIZED;
-    case 2:
-    case "PROPOSAL_RESULT_ACCEPTED":
-      return ProposalResult.PROPOSAL_RESULT_ACCEPTED;
-    case 3:
-    case "PROPOSAL_RESULT_REJECTED":
-      return ProposalResult.PROPOSAL_RESULT_REJECTED;
-    case -1:
-    case "UNRECOGNIZED":
-    default:
-      return ProposalResult.UNRECOGNIZED;
-  }
-}
-
-export function proposalResultToJSON(object: ProposalResult): string {
-  switch (object) {
-    case ProposalResult.PROPOSAL_RESULT_UNSPECIFIED:
-      return "PROPOSAL_RESULT_UNSPECIFIED";
-    case ProposalResult.PROPOSAL_RESULT_UNFINALIZED:
-      return "PROPOSAL_RESULT_UNFINALIZED";
-    case ProposalResult.PROPOSAL_RESULT_ACCEPTED:
-      return "PROPOSAL_RESULT_ACCEPTED";
-    case ProposalResult.PROPOSAL_RESULT_REJECTED:
-      return "PROPOSAL_RESULT_REJECTED";
-    case ProposalResult.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }
@@ -230,43 +197,42 @@ export function proposalExecutorResultToJSON(
 
 /** Params defines the parameters for the foundation module. */
 export interface Params {
-  enabled: boolean;
   foundationTax: string;
-}
-
-/** ValidatorAuth defines authorization info of a validator. */
-export interface ValidatorAuth {
-  operatorAddress: string;
-  creationAllowed: boolean;
-}
-
-/** UpdateFoundationParamsProposal details a proposal to update params of foundation module. */
-export interface UpdateFoundationParamsProposal {
-  title: string;
-  description: string;
-  params?: Params;
-}
-
-/** UpdateValidatorAuthsProposal details a proposal to update validator auths on foundation. */
-export interface UpdateValidatorAuthsProposal {
-  title: string;
-  description: string;
-  auths: ValidatorAuth[];
+  censoredMsgTypeUrls: string[];
 }
 
 /** Member represents a foundation member with an account address and metadata. */
 export interface Member {
   /** address is the member's account address. */
   address: string;
-  /** participating is the flag which allows one to remove the member by setting the flag to false. */
-  participating: boolean;
   /** metadata is any arbitrary metadata to attached to the member. */
   metadata: string;
   /** added_at is a timestamp specifying when a member was added. */
   addedAt?: Timestamp;
 }
 
-/** ThresholdDecisionPolicy implements the DecisionPolicy interface */
+/**
+ * MemberRequest represents a foundation member to be used in Msg server requests.
+ * Contrary to `Member`, it doesn't have any `added_at` field
+ * since this field cannot be set as part of requests.
+ */
+export interface MemberRequest {
+  /** address is the member's account address. */
+  address: string;
+  /** remove is the flag which allows one to remove the member by setting the flag to true. */
+  remove: boolean;
+  /** metadata is any arbitrary metadata attached to the member. */
+  metadata: string;
+}
+
+/**
+ * ThresholdDecisionPolicy is a decision policy where a proposal passes when it
+ * satisfies the two following conditions:
+ * 1. The sum of all `YES` voters' weights is greater or equal than the defined
+ *    `threshold`.
+ * 2. The voting and execution periods of the proposal respect the parameters
+ *    given by `windows`.
+ */
 export interface ThresholdDecisionPolicy {
   /** threshold is the minimum sum of yes votes that must be met or exceeded for a proposal to succeed. */
   threshold: string;
@@ -274,7 +240,14 @@ export interface ThresholdDecisionPolicy {
   windows?: DecisionPolicyWindows;
 }
 
-/** PercentageDecisionPolicy implements the DecisionPolicy interface */
+/**
+ * PercentageDecisionPolicy is a decision policy where a proposal passes when
+ * it satisfies the two following conditions:
+ * 1. The percentage of all `YES` voters' weights out of the total group weight
+ *    is greater or equal than the given `percentage`.
+ * 2. The voting and execution periods of the proposal respect the parameters
+ *    given by `windows`.
+ */
 export interface PercentageDecisionPolicy {
   /** percentage is the minimum percentage the sum of yes votes must meet for a proposal to succeed. */
   percentage: string;
@@ -303,6 +276,14 @@ export interface DecisionPolicyWindows {
    * won't be able to be executed.
    */
   minExecutionPeriod?: Duration;
+}
+
+/**
+ * OutsourcingDecisionPolicy is a dummy decision policy which is set after
+ * the operator has been updated into x/group's group policy.
+ */
+export interface OutsourcingDecisionPolicy {
+  description: string;
 }
 
 /** FoundationInfo represents the high-level on-chain information for the foundation. */
@@ -344,11 +325,6 @@ export interface Proposal {
   foundationVersion: Long;
   /** status represents the high level position in the life cycle of the proposal. Initial value is Submitted. */
   status: ProposalStatus;
-  /**
-   * result is the final result based on the votes and election rule. Initial value is unfinalized.
-   * The result is persisted so that clients can always rely on this state and not have to replicate the logic.
-   */
-  result: ProposalResult;
   /**
    * final_tally_result contains the sums of all votes for this
    * proposal for each vote option, after tallying. When querying a proposal
@@ -396,8 +372,13 @@ export interface Vote {
   submitTime?: Timestamp;
 }
 
+/** Pool is used for tracking treasury. */
+export interface Pool {
+  treasury: DecCoin[];
+}
+
 function createBaseParams(): Params {
-  return { enabled: false, foundationTax: "" };
+  return { foundationTax: "", censoredMsgTypeUrls: [] };
 }
 
 export const Params = {
@@ -405,11 +386,11 @@ export const Params = {
     message: Params,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.enabled === true) {
-      writer.uint32(8).bool(message.enabled);
-    }
     if (message.foundationTax !== "") {
-      writer.uint32(18).string(message.foundationTax);
+      writer.uint32(10).string(message.foundationTax);
+    }
+    for (const v of message.censoredMsgTypeUrls) {
+      writer.uint32(18).string(v!);
     }
     return writer;
   },
@@ -422,10 +403,10 @@ export const Params = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.enabled = reader.bool();
+          message.foundationTax = reader.string();
           break;
         case 2:
-          message.foundationTax = reader.string();
+          message.censoredMsgTypeUrls.push(reader.string());
           break;
         default:
           reader.skipType(tag & 7);
@@ -437,270 +418,38 @@ export const Params = {
 
   fromJSON(object: any): Params {
     return {
-      enabled: isSet(object.enabled) ? Boolean(object.enabled) : false,
       foundationTax: isSet(object.foundationTax)
         ? String(object.foundationTax)
         : "",
+      censoredMsgTypeUrls: Array.isArray(object?.censoredMsgTypeUrls)
+        ? object.censoredMsgTypeUrls.map((e: any) => String(e))
+        : [],
     };
   },
 
   toJSON(message: Params): unknown {
     const obj: any = {};
-    message.enabled !== undefined && (obj.enabled = message.enabled);
     message.foundationTax !== undefined &&
       (obj.foundationTax = message.foundationTax);
+    if (message.censoredMsgTypeUrls) {
+      obj.censoredMsgTypeUrls = message.censoredMsgTypeUrls.map((e) => e);
+    } else {
+      obj.censoredMsgTypeUrls = [];
+    }
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<Params>, I>>(object: I): Params {
     const message = createBaseParams();
-    message.enabled = object.enabled ?? false;
     message.foundationTax = object.foundationTax ?? "";
-    return message;
-  },
-};
-
-function createBaseValidatorAuth(): ValidatorAuth {
-  return { operatorAddress: "", creationAllowed: false };
-}
-
-export const ValidatorAuth = {
-  encode(
-    message: ValidatorAuth,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.operatorAddress !== "") {
-      writer.uint32(10).string(message.operatorAddress);
-    }
-    if (message.creationAllowed === true) {
-      writer.uint32(16).bool(message.creationAllowed);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ValidatorAuth {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseValidatorAuth();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.operatorAddress = reader.string();
-          break;
-        case 2:
-          message.creationAllowed = reader.bool();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ValidatorAuth {
-    return {
-      operatorAddress: isSet(object.operatorAddress)
-        ? String(object.operatorAddress)
-        : "",
-      creationAllowed: isSet(object.creationAllowed)
-        ? Boolean(object.creationAllowed)
-        : false,
-    };
-  },
-
-  toJSON(message: ValidatorAuth): unknown {
-    const obj: any = {};
-    message.operatorAddress !== undefined &&
-      (obj.operatorAddress = message.operatorAddress);
-    message.creationAllowed !== undefined &&
-      (obj.creationAllowed = message.creationAllowed);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<ValidatorAuth>, I>>(
-    object: I
-  ): ValidatorAuth {
-    const message = createBaseValidatorAuth();
-    message.operatorAddress = object.operatorAddress ?? "";
-    message.creationAllowed = object.creationAllowed ?? false;
-    return message;
-  },
-};
-
-function createBaseUpdateFoundationParamsProposal(): UpdateFoundationParamsProposal {
-  return { title: "", description: "", params: undefined };
-}
-
-export const UpdateFoundationParamsProposal = {
-  encode(
-    message: UpdateFoundationParamsProposal,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.title !== "") {
-      writer.uint32(10).string(message.title);
-    }
-    if (message.description !== "") {
-      writer.uint32(18).string(message.description);
-    }
-    if (message.params !== undefined) {
-      Params.encode(message.params, writer.uint32(26).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): UpdateFoundationParamsProposal {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUpdateFoundationParamsProposal();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.title = reader.string();
-          break;
-        case 2:
-          message.description = reader.string();
-          break;
-        case 3:
-          message.params = Params.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): UpdateFoundationParamsProposal {
-    return {
-      title: isSet(object.title) ? String(object.title) : "",
-      description: isSet(object.description) ? String(object.description) : "",
-      params: isSet(object.params) ? Params.fromJSON(object.params) : undefined,
-    };
-  },
-
-  toJSON(message: UpdateFoundationParamsProposal): unknown {
-    const obj: any = {};
-    message.title !== undefined && (obj.title = message.title);
-    message.description !== undefined &&
-      (obj.description = message.description);
-    message.params !== undefined &&
-      (obj.params = message.params ? Params.toJSON(message.params) : undefined);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<UpdateFoundationParamsProposal>, I>>(
-    object: I
-  ): UpdateFoundationParamsProposal {
-    const message = createBaseUpdateFoundationParamsProposal();
-    message.title = object.title ?? "";
-    message.description = object.description ?? "";
-    message.params =
-      object.params !== undefined && object.params !== null
-        ? Params.fromPartial(object.params)
-        : undefined;
-    return message;
-  },
-};
-
-function createBaseUpdateValidatorAuthsProposal(): UpdateValidatorAuthsProposal {
-  return { title: "", description: "", auths: [] };
-}
-
-export const UpdateValidatorAuthsProposal = {
-  encode(
-    message: UpdateValidatorAuthsProposal,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.title !== "") {
-      writer.uint32(10).string(message.title);
-    }
-    if (message.description !== "") {
-      writer.uint32(18).string(message.description);
-    }
-    for (const v of message.auths) {
-      ValidatorAuth.encode(v!, writer.uint32(26).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): UpdateValidatorAuthsProposal {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUpdateValidatorAuthsProposal();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.title = reader.string();
-          break;
-        case 2:
-          message.description = reader.string();
-          break;
-        case 3:
-          message.auths.push(ValidatorAuth.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): UpdateValidatorAuthsProposal {
-    return {
-      title: isSet(object.title) ? String(object.title) : "",
-      description: isSet(object.description) ? String(object.description) : "",
-      auths: Array.isArray(object?.auths)
-        ? object.auths.map((e: any) => ValidatorAuth.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: UpdateValidatorAuthsProposal): unknown {
-    const obj: any = {};
-    message.title !== undefined && (obj.title = message.title);
-    message.description !== undefined &&
-      (obj.description = message.description);
-    if (message.auths) {
-      obj.auths = message.auths.map((e) =>
-        e ? ValidatorAuth.toJSON(e) : undefined
-      );
-    } else {
-      obj.auths = [];
-    }
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<UpdateValidatorAuthsProposal>, I>>(
-    object: I
-  ): UpdateValidatorAuthsProposal {
-    const message = createBaseUpdateValidatorAuthsProposal();
-    message.title = object.title ?? "";
-    message.description = object.description ?? "";
-    message.auths =
-      object.auths?.map((e) => ValidatorAuth.fromPartial(e)) || [];
+    message.censoredMsgTypeUrls =
+      object.censoredMsgTypeUrls?.map((e) => e) || [];
     return message;
   },
 };
 
 function createBaseMember(): Member {
-  return {
-    address: "",
-    participating: false,
-    metadata: "",
-    addedAt: undefined,
-  };
+  return { address: "", metadata: "", addedAt: undefined };
 }
 
 export const Member = {
@@ -711,11 +460,8 @@ export const Member = {
     if (message.address !== "") {
       writer.uint32(10).string(message.address);
     }
-    if (message.participating === true) {
-      writer.uint32(16).bool(message.participating);
-    }
     if (message.metadata !== "") {
-      writer.uint32(26).string(message.metadata);
+      writer.uint32(18).string(message.metadata);
     }
     if (message.addedAt !== undefined) {
       Timestamp.encode(message.addedAt, writer.uint32(34).fork()).ldelim();
@@ -734,9 +480,6 @@ export const Member = {
           message.address = reader.string();
           break;
         case 2:
-          message.participating = reader.bool();
-          break;
-        case 3:
           message.metadata = reader.string();
           break;
         case 4:
@@ -753,9 +496,6 @@ export const Member = {
   fromJSON(object: any): Member {
     return {
       address: isSet(object.address) ? String(object.address) : "",
-      participating: isSet(object.participating)
-        ? Boolean(object.participating)
-        : false,
       metadata: isSet(object.metadata) ? String(object.metadata) : "",
       addedAt: isSet(object.addedAt)
         ? fromJsonTimestamp(object.addedAt)
@@ -766,8 +506,6 @@ export const Member = {
   toJSON(message: Member): unknown {
     const obj: any = {};
     message.address !== undefined && (obj.address = message.address);
-    message.participating !== undefined &&
-      (obj.participating = message.participating);
     message.metadata !== undefined && (obj.metadata = message.metadata);
     message.addedAt !== undefined &&
       (obj.addedAt = fromTimestamp(message.addedAt).toISOString());
@@ -777,12 +515,83 @@ export const Member = {
   fromPartial<I extends Exact<DeepPartial<Member>, I>>(object: I): Member {
     const message = createBaseMember();
     message.address = object.address ?? "";
-    message.participating = object.participating ?? false;
     message.metadata = object.metadata ?? "";
     message.addedAt =
       object.addedAt !== undefined && object.addedAt !== null
         ? Timestamp.fromPartial(object.addedAt)
         : undefined;
+    return message;
+  },
+};
+
+function createBaseMemberRequest(): MemberRequest {
+  return { address: "", remove: false, metadata: "" };
+}
+
+export const MemberRequest = {
+  encode(
+    message: MemberRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.address !== "") {
+      writer.uint32(10).string(message.address);
+    }
+    if (message.remove === true) {
+      writer.uint32(16).bool(message.remove);
+    }
+    if (message.metadata !== "") {
+      writer.uint32(26).string(message.metadata);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MemberRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMemberRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.address = reader.string();
+          break;
+        case 2:
+          message.remove = reader.bool();
+          break;
+        case 3:
+          message.metadata = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MemberRequest {
+    return {
+      address: isSet(object.address) ? String(object.address) : "",
+      remove: isSet(object.remove) ? Boolean(object.remove) : false,
+      metadata: isSet(object.metadata) ? String(object.metadata) : "",
+    };
+  },
+
+  toJSON(message: MemberRequest): unknown {
+    const obj: any = {};
+    message.address !== undefined && (obj.address = message.address);
+    message.remove !== undefined && (obj.remove = message.remove);
+    message.metadata !== undefined && (obj.metadata = message.metadata);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MemberRequest>, I>>(
+    object: I
+  ): MemberRequest {
+    const message = createBaseMemberRequest();
+    message.address = object.address ?? "";
+    message.remove = object.remove ?? false;
+    message.metadata = object.metadata ?? "";
     return message;
   },
 };
@@ -1033,6 +842,64 @@ export const DecisionPolicyWindows = {
   },
 };
 
+function createBaseOutsourcingDecisionPolicy(): OutsourcingDecisionPolicy {
+  return { description: "" };
+}
+
+export const OutsourcingDecisionPolicy = {
+  encode(
+    message: OutsourcingDecisionPolicy,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.description !== "") {
+      writer.uint32(10).string(message.description);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): OutsourcingDecisionPolicy {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOutsourcingDecisionPolicy();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.description = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): OutsourcingDecisionPolicy {
+    return {
+      description: isSet(object.description) ? String(object.description) : "",
+    };
+  },
+
+  toJSON(message: OutsourcingDecisionPolicy): unknown {
+    const obj: any = {};
+    message.description !== undefined &&
+      (obj.description = message.description);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<OutsourcingDecisionPolicy>, I>>(
+    object: I
+  ): OutsourcingDecisionPolicy {
+    const message = createBaseOutsourcingDecisionPolicy();
+    message.description = object.description ?? "";
+    return message;
+  },
+};
+
 function createBaseFoundationInfo(): FoundationInfo {
   return {
     operator: "",
@@ -1142,7 +1009,6 @@ function createBaseProposal(): Proposal {
     submitTime: undefined,
     foundationVersion: Long.UZERO,
     status: 0,
-    result: 0,
     finalTallyResult: undefined,
     votingPeriodEnd: undefined,
     executorResult: 0,
@@ -1173,26 +1039,23 @@ export const Proposal = {
     if (message.status !== 0) {
       writer.uint32(48).int32(message.status);
     }
-    if (message.result !== 0) {
-      writer.uint32(56).int32(message.result);
-    }
     if (message.finalTallyResult !== undefined) {
       TallyResult.encode(
         message.finalTallyResult,
-        writer.uint32(66).fork()
+        writer.uint32(58).fork()
       ).ldelim();
     }
     if (message.votingPeriodEnd !== undefined) {
       Timestamp.encode(
         message.votingPeriodEnd,
-        writer.uint32(74).fork()
+        writer.uint32(66).fork()
       ).ldelim();
     }
     if (message.executorResult !== 0) {
-      writer.uint32(80).int32(message.executorResult);
+      writer.uint32(72).int32(message.executorResult);
     }
     for (const v of message.messages) {
-      Any.encode(v!, writer.uint32(90).fork()).ldelim();
+      Any.encode(v!, writer.uint32(82).fork()).ldelim();
     }
     return writer;
   },
@@ -1223,21 +1086,18 @@ export const Proposal = {
           message.status = reader.int32() as any;
           break;
         case 7:
-          message.result = reader.int32() as any;
-          break;
-        case 8:
           message.finalTallyResult = TallyResult.decode(
             reader,
             reader.uint32()
           );
           break;
-        case 9:
+        case 8:
           message.votingPeriodEnd = Timestamp.decode(reader, reader.uint32());
           break;
-        case 10:
+        case 9:
           message.executorResult = reader.int32() as any;
           break;
-        case 11:
+        case 10:
           message.messages.push(Any.decode(reader, reader.uint32()));
           break;
         default:
@@ -1262,7 +1122,6 @@ export const Proposal = {
         ? Long.fromValue(object.foundationVersion)
         : Long.UZERO,
       status: isSet(object.status) ? proposalStatusFromJSON(object.status) : 0,
-      result: isSet(object.result) ? proposalResultFromJSON(object.result) : 0,
       finalTallyResult: isSet(object.finalTallyResult)
         ? TallyResult.fromJSON(object.finalTallyResult)
         : undefined,
@@ -1296,8 +1155,6 @@ export const Proposal = {
       ).toString());
     message.status !== undefined &&
       (obj.status = proposalStatusToJSON(message.status));
-    message.result !== undefined &&
-      (obj.result = proposalResultToJSON(message.result));
     message.finalTallyResult !== undefined &&
       (obj.finalTallyResult = message.finalTallyResult
         ? TallyResult.toJSON(message.finalTallyResult)
@@ -1338,7 +1195,6 @@ export const Proposal = {
         ? Long.fromValue(object.foundationVersion)
         : Long.UZERO;
     message.status = object.status ?? 0;
-    message.result = object.result ?? 0;
     message.finalTallyResult =
       object.finalTallyResult !== undefined && object.finalTallyResult !== null
         ? TallyResult.fromPartial(object.finalTallyResult)
@@ -1540,6 +1396,64 @@ export const Vote = {
       object.submitTime !== undefined && object.submitTime !== null
         ? Timestamp.fromPartial(object.submitTime)
         : undefined;
+    return message;
+  },
+};
+
+function createBasePool(): Pool {
+  return { treasury: [] };
+}
+
+export const Pool = {
+  encode(message: Pool, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.treasury) {
+      DecCoin.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): Pool {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePool();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.treasury.push(DecCoin.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Pool {
+    return {
+      treasury: Array.isArray(object?.treasury)
+        ? object.treasury.map((e: any) => DecCoin.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: Pool): unknown {
+    const obj: any = {};
+    if (message.treasury) {
+      obj.treasury = message.treasury.map((e) =>
+        e ? DecCoin.toJSON(e) : undefined
+      );
+    } else {
+      obj.treasury = [];
+    }
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<Pool>, I>>(object: I): Pool {
+    const message = createBasePool();
+    message.treasury =
+      object.treasury?.map((e) => DecCoin.fromPartial(e)) || [];
     return message;
   },
 };
