@@ -8,7 +8,9 @@
   ],
   "license": "Apache-2.0",
   "files": [
-    "confio",
+    "proofs.d.ts",
+    "proofs.js",
+    "proofs.js.map",
     "cosmos",
     "cosmos_proto",
     "gogoproto",
@@ -28,7 +30,7 @@
     "codegen": "./scripts/codegen.sh",
     "lbmsdk_update": "git submodule update --remote --merge",
     "build": "rm -rf ./build && tsc && ./scripts/prepare.sh",
-    "clean": "rm -rf ./build confio cosmos cosmos_proto gogoproto google ibc lbm ostracon"
+    "clean": "rm -rf ./build confio cosmos cosmos_proto gogoproto google ibc lbm ostracon proofs.d.ts proofs.js proofs.js.map"
   },
   "dependencies": {
     "long": "^4.0.0",
