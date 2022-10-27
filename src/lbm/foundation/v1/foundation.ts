@@ -280,7 +280,7 @@ export interface DecisionPolicyWindows {
 
 /**
  * OutsourcingDecisionPolicy is a dummy decision policy which is set after
- * the operator has been updated into x/group's group policy.
+ * the proposal feature has been outsourced to x/group.
  */
 export interface OutsourcingDecisionPolicy {
   description: string;
@@ -288,8 +288,6 @@ export interface OutsourcingDecisionPolicy {
 
 /** FoundationInfo represents the high-level on-chain information for the foundation. */
 export interface FoundationInfo {
-  /** operator is the account address of the foundation's operator. */
-  operator: string;
   /**
    * version is used to track changes to the foundation's membership structure that
    * would break existing proposals. Whenever any member is added or removed,
@@ -901,12 +899,7 @@ export const OutsourcingDecisionPolicy = {
 };
 
 function createBaseFoundationInfo(): FoundationInfo {
-  return {
-    operator: "",
-    version: Long.UZERO,
-    totalWeight: "",
-    decisionPolicy: undefined,
-  };
+  return { version: Long.UZERO, totalWeight: "", decisionPolicy: undefined };
 }
 
 export const FoundationInfo = {
@@ -914,17 +907,14 @@ export const FoundationInfo = {
     message: FoundationInfo,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.operator !== "") {
-      writer.uint32(10).string(message.operator);
-    }
     if (!message.version.isZero()) {
-      writer.uint32(16).uint64(message.version);
+      writer.uint32(8).uint64(message.version);
     }
     if (message.totalWeight !== "") {
-      writer.uint32(26).string(message.totalWeight);
+      writer.uint32(18).string(message.totalWeight);
     }
     if (message.decisionPolicy !== undefined) {
-      Any.encode(message.decisionPolicy, writer.uint32(34).fork()).ldelim();
+      Any.encode(message.decisionPolicy, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -937,15 +927,12 @@ export const FoundationInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.operator = reader.string();
-          break;
-        case 2:
           message.version = reader.uint64() as Long;
           break;
-        case 3:
+        case 2:
           message.totalWeight = reader.string();
           break;
-        case 4:
+        case 3:
           message.decisionPolicy = Any.decode(reader, reader.uint32());
           break;
         default:
@@ -958,7 +945,6 @@ export const FoundationInfo = {
 
   fromJSON(object: any): FoundationInfo {
     return {
-      operator: isSet(object.operator) ? String(object.operator) : "",
       version: isSet(object.version)
         ? Long.fromValue(object.version)
         : Long.UZERO,
@@ -971,7 +957,6 @@ export const FoundationInfo = {
 
   toJSON(message: FoundationInfo): unknown {
     const obj: any = {};
-    message.operator !== undefined && (obj.operator = message.operator);
     message.version !== undefined &&
       (obj.version = (message.version || Long.UZERO).toString());
     message.totalWeight !== undefined &&
@@ -987,7 +972,6 @@ export const FoundationInfo = {
     object: I
   ): FoundationInfo {
     const message = createBaseFoundationInfo();
-    message.operator = object.operator ?? "";
     message.version =
       object.version !== undefined && object.version !== null
         ? Long.fromValue(object.version)

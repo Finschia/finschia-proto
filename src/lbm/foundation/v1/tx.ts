@@ -59,7 +59,7 @@ export function execToJSON(object: Exec): string {
 
 /** MsgUpdateParams is the Msg/UpdateParams request type. */
 export interface MsgUpdateParams {
-  /** authority is the address of the operator account. */
+  /** authority is the address of the privileged account. */
   authority: string;
   /**
    * params defines the x/foundation parameters to update.
@@ -83,7 +83,8 @@ export interface MsgFundTreasuryResponse {}
 
 /** MsgWithdrawFromTreasury is the Msg/WithdrawFromTreasury request type. */
 export interface MsgWithdrawFromTreasury {
-  operator: string;
+  /** authority is the address of the privileged account. */
+  authority: string;
   to: string;
   amount: Coin[];
 }
@@ -93,8 +94,8 @@ export interface MsgWithdrawFromTreasuryResponse {}
 
 /** MsgUpdateMembers is the Msg/UpdateMembers request type. */
 export interface MsgUpdateMembers {
-  /** operator is the account address of the foundation operator. */
-  operator: string;
+  /** authority is the address of the privileged account. */
+  authority: string;
   /**
    * member_updates is the list of members to update,
    * set remove to true to remove a member.
@@ -107,8 +108,8 @@ export interface MsgUpdateMembersResponse {}
 
 /** MsgUpdateDecisionPolicy is the Msg/UpdateDecisionPolicy request type. */
 export interface MsgUpdateDecisionPolicy {
-  /** operator is the account address of the foundation operator. */
-  operator: string;
+  /** authority is the address of the privileged account. */
+  authority: string;
   /** decision_policy is the updated decision policy. */
   decisionPolicy?: Any;
 }
@@ -197,7 +198,8 @@ export interface MsgLeaveFoundationResponse {}
  * on behalf of the foundation.
  */
 export interface MsgGrant {
-  operator: string;
+  /** authority is the address of the privileged account. */
+  authority: string;
   grantee: string;
   authorization?: Any;
 }
@@ -207,7 +209,8 @@ export interface MsgGrantResponse {}
 
 /** MsgRevoke is the Msg/Revoke request type. */
 export interface MsgRevoke {
-  operator: string;
+  /** authority is the address of the privileged account. */
+  authority: string;
   grantee: string;
   msgTypeUrl: string;
 }
@@ -217,7 +220,8 @@ export interface MsgRevokeResponse {}
 
 /** MsgGovMint is the Msg/GovMint request type. */
 export interface MsgGovMint {
-  operator: string;
+  /** authority is the address of the privileged account. */
+  authority: string;
   amount: Coin[];
 }
 
@@ -455,7 +459,7 @@ export const MsgFundTreasuryResponse = {
 };
 
 function createBaseMsgWithdrawFromTreasury(): MsgWithdrawFromTreasury {
-  return { operator: "", to: "", amount: [] };
+  return { authority: "", to: "", amount: [] };
 }
 
 export const MsgWithdrawFromTreasury = {
@@ -463,8 +467,8 @@ export const MsgWithdrawFromTreasury = {
     message: MsgWithdrawFromTreasury,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.operator !== "") {
-      writer.uint32(10).string(message.operator);
+    if (message.authority !== "") {
+      writer.uint32(10).string(message.authority);
     }
     if (message.to !== "") {
       writer.uint32(18).string(message.to);
@@ -486,7 +490,7 @@ export const MsgWithdrawFromTreasury = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.operator = reader.string();
+          message.authority = reader.string();
           break;
         case 2:
           message.to = reader.string();
@@ -504,7 +508,7 @@ export const MsgWithdrawFromTreasury = {
 
   fromJSON(object: any): MsgWithdrawFromTreasury {
     return {
-      operator: isSet(object.operator) ? String(object.operator) : "",
+      authority: isSet(object.authority) ? String(object.authority) : "",
       to: isSet(object.to) ? String(object.to) : "",
       amount: Array.isArray(object?.amount)
         ? object.amount.map((e: any) => Coin.fromJSON(e))
@@ -514,7 +518,7 @@ export const MsgWithdrawFromTreasury = {
 
   toJSON(message: MsgWithdrawFromTreasury): unknown {
     const obj: any = {};
-    message.operator !== undefined && (obj.operator = message.operator);
+    message.authority !== undefined && (obj.authority = message.authority);
     message.to !== undefined && (obj.to = message.to);
     if (message.amount) {
       obj.amount = message.amount.map((e) => (e ? Coin.toJSON(e) : undefined));
@@ -528,7 +532,7 @@ export const MsgWithdrawFromTreasury = {
     object: I
   ): MsgWithdrawFromTreasury {
     const message = createBaseMsgWithdrawFromTreasury();
-    message.operator = object.operator ?? "";
+    message.authority = object.authority ?? "";
     message.to = object.to ?? "";
     message.amount = object.amount?.map((e) => Coin.fromPartial(e)) || [];
     return message;
@@ -583,7 +587,7 @@ export const MsgWithdrawFromTreasuryResponse = {
 };
 
 function createBaseMsgUpdateMembers(): MsgUpdateMembers {
-  return { operator: "", memberUpdates: [] };
+  return { authority: "", memberUpdates: [] };
 }
 
 export const MsgUpdateMembers = {
@@ -591,8 +595,8 @@ export const MsgUpdateMembers = {
     message: MsgUpdateMembers,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.operator !== "") {
-      writer.uint32(10).string(message.operator);
+    if (message.authority !== "") {
+      writer.uint32(10).string(message.authority);
     }
     for (const v of message.memberUpdates) {
       MemberRequest.encode(v!, writer.uint32(18).fork()).ldelim();
@@ -608,7 +612,7 @@ export const MsgUpdateMembers = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.operator = reader.string();
+          message.authority = reader.string();
           break;
         case 2:
           message.memberUpdates.push(
@@ -625,7 +629,7 @@ export const MsgUpdateMembers = {
 
   fromJSON(object: any): MsgUpdateMembers {
     return {
-      operator: isSet(object.operator) ? String(object.operator) : "",
+      authority: isSet(object.authority) ? String(object.authority) : "",
       memberUpdates: Array.isArray(object?.memberUpdates)
         ? object.memberUpdates.map((e: any) => MemberRequest.fromJSON(e))
         : [],
@@ -634,7 +638,7 @@ export const MsgUpdateMembers = {
 
   toJSON(message: MsgUpdateMembers): unknown {
     const obj: any = {};
-    message.operator !== undefined && (obj.operator = message.operator);
+    message.authority !== undefined && (obj.authority = message.authority);
     if (message.memberUpdates) {
       obj.memberUpdates = message.memberUpdates.map((e) =>
         e ? MemberRequest.toJSON(e) : undefined
@@ -649,7 +653,7 @@ export const MsgUpdateMembers = {
     object: I
   ): MsgUpdateMembers {
     const message = createBaseMsgUpdateMembers();
-    message.operator = object.operator ?? "";
+    message.authority = object.authority ?? "";
     message.memberUpdates =
       object.memberUpdates?.map((e) => MemberRequest.fromPartial(e)) || [];
     return message;
@@ -704,7 +708,7 @@ export const MsgUpdateMembersResponse = {
 };
 
 function createBaseMsgUpdateDecisionPolicy(): MsgUpdateDecisionPolicy {
-  return { operator: "", decisionPolicy: undefined };
+  return { authority: "", decisionPolicy: undefined };
 }
 
 export const MsgUpdateDecisionPolicy = {
@@ -712,8 +716,8 @@ export const MsgUpdateDecisionPolicy = {
     message: MsgUpdateDecisionPolicy,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.operator !== "") {
-      writer.uint32(10).string(message.operator);
+    if (message.authority !== "") {
+      writer.uint32(10).string(message.authority);
     }
     if (message.decisionPolicy !== undefined) {
       Any.encode(message.decisionPolicy, writer.uint32(18).fork()).ldelim();
@@ -732,7 +736,7 @@ export const MsgUpdateDecisionPolicy = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.operator = reader.string();
+          message.authority = reader.string();
           break;
         case 2:
           message.decisionPolicy = Any.decode(reader, reader.uint32());
@@ -747,7 +751,7 @@ export const MsgUpdateDecisionPolicy = {
 
   fromJSON(object: any): MsgUpdateDecisionPolicy {
     return {
-      operator: isSet(object.operator) ? String(object.operator) : "",
+      authority: isSet(object.authority) ? String(object.authority) : "",
       decisionPolicy: isSet(object.decisionPolicy)
         ? Any.fromJSON(object.decisionPolicy)
         : undefined,
@@ -756,7 +760,7 @@ export const MsgUpdateDecisionPolicy = {
 
   toJSON(message: MsgUpdateDecisionPolicy): unknown {
     const obj: any = {};
-    message.operator !== undefined && (obj.operator = message.operator);
+    message.authority !== undefined && (obj.authority = message.authority);
     message.decisionPolicy !== undefined &&
       (obj.decisionPolicy = message.decisionPolicy
         ? Any.toJSON(message.decisionPolicy)
@@ -768,7 +772,7 @@ export const MsgUpdateDecisionPolicy = {
     object: I
   ): MsgUpdateDecisionPolicy {
     const message = createBaseMsgUpdateDecisionPolicy();
-    message.operator = object.operator ?? "";
+    message.authority = object.authority ?? "";
     message.decisionPolicy =
       object.decisionPolicy !== undefined && object.decisionPolicy !== null
         ? Any.fromPartial(object.decisionPolicy)
@@ -1456,7 +1460,7 @@ export const MsgLeaveFoundationResponse = {
 };
 
 function createBaseMsgGrant(): MsgGrant {
-  return { operator: "", grantee: "", authorization: undefined };
+  return { authority: "", grantee: "", authorization: undefined };
 }
 
 export const MsgGrant = {
@@ -1464,8 +1468,8 @@ export const MsgGrant = {
     message: MsgGrant,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.operator !== "") {
-      writer.uint32(10).string(message.operator);
+    if (message.authority !== "") {
+      writer.uint32(10).string(message.authority);
     }
     if (message.grantee !== "") {
       writer.uint32(18).string(message.grantee);
@@ -1484,7 +1488,7 @@ export const MsgGrant = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.operator = reader.string();
+          message.authority = reader.string();
           break;
         case 2:
           message.grantee = reader.string();
@@ -1502,7 +1506,7 @@ export const MsgGrant = {
 
   fromJSON(object: any): MsgGrant {
     return {
-      operator: isSet(object.operator) ? String(object.operator) : "",
+      authority: isSet(object.authority) ? String(object.authority) : "",
       grantee: isSet(object.grantee) ? String(object.grantee) : "",
       authorization: isSet(object.authorization)
         ? Any.fromJSON(object.authorization)
@@ -1512,7 +1516,7 @@ export const MsgGrant = {
 
   toJSON(message: MsgGrant): unknown {
     const obj: any = {};
-    message.operator !== undefined && (obj.operator = message.operator);
+    message.authority !== undefined && (obj.authority = message.authority);
     message.grantee !== undefined && (obj.grantee = message.grantee);
     message.authorization !== undefined &&
       (obj.authorization = message.authorization
@@ -1523,7 +1527,7 @@ export const MsgGrant = {
 
   fromPartial<I extends Exact<DeepPartial<MsgGrant>, I>>(object: I): MsgGrant {
     const message = createBaseMsgGrant();
-    message.operator = object.operator ?? "";
+    message.authority = object.authority ?? "";
     message.grantee = object.grantee ?? "";
     message.authorization =
       object.authorization !== undefined && object.authorization !== null
@@ -1578,7 +1582,7 @@ export const MsgGrantResponse = {
 };
 
 function createBaseMsgRevoke(): MsgRevoke {
-  return { operator: "", grantee: "", msgTypeUrl: "" };
+  return { authority: "", grantee: "", msgTypeUrl: "" };
 }
 
 export const MsgRevoke = {
@@ -1586,8 +1590,8 @@ export const MsgRevoke = {
     message: MsgRevoke,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.operator !== "") {
-      writer.uint32(10).string(message.operator);
+    if (message.authority !== "") {
+      writer.uint32(10).string(message.authority);
     }
     if (message.grantee !== "") {
       writer.uint32(18).string(message.grantee);
@@ -1606,7 +1610,7 @@ export const MsgRevoke = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.operator = reader.string();
+          message.authority = reader.string();
           break;
         case 2:
           message.grantee = reader.string();
@@ -1624,7 +1628,7 @@ export const MsgRevoke = {
 
   fromJSON(object: any): MsgRevoke {
     return {
-      operator: isSet(object.operator) ? String(object.operator) : "",
+      authority: isSet(object.authority) ? String(object.authority) : "",
       grantee: isSet(object.grantee) ? String(object.grantee) : "",
       msgTypeUrl: isSet(object.msgTypeUrl) ? String(object.msgTypeUrl) : "",
     };
@@ -1632,7 +1636,7 @@ export const MsgRevoke = {
 
   toJSON(message: MsgRevoke): unknown {
     const obj: any = {};
-    message.operator !== undefined && (obj.operator = message.operator);
+    message.authority !== undefined && (obj.authority = message.authority);
     message.grantee !== undefined && (obj.grantee = message.grantee);
     message.msgTypeUrl !== undefined && (obj.msgTypeUrl = message.msgTypeUrl);
     return obj;
@@ -1642,7 +1646,7 @@ export const MsgRevoke = {
     object: I
   ): MsgRevoke {
     const message = createBaseMsgRevoke();
-    message.operator = object.operator ?? "";
+    message.authority = object.authority ?? "";
     message.grantee = object.grantee ?? "";
     message.msgTypeUrl = object.msgTypeUrl ?? "";
     return message;
@@ -1694,7 +1698,7 @@ export const MsgRevokeResponse = {
 };
 
 function createBaseMsgGovMint(): MsgGovMint {
-  return { operator: "", amount: [] };
+  return { authority: "", amount: [] };
 }
 
 export const MsgGovMint = {
@@ -1702,8 +1706,8 @@ export const MsgGovMint = {
     message: MsgGovMint,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.operator !== "") {
-      writer.uint32(10).string(message.operator);
+    if (message.authority !== "") {
+      writer.uint32(10).string(message.authority);
     }
     for (const v of message.amount) {
       Coin.encode(v!, writer.uint32(18).fork()).ldelim();
@@ -1719,7 +1723,7 @@ export const MsgGovMint = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.operator = reader.string();
+          message.authority = reader.string();
           break;
         case 2:
           message.amount.push(Coin.decode(reader, reader.uint32()));
@@ -1734,7 +1738,7 @@ export const MsgGovMint = {
 
   fromJSON(object: any): MsgGovMint {
     return {
-      operator: isSet(object.operator) ? String(object.operator) : "",
+      authority: isSet(object.authority) ? String(object.authority) : "",
       amount: Array.isArray(object?.amount)
         ? object.amount.map((e: any) => Coin.fromJSON(e))
         : [],
@@ -1743,7 +1747,7 @@ export const MsgGovMint = {
 
   toJSON(message: MsgGovMint): unknown {
     const obj: any = {};
-    message.operator !== undefined && (obj.operator = message.operator);
+    message.authority !== undefined && (obj.authority = message.authority);
     if (message.amount) {
       obj.amount = message.amount.map((e) => (e ? Coin.toJSON(e) : undefined));
     } else {
@@ -1756,7 +1760,7 @@ export const MsgGovMint = {
     object: I
   ): MsgGovMint {
     const message = createBaseMsgGovMint();
-    message.operator = object.operator ?? "";
+    message.authority = object.authority ?? "";
     message.amount = object.amount?.map((e) => Coin.fromPartial(e)) || [];
     return message;
   },

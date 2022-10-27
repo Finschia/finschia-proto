@@ -26,7 +26,7 @@ export interface EventFundTreasury {
   amount: Coin[];
 }
 
-/** EventWithdrawFromTreasury is an event emitted when the operator withdraws coins from the treasury. */
+/** EventWithdrawFromTreasury is an event emitted when coins are withdrawn from the treasury. */
 export interface EventWithdrawFromTreasury {
   to: string;
   amount: Coin[];
@@ -77,7 +77,6 @@ export interface EventLeaveFoundation {
 
 /** EventGrant is emitted on Msg/Grant */
 export interface EventGrant {
-  granter: string;
   /** the address of the grantee. */
   grantee: string;
   /** authorization granted. */
@@ -86,7 +85,6 @@ export interface EventGrant {
 
 /** EventRevoke is emitted on Msg/Revoke */
 export interface EventRevoke {
-  granter: string;
   /** address of the grantee. */
   grantee: string;
   /** message type url for which an autorization is revoked. */
@@ -749,7 +747,7 @@ export const EventLeaveFoundation = {
 };
 
 function createBaseEventGrant(): EventGrant {
-  return { granter: "", grantee: "", authorization: undefined };
+  return { grantee: "", authorization: undefined };
 }
 
 export const EventGrant = {
@@ -757,14 +755,11 @@ export const EventGrant = {
     message: EventGrant,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.granter !== "") {
-      writer.uint32(10).string(message.granter);
-    }
     if (message.grantee !== "") {
-      writer.uint32(18).string(message.grantee);
+      writer.uint32(10).string(message.grantee);
     }
     if (message.authorization !== undefined) {
-      Any.encode(message.authorization, writer.uint32(26).fork()).ldelim();
+      Any.encode(message.authorization, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -777,12 +772,9 @@ export const EventGrant = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.granter = reader.string();
-          break;
-        case 2:
           message.grantee = reader.string();
           break;
-        case 3:
+        case 2:
           message.authorization = Any.decode(reader, reader.uint32());
           break;
         default:
@@ -795,7 +787,6 @@ export const EventGrant = {
 
   fromJSON(object: any): EventGrant {
     return {
-      granter: isSet(object.granter) ? String(object.granter) : "",
       grantee: isSet(object.grantee) ? String(object.grantee) : "",
       authorization: isSet(object.authorization)
         ? Any.fromJSON(object.authorization)
@@ -805,7 +796,6 @@ export const EventGrant = {
 
   toJSON(message: EventGrant): unknown {
     const obj: any = {};
-    message.granter !== undefined && (obj.granter = message.granter);
     message.grantee !== undefined && (obj.grantee = message.grantee);
     message.authorization !== undefined &&
       (obj.authorization = message.authorization
@@ -818,7 +808,6 @@ export const EventGrant = {
     object: I
   ): EventGrant {
     const message = createBaseEventGrant();
-    message.granter = object.granter ?? "";
     message.grantee = object.grantee ?? "";
     message.authorization =
       object.authorization !== undefined && object.authorization !== null
@@ -829,7 +818,7 @@ export const EventGrant = {
 };
 
 function createBaseEventRevoke(): EventRevoke {
-  return { granter: "", grantee: "", msgTypeUrl: "" };
+  return { grantee: "", msgTypeUrl: "" };
 }
 
 export const EventRevoke = {
@@ -837,14 +826,11 @@ export const EventRevoke = {
     message: EventRevoke,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.granter !== "") {
-      writer.uint32(10).string(message.granter);
-    }
     if (message.grantee !== "") {
-      writer.uint32(18).string(message.grantee);
+      writer.uint32(10).string(message.grantee);
     }
     if (message.msgTypeUrl !== "") {
-      writer.uint32(26).string(message.msgTypeUrl);
+      writer.uint32(18).string(message.msgTypeUrl);
     }
     return writer;
   },
@@ -857,12 +843,9 @@ export const EventRevoke = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.granter = reader.string();
-          break;
-        case 2:
           message.grantee = reader.string();
           break;
-        case 3:
+        case 2:
           message.msgTypeUrl = reader.string();
           break;
         default:
@@ -875,7 +858,6 @@ export const EventRevoke = {
 
   fromJSON(object: any): EventRevoke {
     return {
-      granter: isSet(object.granter) ? String(object.granter) : "",
       grantee: isSet(object.grantee) ? String(object.grantee) : "",
       msgTypeUrl: isSet(object.msgTypeUrl) ? String(object.msgTypeUrl) : "",
     };
@@ -883,7 +865,6 @@ export const EventRevoke = {
 
   toJSON(message: EventRevoke): unknown {
     const obj: any = {};
-    message.granter !== undefined && (obj.granter = message.granter);
     message.grantee !== undefined && (obj.grantee = message.grantee);
     message.msgTypeUrl !== undefined && (obj.msgTypeUrl = message.msgTypeUrl);
     return obj;
@@ -893,7 +874,6 @@ export const EventRevoke = {
     object: I
   ): EventRevoke {
     const message = createBaseEventRevoke();
-    message.granter = object.granter ?? "";
     message.grantee = object.grantee ?? "";
     message.msgTypeUrl = object.msgTypeUrl ?? "";
     return message;
