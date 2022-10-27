@@ -193,8 +193,8 @@ export interface QueryPacketReceiptRequest {
 }
 
 /**
- * QueryPacketReceiptResponse defines the client query response for a packet receipt
- * which also includes a proof, and the height from which the proof was
+ * QueryPacketReceiptResponse defines the client query response for a packet
+ * receipt which also includes a proof, and the height from which the proof was
  * retrieved
  */
 export interface QueryPacketReceiptResponse {
@@ -244,6 +244,8 @@ export interface QueryPacketAcknowledgementsRequest {
   channelId: string;
   /** pagination request */
   pagination?: PageRequest;
+  /** list of packet sequences */
+  packetCommitmentSequences: Long[];
 }
 
 /**
@@ -1928,7 +1930,12 @@ export const QueryPacketAcknowledgementResponse = {
 };
 
 function createBaseQueryPacketAcknowledgementsRequest(): QueryPacketAcknowledgementsRequest {
-  return { portId: "", channelId: "", pagination: undefined };
+  return {
+    portId: "",
+    channelId: "",
+    pagination: undefined,
+    packetCommitmentSequences: [],
+  };
 }
 
 export const QueryPacketAcknowledgementsRequest = {
@@ -1945,6 +1952,11 @@ export const QueryPacketAcknowledgementsRequest = {
     if (message.pagination !== undefined) {
       PageRequest.encode(message.pagination, writer.uint32(26).fork()).ldelim();
     }
+    writer.uint32(34).fork();
+    for (const v of message.packetCommitmentSequences) {
+      writer.uint64(v);
+    }
+    writer.ldelim();
     return writer;
   },
 
@@ -1967,6 +1979,16 @@ export const QueryPacketAcknowledgementsRequest = {
         case 3:
           message.pagination = PageRequest.decode(reader, reader.uint32());
           break;
+        case 4:
+          if ((tag & 7) === 2) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.packetCommitmentSequences.push(reader.uint64() as Long);
+            }
+          } else {
+            message.packetCommitmentSequences.push(reader.uint64() as Long);
+          }
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1982,6 +2004,11 @@ export const QueryPacketAcknowledgementsRequest = {
       pagination: isSet(object.pagination)
         ? PageRequest.fromJSON(object.pagination)
         : undefined,
+      packetCommitmentSequences: Array.isArray(
+        object?.packetCommitmentSequences
+      )
+        ? object.packetCommitmentSequences.map((e: any) => Long.fromValue(e))
+        : [],
     };
   },
 
@@ -1993,6 +2020,13 @@ export const QueryPacketAcknowledgementsRequest = {
       (obj.pagination = message.pagination
         ? PageRequest.toJSON(message.pagination)
         : undefined);
+    if (message.packetCommitmentSequences) {
+      obj.packetCommitmentSequences = message.packetCommitmentSequences.map(
+        (e) => (e || Long.UZERO).toString()
+      );
+    } else {
+      obj.packetCommitmentSequences = [];
+    }
     return obj;
   },
 
@@ -2006,6 +2040,8 @@ export const QueryPacketAcknowledgementsRequest = {
       object.pagination !== undefined && object.pagination !== null
         ? PageRequest.fromPartial(object.pagination)
         : undefined;
+    message.packetCommitmentSequences =
+      object.packetCommitmentSequences?.map((e) => Long.fromValue(e)) || [];
     return message;
   },
 };
@@ -2678,7 +2714,10 @@ export interface Query {
   PacketCommitments(
     request: QueryPacketCommitmentsRequest
   ): Promise<QueryPacketCommitmentsResponse>;
-  /** PacketReceipt queries if a given packet sequence has been received on the queried chain */
+  /**
+   * PacketReceipt queries if a given packet sequence has been received on the
+   * queried chain
+   */
   PacketReceipt(
     request: QueryPacketReceiptRequest
   ): Promise<QueryPacketReceiptResponse>;
@@ -2701,8 +2740,8 @@ export interface Query {
     request: QueryUnreceivedPacketsRequest
   ): Promise<QueryUnreceivedPacketsResponse>;
   /**
-   * UnreceivedAcks returns all the unreceived IBC acknowledgements associated with a
-   * channel and sequences.
+   * UnreceivedAcks returns all the unreceived IBC acknowledgements associated
+   * with a channel and sequences.
    */
   UnreceivedAcks(
     request: QueryUnreceivedAcksRequest

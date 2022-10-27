@@ -4,7 +4,7 @@ import {
   Proposal,
   Vote,
   ProposalExecutorResult,
-  Member,
+  MemberRequest,
   proposalExecutorResultFromJSON,
   proposalExecutorResultToJSON,
 } from "./foundation";
@@ -15,8 +15,8 @@ import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.foundation.v1";
 
-/** EventUpdateFoundationParams is emitted after updating foundation parameters. */
-export interface EventUpdateFoundationParams {
+/** EventUpdateParams is emitted after updating foundation parameters. */
+export interface EventUpdateParams {
   params?: Params;
 }
 
@@ -26,7 +26,7 @@ export interface EventFundTreasury {
   amount: Coin[];
 }
 
-/** EventWithdrawFromTreasury is an event emitted when the operator withdraws coins from the treasury. */
+/** EventWithdrawFromTreasury is an event emitted when coins are withdrawn from the treasury. */
 export interface EventWithdrawFromTreasury {
   to: string;
   amount: Coin[];
@@ -34,7 +34,7 @@ export interface EventWithdrawFromTreasury {
 
 /** EventUpdateMembers is an event emitted when the members have been updated. */
 export interface EventUpdateMembers {
-  memberUpdates: Member[];
+  memberUpdates: MemberRequest[];
 }
 
 /** EventUpdateDecisionPolicy is an event emitted when the decision policy have been updated. */
@@ -65,6 +65,8 @@ export interface EventExec {
   proposalId: Long;
   /** result is the proposal execution result. */
   result: ProposalExecutorResult;
+  /** logs contains error logs in case the execution result is FAILURE. */
+  logs: string;
 }
 
 /** EventLeaveFoundation is an event emitted when a foundation member leaves the foundation. */
@@ -75,7 +77,6 @@ export interface EventLeaveFoundation {
 
 /** EventGrant is emitted on Msg/Grant */
 export interface EventGrant {
-  granter: string;
   /** the address of the grantee. */
   grantee: string;
   /** authorization granted. */
@@ -84,20 +85,24 @@ export interface EventGrant {
 
 /** EventRevoke is emitted on Msg/Revoke */
 export interface EventRevoke {
-  granter: string;
   /** address of the grantee. */
   grantee: string;
   /** message type url for which an autorization is revoked. */
   msgTypeUrl: string;
 }
 
-function createBaseEventUpdateFoundationParams(): EventUpdateFoundationParams {
+/** EventGovMint is an event emitted when the minter mint coins to the treasury. */
+export interface EventGovMint {
+  amount: Coin[];
+}
+
+function createBaseEventUpdateParams(): EventUpdateParams {
   return { params: undefined };
 }
 
-export const EventUpdateFoundationParams = {
+export const EventUpdateParams = {
   encode(
-    message: EventUpdateFoundationParams,
+    message: EventUpdateParams,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.params !== undefined) {
@@ -106,13 +111,10 @@ export const EventUpdateFoundationParams = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): EventUpdateFoundationParams {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventUpdateParams {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventUpdateFoundationParams();
+    const message = createBaseEventUpdateParams();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -127,23 +129,23 @@ export const EventUpdateFoundationParams = {
     return message;
   },
 
-  fromJSON(object: any): EventUpdateFoundationParams {
+  fromJSON(object: any): EventUpdateParams {
     return {
       params: isSet(object.params) ? Params.fromJSON(object.params) : undefined,
     };
   },
 
-  toJSON(message: EventUpdateFoundationParams): unknown {
+  toJSON(message: EventUpdateParams): unknown {
     const obj: any = {};
     message.params !== undefined &&
       (obj.params = message.params ? Params.toJSON(message.params) : undefined);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<EventUpdateFoundationParams>, I>>(
+  fromPartial<I extends Exact<DeepPartial<EventUpdateParams>, I>>(
     object: I
-  ): EventUpdateFoundationParams {
-    const message = createBaseEventUpdateFoundationParams();
+  ): EventUpdateParams {
+    const message = createBaseEventUpdateParams();
     message.params =
       object.params !== undefined && object.params !== null
         ? Params.fromPartial(object.params)
@@ -303,7 +305,7 @@ export const EventUpdateMembers = {
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     for (const v of message.memberUpdates) {
-      Member.encode(v!, writer.uint32(10).fork()).ldelim();
+      MemberRequest.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -316,7 +318,9 @@ export const EventUpdateMembers = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.memberUpdates.push(Member.decode(reader, reader.uint32()));
+          message.memberUpdates.push(
+            MemberRequest.decode(reader, reader.uint32())
+          );
           break;
         default:
           reader.skipType(tag & 7);
@@ -329,7 +333,7 @@ export const EventUpdateMembers = {
   fromJSON(object: any): EventUpdateMembers {
     return {
       memberUpdates: Array.isArray(object?.memberUpdates)
-        ? object.memberUpdates.map((e: any) => Member.fromJSON(e))
+        ? object.memberUpdates.map((e: any) => MemberRequest.fromJSON(e))
         : [],
     };
   },
@@ -338,7 +342,7 @@ export const EventUpdateMembers = {
     const obj: any = {};
     if (message.memberUpdates) {
       obj.memberUpdates = message.memberUpdates.map((e) =>
-        e ? Member.toJSON(e) : undefined
+        e ? MemberRequest.toJSON(e) : undefined
       );
     } else {
       obj.memberUpdates = [];
@@ -351,7 +355,7 @@ export const EventUpdateMembers = {
   ): EventUpdateMembers {
     const message = createBaseEventUpdateMembers();
     message.memberUpdates =
-      object.memberUpdates?.map((e) => Member.fromPartial(e)) || [];
+      object.memberUpdates?.map((e) => MemberRequest.fromPartial(e)) || [];
     return message;
   },
 };
@@ -605,7 +609,7 @@ export const EventVote = {
 };
 
 function createBaseEventExec(): EventExec {
-  return { proposalId: Long.UZERO, result: 0 };
+  return { proposalId: Long.UZERO, result: 0, logs: "" };
 }
 
 export const EventExec = {
@@ -618,6 +622,9 @@ export const EventExec = {
     }
     if (message.result !== 0) {
       writer.uint32(16).int32(message.result);
+    }
+    if (message.logs !== "") {
+      writer.uint32(26).string(message.logs);
     }
     return writer;
   },
@@ -635,6 +642,9 @@ export const EventExec = {
         case 2:
           message.result = reader.int32() as any;
           break;
+        case 3:
+          message.logs = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -651,6 +661,7 @@ export const EventExec = {
       result: isSet(object.result)
         ? proposalExecutorResultFromJSON(object.result)
         : 0,
+      logs: isSet(object.logs) ? String(object.logs) : "",
     };
   },
 
@@ -660,6 +671,7 @@ export const EventExec = {
       (obj.proposalId = (message.proposalId || Long.UZERO).toString());
     message.result !== undefined &&
       (obj.result = proposalExecutorResultToJSON(message.result));
+    message.logs !== undefined && (obj.logs = message.logs);
     return obj;
   },
 
@@ -672,6 +684,7 @@ export const EventExec = {
         ? Long.fromValue(object.proposalId)
         : Long.UZERO;
     message.result = object.result ?? 0;
+    message.logs = object.logs ?? "";
     return message;
   },
 };
@@ -734,7 +747,7 @@ export const EventLeaveFoundation = {
 };
 
 function createBaseEventGrant(): EventGrant {
-  return { granter: "", grantee: "", authorization: undefined };
+  return { grantee: "", authorization: undefined };
 }
 
 export const EventGrant = {
@@ -742,14 +755,11 @@ export const EventGrant = {
     message: EventGrant,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.granter !== "") {
-      writer.uint32(10).string(message.granter);
-    }
     if (message.grantee !== "") {
-      writer.uint32(18).string(message.grantee);
+      writer.uint32(10).string(message.grantee);
     }
     if (message.authorization !== undefined) {
-      Any.encode(message.authorization, writer.uint32(26).fork()).ldelim();
+      Any.encode(message.authorization, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -762,12 +772,9 @@ export const EventGrant = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.granter = reader.string();
-          break;
-        case 2:
           message.grantee = reader.string();
           break;
-        case 3:
+        case 2:
           message.authorization = Any.decode(reader, reader.uint32());
           break;
         default:
@@ -780,7 +787,6 @@ export const EventGrant = {
 
   fromJSON(object: any): EventGrant {
     return {
-      granter: isSet(object.granter) ? String(object.granter) : "",
       grantee: isSet(object.grantee) ? String(object.grantee) : "",
       authorization: isSet(object.authorization)
         ? Any.fromJSON(object.authorization)
@@ -790,7 +796,6 @@ export const EventGrant = {
 
   toJSON(message: EventGrant): unknown {
     const obj: any = {};
-    message.granter !== undefined && (obj.granter = message.granter);
     message.grantee !== undefined && (obj.grantee = message.grantee);
     message.authorization !== undefined &&
       (obj.authorization = message.authorization
@@ -803,7 +808,6 @@ export const EventGrant = {
     object: I
   ): EventGrant {
     const message = createBaseEventGrant();
-    message.granter = object.granter ?? "";
     message.grantee = object.grantee ?? "";
     message.authorization =
       object.authorization !== undefined && object.authorization !== null
@@ -814,7 +818,7 @@ export const EventGrant = {
 };
 
 function createBaseEventRevoke(): EventRevoke {
-  return { granter: "", grantee: "", msgTypeUrl: "" };
+  return { grantee: "", msgTypeUrl: "" };
 }
 
 export const EventRevoke = {
@@ -822,14 +826,11 @@ export const EventRevoke = {
     message: EventRevoke,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.granter !== "") {
-      writer.uint32(10).string(message.granter);
-    }
     if (message.grantee !== "") {
-      writer.uint32(18).string(message.grantee);
+      writer.uint32(10).string(message.grantee);
     }
     if (message.msgTypeUrl !== "") {
-      writer.uint32(26).string(message.msgTypeUrl);
+      writer.uint32(18).string(message.msgTypeUrl);
     }
     return writer;
   },
@@ -842,12 +843,9 @@ export const EventRevoke = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.granter = reader.string();
-          break;
-        case 2:
           message.grantee = reader.string();
           break;
-        case 3:
+        case 2:
           message.msgTypeUrl = reader.string();
           break;
         default:
@@ -860,7 +858,6 @@ export const EventRevoke = {
 
   fromJSON(object: any): EventRevoke {
     return {
-      granter: isSet(object.granter) ? String(object.granter) : "",
       grantee: isSet(object.grantee) ? String(object.grantee) : "",
       msgTypeUrl: isSet(object.msgTypeUrl) ? String(object.msgTypeUrl) : "",
     };
@@ -868,7 +865,6 @@ export const EventRevoke = {
 
   toJSON(message: EventRevoke): unknown {
     const obj: any = {};
-    message.granter !== undefined && (obj.granter = message.granter);
     message.grantee !== undefined && (obj.grantee = message.grantee);
     message.msgTypeUrl !== undefined && (obj.msgTypeUrl = message.msgTypeUrl);
     return obj;
@@ -878,9 +874,68 @@ export const EventRevoke = {
     object: I
   ): EventRevoke {
     const message = createBaseEventRevoke();
-    message.granter = object.granter ?? "";
     message.grantee = object.grantee ?? "";
     message.msgTypeUrl = object.msgTypeUrl ?? "";
+    return message;
+  },
+};
+
+function createBaseEventGovMint(): EventGovMint {
+  return { amount: [] };
+}
+
+export const EventGovMint = {
+  encode(
+    message: EventGovMint,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    for (const v of message.amount) {
+      Coin.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventGovMint {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEventGovMint();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.amount.push(Coin.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EventGovMint {
+    return {
+      amount: Array.isArray(object?.amount)
+        ? object.amount.map((e: any) => Coin.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: EventGovMint): unknown {
+    const obj: any = {};
+    if (message.amount) {
+      obj.amount = message.amount.map((e) => (e ? Coin.toJSON(e) : undefined));
+    } else {
+      obj.amount = [];
+    }
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EventGovMint>, I>>(
+    object: I
+  ): EventGovMint {
+    const message = createBaseEventGovMint();
+    message.amount = object.amount?.map((e) => Coin.fromPartial(e)) || [];
     return message;
   },
 };

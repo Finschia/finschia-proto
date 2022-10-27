@@ -1,5 +1,12 @@
 /* eslint-disable */
-import { Params, FoundationInfo, Member, Proposal, Vote } from "./foundation";
+import {
+  Params,
+  FoundationInfo,
+  Pool,
+  Member,
+  Proposal,
+  Vote,
+} from "./foundation";
 import { Any } from "../../../google/protobuf/any";
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
@@ -22,11 +29,14 @@ export interface GenesisState {
   votes: Vote[];
   /** grants */
   authorizations: GrantAuthorization[];
+  /** pool */
+  pool?: Pool;
+  /** govMintLeftCount is gov mint max count */
+  govMintLeftCount: number;
 }
 
 /** GrantAuthorization defines authorization grant to grantee via route. */
 export interface GrantAuthorization {
-  granter: string;
   grantee: string;
   authorization?: Any;
 }
@@ -40,6 +50,8 @@ function createBaseGenesisState(): GenesisState {
     proposals: [],
     votes: [],
     authorizations: [],
+    pool: undefined,
+    govMintLeftCount: 0,
   };
 }
 
@@ -71,6 +83,12 @@ export const GenesisState = {
     }
     for (const v of message.authorizations) {
       GrantAuthorization.encode(v!, writer.uint32(58).fork()).ldelim();
+    }
+    if (message.pool !== undefined) {
+      Pool.encode(message.pool, writer.uint32(66).fork()).ldelim();
+    }
+    if (message.govMintLeftCount !== 0) {
+      writer.uint32(72).uint32(message.govMintLeftCount);
     }
     return writer;
   },
@@ -105,6 +123,12 @@ export const GenesisState = {
             GrantAuthorization.decode(reader, reader.uint32())
           );
           break;
+        case 8:
+          message.pool = Pool.decode(reader, reader.uint32());
+          break;
+        case 9:
+          message.govMintLeftCount = reader.uint32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -134,6 +158,10 @@ export const GenesisState = {
       authorizations: Array.isArray(object?.authorizations)
         ? object.authorizations.map((e: any) => GrantAuthorization.fromJSON(e))
         : [],
+      pool: isSet(object.pool) ? Pool.fromJSON(object.pool) : undefined,
+      govMintLeftCount: isSet(object.govMintLeftCount)
+        ? Number(object.govMintLeftCount)
+        : 0,
     };
   },
 
@@ -175,6 +203,10 @@ export const GenesisState = {
     } else {
       obj.authorizations = [];
     }
+    message.pool !== undefined &&
+      (obj.pool = message.pool ? Pool.toJSON(message.pool) : undefined);
+    message.govMintLeftCount !== undefined &&
+      (obj.govMintLeftCount = Math.round(message.govMintLeftCount));
     return obj;
   },
 
@@ -202,12 +234,17 @@ export const GenesisState = {
     message.authorizations =
       object.authorizations?.map((e) => GrantAuthorization.fromPartial(e)) ||
       [];
+    message.pool =
+      object.pool !== undefined && object.pool !== null
+        ? Pool.fromPartial(object.pool)
+        : undefined;
+    message.govMintLeftCount = object.govMintLeftCount ?? 0;
     return message;
   },
 };
 
 function createBaseGrantAuthorization(): GrantAuthorization {
-  return { granter: "", grantee: "", authorization: undefined };
+  return { grantee: "", authorization: undefined };
 }
 
 export const GrantAuthorization = {
@@ -215,14 +252,11 @@ export const GrantAuthorization = {
     message: GrantAuthorization,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.granter !== "") {
-      writer.uint32(10).string(message.granter);
-    }
     if (message.grantee !== "") {
-      writer.uint32(18).string(message.grantee);
+      writer.uint32(10).string(message.grantee);
     }
     if (message.authorization !== undefined) {
-      Any.encode(message.authorization, writer.uint32(26).fork()).ldelim();
+      Any.encode(message.authorization, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -235,12 +269,9 @@ export const GrantAuthorization = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.granter = reader.string();
-          break;
-        case 2:
           message.grantee = reader.string();
           break;
-        case 3:
+        case 2:
           message.authorization = Any.decode(reader, reader.uint32());
           break;
         default:
@@ -253,7 +284,6 @@ export const GrantAuthorization = {
 
   fromJSON(object: any): GrantAuthorization {
     return {
-      granter: isSet(object.granter) ? String(object.granter) : "",
       grantee: isSet(object.grantee) ? String(object.grantee) : "",
       authorization: isSet(object.authorization)
         ? Any.fromJSON(object.authorization)
@@ -263,7 +293,6 @@ export const GrantAuthorization = {
 
   toJSON(message: GrantAuthorization): unknown {
     const obj: any = {};
-    message.granter !== undefined && (obj.granter = message.granter);
     message.grantee !== undefined && (obj.grantee = message.grantee);
     message.authorization !== undefined &&
       (obj.authorization = message.authorization
@@ -276,7 +305,6 @@ export const GrantAuthorization = {
     object: I
   ): GrantAuthorization {
     const message = createBaseGrantAuthorization();
-    message.granter = object.granter ?? "";
     message.grantee = object.grantee ?? "";
     message.authorization =
       object.authorization !== undefined && object.authorization !== null

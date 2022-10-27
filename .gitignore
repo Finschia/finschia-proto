@@ -2,6 +2,9 @@
 /build/
 /package
 
+proofs.d.ts
+proofs.js
+proofs.js.map
 /confio
 /cosmos
 /cosmos_proto
