@@ -31,7 +31,7 @@ export interface GenesisState {
   authorizations: GrantAuthorization[];
   /** pool */
   pool?: Pool;
-  /** govMintLeftCount is gov mint max count */
+  /** gov_mint_count_left is the remaining number of times for gov_mint. */
   govMintLeftCount: number;
 }
 
