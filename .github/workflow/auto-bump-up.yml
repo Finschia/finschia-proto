@@ -1,0 +1,69 @@
+name: Create branch on new tag in lbm-sdk
+
+on:
+  schedule:
+    # Every day
+    - cron: "0 1 * * *"
+
+jobs:
+  create-proto:
+    runs-on: self-hosted
+    
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with: 
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: init submodule
+        run: |
+          git submodule init
+          git submodule update
+
+      - name: install dependencies
+        run: yarn install
+
+      - name: tag list
+        run: git tag --list
+
+      - name: branch list
+        run: git branch
+
+      - name: Check new tag released
+        run: |
+          CURRENT_TAG=$(git describe --tags --abbrev=0)
+          cd ./lbm-sdk
+          if [ $CURRENT_TAG != "$(git describe --tags --abbrev=0)" ]; then echo "NEW_TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV; fi
+
+      - name: Install protoc
+        uses: arduino/setup-protoc@v1
+        with:
+          version: '3.14.0'
+
+      - name: create new branch
+        if: env.NEW_TAG
+        run: |
+          git checkout -b auto-bump-up/${NEW_TAG}
+          echo "NEW_BRANCH=auto-bump-up/${NEW_TAG}" >> $GITHUB_ENV
+
+      - name: generate proto
+        if: env.NEW_TAG
+        run: |
+          yarn codegen
+          yarn build
+
+      - name: commit changes
+        if: env.NEW_TAG
+        run: |
+          git add .
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -m "Automated bump up $NEW_TAG"
+
+      - name: push branch
+        if: env.NEW_TAG
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.PAT }}
+          branch: ${{ env.NEW_BRANCH }}
