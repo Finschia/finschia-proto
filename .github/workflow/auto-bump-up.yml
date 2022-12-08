@@ -24,12 +24,6 @@ jobs:
       - name: install dependencies
         run: yarn install
 
-      - name: tag list
-        run: git tag --list
-
-      - name: branch list
-        run: git branch
-
       - name: Check new tag released
         run: |
           CURRENT_TAG=$(git describe --tags --abbrev=0)
@@ -41,29 +35,18 @@ jobs:
         with:
           version: '3.14.0'
 
-      - name: create new branch
-        if: env.NEW_TAG
-        run: |
-          git checkout -b auto-bump-up/${NEW_TAG}
-          echo "NEW_BRANCH=auto-bump-up/${NEW_TAG}" >> $GITHUB_ENV
-
       - name: generate proto
         if: env.NEW_TAG
         run: |
           yarn codegen
           yarn build
 
-      - name: commit changes
-        if: env.NEW_TAG
-        run: |
-          git add .
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git commit -m "Automated bump up $NEW_TAG"
-
-      - name: push branch
-        if: env.NEW_TAG
-        uses: ad-m/github-push-action@master
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
         with:
-          github_token: ${{ secrets.PAT }}
-          branch: ${{ env.NEW_BRANCH }}
+          commit-message: Automated bump up ${{ env.NEW_TAG }}
+          committer: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+          author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+          branch: auto-bump-up/${{ env.NEW_TAG }}
+          labels: automated pr
+          title: pulling ${{ github.ref }} into main
