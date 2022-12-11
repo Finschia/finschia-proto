@@ -6,7 +6,7 @@ on:
     - cron: "0 1 * * *"
 
 jobs:
-  create-proto:
+  create-bump-up-PR:
     runs-on: self-hosted
     
     steps:
@@ -14,7 +14,6 @@ jobs:
         uses: actions/checkout@v3
         with: 
           fetch-depth: 0
-          persist-credentials: false
 
       - name: init submodule
         run: |
@@ -26,11 +25,17 @@ jobs:
 
       - name: Check new tag released
         run: |
-          CURRENT_TAG=$(git describe --tags --abbrev=0)
           cd ./lbm-sdk
-          if [ $CURRENT_TAG != "$(git describe --tags --abbrev=0)" ]; then echo "NEW_TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV; fi
+          CURRENT_TAG=$(git describe --tags --abbrev=0)
+          git checkout $CURRENT_TAG;
+          cd ..
+          if [ $CURRENT_TAG != "$(git describe --tags --abbrev=0)" ] && \
+          [ "$(git ls-remote | grep "auto-bump-up/${CURRENT_TAG}")" == "" ]; then \
+            echo "NEW_TAG=$CURRENT_TAG" >> $GITHUB_ENV; \
+          fi
 
       - name: Install protoc
+        if: env.NEW_TAG
         uses: arduino/setup-protoc@v1
         with:
           version: '3.14.0'
@@ -42,6 +47,7 @@ jobs:
           yarn build
 
       - name: Create Pull Request
+        if: env.NEW_TAG
         uses: peter-evans/create-pull-request@v4
         with:
           commit-message: Automated bump up ${{ env.NEW_TAG }}
@@ -49,4 +55,4 @@ jobs:
           author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
           branch: auto-bump-up/${{ env.NEW_TAG }}
           labels: automated pr
-          title: pulling ${{ github.ref }} into main
+          title: pulling lbm-sdk ${{ env.NEW_TAG }} into main
