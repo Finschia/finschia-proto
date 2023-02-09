@@ -1,0 +1,59 @@
+name: Create branch on new tag in lbm-sdk
+
+on:
+  schedule:
+    # Every day
+    - cron: "0 1 * * *"
+
+jobs:
+  create-bump-up-PR:
+    runs-on: self-hosted
+    
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with: 
+          fetch-depth: 0
+
+      - name: init submodule
+        run: |
+          git submodule init
+          git submodule update
+
+      - name: install dependencies
+        run: yarn install
+
+      - name: Check new tag released
+        run: |
+          cd ./lbm-sdk
+          CURRENT_TAG=$(git describe --tags --abbrev=0)
+          git checkout $CURRENT_TAG;
+          cd ..
+          if [ $CURRENT_TAG != "$(git describe --tags --abbrev=0)" ] && \
+          [ "$(git ls-remote | grep "auto-bump-up/${CURRENT_TAG}")" == "" ]; then \
+            echo "NEW_TAG=$CURRENT_TAG" >> $GITHUB_ENV; \
+          fi
+
+      - name: Install protoc
+        if: env.NEW_TAG
+        uses: arduino/setup-protoc@v1
+        with:
+          version: '3.14.0'
+
+      - name: generate proto
+        if: env.NEW_TAG
+        run: |
+          yarn codegen
+          yarn build
+
+      - name: Create Pull Request
+        if: env.NEW_TAG
+        uses: peter-evans/create-pull-request@v4
+        with:
+          commit-message: Automated bump up ${{ env.NEW_TAG }}
+          committer: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+          author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+          branch: auto-bump-up/${{ env.NEW_TAG }}
+          labels: automated pr
+          title: pulling lbm-sdk ${{ env.NEW_TAG }} into main
+          

@@ -29,8 +29,9 @@
     "format": "prettier --write --loglevel warn \"./src/**/*.ts\"",
     "codegen": "./scripts/codegen.sh",
     "lbmsdk_update": "git submodule update --remote --merge",
-    "build": "rm -rf ./build && tsc && ./scripts/prepare.sh",
-    "clean": "rm -rf ./build confio cosmos cosmos_proto gogoproto google ibc lbm ostracon proofs.d.ts proofs.js proofs.js.map"
+    "build": "rm -rf ./build && tsc",
+    "clean": "rm -rf ./build confio cosmos cosmos_proto gogoproto google ibc lbm ostracon proofs.d.ts proofs.js proofs.js.map",
+    "prepare": "./scripts/prepare.sh"
   },
   "dependencies": {
     "long": "^4.0.0",

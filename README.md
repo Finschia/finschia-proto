@@ -38,4 +38,7 @@ yarn codegen
 
 # Build .js/.d.ts files
 yarn build
+
+# Prepare publishing
+yarn prepare
 ```
