@@ -3,7 +3,7 @@ import { Duration } from "../../google/protobuf/duration";
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = "ostracon.types";
+export const protobufPackage = "tendermint.types";
 
 /**
  * ConsensusParams contains consensus critical parameters that determine the

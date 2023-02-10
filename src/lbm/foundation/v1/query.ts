@@ -159,15 +159,6 @@ export interface QueryGrantsResponse {
   pagination?: PageResponse;
 }
 
-/** QueryGovMintRequest is the Query/GovMint request type. */
-export interface QueryGovMintRequest {}
-
-/** QueryGovMintResponse is the Query/GovMint response type. */
-export interface QueryGovMintResponse {
-  /** leftCount is the left count of GovMint. */
-  leftCount: number;
-}
-
 function createBaseQueryParamsRequest(): QueryParamsRequest {
   return {};
 }
@@ -1607,108 +1598,6 @@ export const QueryGrantsResponse = {
   },
 };
 
-function createBaseQueryGovMintRequest(): QueryGovMintRequest {
-  return {};
-}
-
-export const QueryGovMintRequest = {
-  encode(
-    _: QueryGovMintRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGovMintRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryGovMintRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(_: any): QueryGovMintRequest {
-    return {};
-  },
-
-  toJSON(_: QueryGovMintRequest): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<QueryGovMintRequest>, I>>(
-    _: I
-  ): QueryGovMintRequest {
-    const message = createBaseQueryGovMintRequest();
-    return message;
-  },
-};
-
-function createBaseQueryGovMintResponse(): QueryGovMintResponse {
-  return { leftCount: 0 };
-}
-
-export const QueryGovMintResponse = {
-  encode(
-    message: QueryGovMintResponse,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.leftCount !== 0) {
-      writer.uint32(8).uint32(message.leftCount);
-    }
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): QueryGovMintResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryGovMintResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.leftCount = reader.uint32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): QueryGovMintResponse {
-    return {
-      leftCount: isSet(object.leftCount) ? Number(object.leftCount) : 0,
-    };
-  },
-
-  toJSON(message: QueryGovMintResponse): unknown {
-    const obj: any = {};
-    message.leftCount !== undefined &&
-      (obj.leftCount = Math.round(message.leftCount));
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<QueryGovMintResponse>, I>>(
-    object: I
-  ): QueryGovMintResponse {
-    const message = createBaseQueryGovMintResponse();
-    message.leftCount = object.leftCount ?? 0;
-    return message;
-  },
-};
-
 /** Query defines the gRPC querier service for foundation module. */
 export interface Query {
   /** Params queries the module params. */
@@ -1737,8 +1626,6 @@ export interface Query {
   ): Promise<QueryTallyResultResponse>;
   /** Returns list of authorizations, granted to the grantee. */
   Grants(request: QueryGrantsRequest): Promise<QueryGrantsResponse>;
-  /** GovMint queries the left count of gov mint. */
-  GovMint(request: QueryGovMintRequest): Promise<QueryGovMintResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -1756,7 +1643,6 @@ export class QueryClientImpl implements Query {
     this.Votes = this.Votes.bind(this);
     this.TallyResult = this.TallyResult.bind(this);
     this.Grants = this.Grants.bind(this);
-    this.GovMint = this.GovMint.bind(this);
   }
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
@@ -1871,18 +1757,6 @@ export class QueryClientImpl implements Query {
     const promise = this.rpc.request("lbm.foundation.v1.Query", "Grants", data);
     return promise.then((data) =>
       QueryGrantsResponse.decode(new _m0.Reader(data))
-    );
-  }
-
-  GovMint(request: QueryGovMintRequest): Promise<QueryGovMintResponse> {
-    const data = QueryGovMintRequest.encode(request).finish();
-    const promise = this.rpc.request(
-      "lbm.foundation.v1.Query",
-      "GovMint",
-      data
-    );
-    return promise.then((data) =>
-      QueryGovMintResponse.decode(new _m0.Reader(data))
     );
   }
 }

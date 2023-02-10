@@ -91,11 +91,6 @@ export interface EventRevoke {
   msgTypeUrl: string;
 }
 
-/** EventGovMint is an event emitted when the minter mint coins to the treasury. */
-export interface EventGovMint {
-  amount: Coin[];
-}
-
 function createBaseEventUpdateParams(): EventUpdateParams {
   return { params: undefined };
 }
@@ -876,66 +871,6 @@ export const EventRevoke = {
     const message = createBaseEventRevoke();
     message.grantee = object.grantee ?? "";
     message.msgTypeUrl = object.msgTypeUrl ?? "";
-    return message;
-  },
-};
-
-function createBaseEventGovMint(): EventGovMint {
-  return { amount: [] };
-}
-
-export const EventGovMint = {
-  encode(
-    message: EventGovMint,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    for (const v of message.amount) {
-      Coin.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): EventGovMint {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventGovMint();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.amount.push(Coin.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): EventGovMint {
-    return {
-      amount: Array.isArray(object?.amount)
-        ? object.amount.map((e: any) => Coin.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: EventGovMint): unknown {
-    const obj: any = {};
-    if (message.amount) {
-      obj.amount = message.amount.map((e) => (e ? Coin.toJSON(e) : undefined));
-    } else {
-      obj.amount = [];
-    }
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<EventGovMint>, I>>(
-    object: I
-  ): EventGovMint {
-    const message = createBaseEventGovMint();
-    message.amount = object.amount?.map((e) => Coin.fromPartial(e)) || [];
     return message;
   },
 };

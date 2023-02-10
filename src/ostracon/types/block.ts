@@ -1,6 +1,7 @@
 /* eslint-disable */
-import { Header, Data, Commit } from "./types";
-import { EvidenceList } from "./evidence";
+import { Header, Data, Commit } from "../../tendermint/types/types";
+import { EvidenceList } from "../../tendermint/types/evidence";
+import { Entropy } from "./types";
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
 
@@ -11,6 +12,8 @@ export interface Block {
   data?: Data;
   evidence?: EvidenceList;
   lastCommit?: Commit;
+  /** ** Ostracon Extended Fields *** */
+  entropy?: Entropy;
 }
 
 function createBaseBlock(): Block {
@@ -19,6 +22,7 @@ function createBaseBlock(): Block {
     data: undefined,
     evidence: undefined,
     lastCommit: undefined,
+    entropy: undefined,
   };
 }
 
@@ -35,6 +39,9 @@ export const Block = {
     }
     if (message.lastCommit !== undefined) {
       Commit.encode(message.lastCommit, writer.uint32(34).fork()).ldelim();
+    }
+    if (message.entropy !== undefined) {
+      Entropy.encode(message.entropy, writer.uint32(8002).fork()).ldelim();
     }
     return writer;
   },
@@ -58,6 +65,9 @@ export const Block = {
         case 4:
           message.lastCommit = Commit.decode(reader, reader.uint32());
           break;
+        case 1000:
+          message.entropy = Entropy.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -76,6 +86,9 @@ export const Block = {
       lastCommit: isSet(object.lastCommit)
         ? Commit.fromJSON(object.lastCommit)
         : undefined,
+      entropy: isSet(object.entropy)
+        ? Entropy.fromJSON(object.entropy)
+        : undefined,
     };
   },
 
@@ -92,6 +105,10 @@ export const Block = {
     message.lastCommit !== undefined &&
       (obj.lastCommit = message.lastCommit
         ? Commit.toJSON(message.lastCommit)
+        : undefined);
+    message.entropy !== undefined &&
+      (obj.entropy = message.entropy
+        ? Entropy.toJSON(message.entropy)
         : undefined);
     return obj;
   },
@@ -113,6 +130,10 @@ export const Block = {
     message.lastCommit =
       object.lastCommit !== undefined && object.lastCommit !== null
         ? Commit.fromPartial(object.lastCommit)
+        : undefined;
+    message.entropy =
+      object.entropy !== undefined && object.entropy !== null
+        ? Entropy.fromPartial(object.entropy)
         : undefined;
     return message;
   },

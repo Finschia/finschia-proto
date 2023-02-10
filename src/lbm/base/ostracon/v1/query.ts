@@ -4,14 +4,14 @@ import {
   PageResponse,
 } from "../../../../cosmos/base/query/v1beta1/pagination";
 import { Any } from "../../../../google/protobuf/any";
-import { BlockID } from "../../../../ostracon/types/types";
+import { BlockID } from "../../../../tendermint/types/types";
 import { Block } from "../../../../ostracon/types/block";
 import {
   ResponseBeginBlock,
   ResponseEndBlock,
   ResponseDeliverTx,
-} from "../../../../ostracon/abci/types";
-import { DefaultNodeInfo } from "../../../../ostracon/p2p/types";
+} from "../../../../tendermint/abci/types";
+import { DefaultNodeInfo } from "../../../../tendermint/p2p/types";
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
 

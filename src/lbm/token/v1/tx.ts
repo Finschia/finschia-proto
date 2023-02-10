@@ -1,6 +1,6 @@
 /* eslint-disable */
 import Long from "long";
-import { Pair } from "./token";
+import { Attribute } from "./token";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.token.v1";
@@ -8,20 +8,12 @@ export const protobufPackage = "lbm.token.v1";
 /**
  * MsgSend defines the Msg/Send request type.
  *
- * Throws:
- * - ErrInvalidAddress
- *   - `from` is of invalid format.
- *   - `to` is of invalid format.
- * - ErrInvalidRequest
- *   - `contract_id` is of invalid format.
- *   - `amount` is not positive.
- *
  * Signer: `from`
  */
 export interface MsgSend {
   /** contract id associated with the token class. */
   contractId: string;
-  /** approver whose tokens are being sent. */
+  /** holder whose tokens are being sent. */
   from: string;
   /** recipient of the tokens. */
   to: string;
@@ -33,23 +25,15 @@ export interface MsgSend {
 export interface MsgSendResponse {}
 
 /**
- * MsgTransferFrom defines the Msg/TransferFrom request type.
- * Throws:
- * - ErrInvalidAddress
- *   - `proxy` is of invalid format.
- *   - `from` is of invalid format.
- *   - `to` is of invalid format.
- * - ErrInvalidRequest
- *   - `contract_id` is of invalid format.
- *   - `amount` is not positive.
+ * MsgOperatorSend defines the Msg/OperatorSend request type.
  *
- * Signer: `proxy`
+ * Signer: `operator`
  */
-export interface MsgTransferFrom {
+export interface MsgOperatorSend {
   /** contract id associated with the token class. */
   contractId: string;
-  /** the address of the proxy. */
-  proxy: string;
+  /** the address of the operator. */
+  operator: string;
   /** the address which the transfer is from. */
   from: string;
   /** the address which the transfer is to. */
@@ -58,18 +42,11 @@ export interface MsgTransferFrom {
   amount: string;
 }
 
-/** MsgTransferFromResponse defines the Msg/TransferFrom response type. */
-export interface MsgTransferFromResponse {}
+/** MsgOperatorSendResponse defines the Msg/OperatorSend response type. */
+export interface MsgOperatorSendResponse {}
 
 /**
  * MsgRevokeOperator defines the Msg/RevokeOperator request type.
- *
- * Throws:
- * - ErrInvalidAddress
- *   - `holder` is of invalid format.
- *   - `operator` is of invalid format.
- * - ErrInvalidRequest
- *   - `contract_id` is of invalid format.
  *
  * Signer: `holder`
  *
@@ -92,44 +69,24 @@ export interface MsgRevokeOperator {
 export interface MsgRevokeOperatorResponse {}
 
 /**
- * MsgApprove defines the Msg/Approve request type.
+ * MsgAuthorizeOperator defines the Msg/AuthorizeOperator request type.
  *
- * Throws:
- * - ErrInvalidAddress
- *   - `approver` is of invalid format.
- *   - `proxy` is of invalid format.
- * - ErrInvalidRequest
- *   - `contract_id` is of invalid format.
- *
- * Signer: `approver`
+ * Signer: `holder`
  */
-export interface MsgApprove {
+export interface MsgAuthorizeOperator {
   /** contract id associated with the token class. */
   contractId: string;
-  /** address of the token approver which approves the authorization. */
-  approver: string;
-  /** address of the proxy which the authorization is granted to. */
-  proxy: string;
+  /** address of the token holder which approves the authorization. */
+  holder: string;
+  /** address of the operator which the authorization is granted to. */
+  operator: string;
 }
 
-/** MsgApproveResponse defines the Msg/Approve response type. */
-export interface MsgApproveResponse {}
+/** MsgAuthorizeOperatorResponse defines the Msg/AuthorizeOperator response type. */
+export interface MsgAuthorizeOperatorResponse {}
 
 /**
  * MsgIssue defines the Msg/Issue request type.
- *
- * Throws:
- * - ErrInvalidAddress
- *   - `owner` is of invalid format.
- *   - `to` is of invalid format.
- * - ErrInvalidRequest
- *   - `name` is empty.
- *   - `name` exceeds the app-specific limit in length.
- *   - `symbol` is of invalid format.
- *   - `image_uri` exceeds the app-specific limit in length.
- *   - `meta` exceeds the app-specific limit in length.
- *   - `decimals` is lesser than 0 or greater than 18.
- *   - `amount` is not positive.
  *
  * Signer: `owner`
  */
@@ -138,8 +95,8 @@ export interface MsgIssue {
   name: string;
   /** symbol is an abbreviated name for token class. mandatory (not ERC20 compliant). */
   symbol: string;
-  /** image_uri is an uri for the image of the token class stored off chain. */
-  imageUri: string;
+  /** uri for the image of the token class stored off chain. */
+  uri: string;
   /** meta is a brief description of token class. */
   meta: string;
   /** decimals is the number of decimals which one must divide the amount by to get its user representation. */
@@ -156,20 +113,12 @@ export interface MsgIssue {
 
 /** MsgIssueResponse defines the Msg/Issue response type. */
 export interface MsgIssueResponse {
-  /** id of the new token class. */
-  id: string;
+  /** id of the new contract. */
+  contractId: string;
 }
 
 /**
  * MsgGrantPermission defines the Msg/GrantPermission request type.
- *
- * Throws:
- * - ErrInvalidAddress
- *   - `granter` is of invalid format.
- *   - `grantee` is of invalid format.
- * - ErrInvalidRequest
- *   - `contract_id` is of invalid format.
- *   - `permission` is not a valid permission.
  *
  * Signer: `granter`
  */
@@ -190,13 +139,6 @@ export interface MsgGrantPermissionResponse {}
 /**
  * MsgRevokePermission defines the Msg/RevokePermission request type.
  *
- * Throws:
- * - ErrInvalidAddress
- *   - `grantee` is of invalid format.
- * - ErrInvalidRequest
- *   - `contract_id` is of invalid format.
- *   - `permission` is not a valid permission.
- *
  * Signer: `grantee`
  */
 export interface MsgRevokePermission {
@@ -213,14 +155,6 @@ export interface MsgRevokePermissionResponse {}
 
 /**
  * MsgMint defines the Msg/Mint request type.
- *
- * Throws:
- * - ErrInvalidAddress
- *   - `from` is of invalid format.
- *   - `to` is of invalid format.
- * - ErrInvalidRequest
- *   - `contract_id` is of invalid format.
- *   - `amount` is not positive.
  *
  * Signer: `from`
  */
@@ -241,13 +175,6 @@ export interface MsgMintResponse {}
 /**
  * MsgBurn defines the Msg/Burn request type.
  *
- * Throws:
- * - ErrInvalidAddress
- *   - `from` is of invalid format.
- * - ErrInvalidRequest
- *   - `contract_id` is of invalid format.
- *   - `amount` is not positive.
- *
  * Signer: `from`
  */
 export interface MsgBurn {
@@ -263,43 +190,26 @@ export interface MsgBurn {
 export interface MsgBurnResponse {}
 
 /**
- * MsgBurnFrom defines the Msg/BurnFrom request type.
+ * MsgOperatorBurn defines the Msg/OperatorBurn request type.
  *
- * Throws:
- * - ErrInvalidAddress
- *   - `proxy` is of invalid format.
- *   - `from` is of invalid format.
- * - ErrInvalidRequest
- *   - `contract_id` is of invalid format.
- *   - `amount` is not positive.
- *
- * Signer: `proxy`
+ * Signer: `operator`
  */
-export interface MsgBurnFrom {
+export interface MsgOperatorBurn {
   /** contract id associated with the token class. */
   contractId: string;
   /** address which triggers the burn. */
-  proxy: string;
+  operator: string;
   /** address which the tokens will be burnt from. */
   from: string;
   /** the amount of the burn. */
   amount: string;
 }
 
-/** MsgBurnFromResponse defines the Msg/BurnFrom response type. */
-export interface MsgBurnFromResponse {}
+/** MsgOperatorBurnResponse defines the Msg/OperatorBurn response type. */
+export interface MsgOperatorBurnResponse {}
 
 /**
  * MsgModify defines the Msg/Modify request type.
- *
- * Throws:
- * - ErrInvalidAddress
- *   - `owner` is of invalid format.
- * - ErrInvalidRequest
- *   - `contract_id` is of invalid format.
- *   - `changes` has duplicate keys.
- *   - `changes` has a key which is not allowed to modify.
- *   - `changes` is empty.
  *
  * Signer: `owner`
  */
@@ -308,8 +218,11 @@ export interface MsgModify {
   contractId: string;
   /** the address of the grantee which must have modify permission. */
   owner: string;
-  /** changes to apply. */
-  changes: Pair[];
+  /**
+   * changes to apply.
+   * possible attribute keys are: name, img_uri, meta
+   */
+  changes: Attribute[];
 }
 
 /** MsgModifyResponse defines the Msg/Modify response type. */
@@ -438,20 +351,20 @@ export const MsgSendResponse = {
   },
 };
 
-function createBaseMsgTransferFrom(): MsgTransferFrom {
-  return { contractId: "", proxy: "", from: "", to: "", amount: "" };
+function createBaseMsgOperatorSend(): MsgOperatorSend {
+  return { contractId: "", operator: "", from: "", to: "", amount: "" };
 }
 
-export const MsgTransferFrom = {
+export const MsgOperatorSend = {
   encode(
-    message: MsgTransferFrom,
+    message: MsgOperatorSend,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.contractId !== "") {
       writer.uint32(10).string(message.contractId);
     }
-    if (message.proxy !== "") {
-      writer.uint32(18).string(message.proxy);
+    if (message.operator !== "") {
+      writer.uint32(18).string(message.operator);
     }
     if (message.from !== "") {
       writer.uint32(26).string(message.from);
@@ -465,10 +378,10 @@ export const MsgTransferFrom = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgTransferFrom {
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgOperatorSend {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgTransferFrom();
+    const message = createBaseMsgOperatorSend();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -476,7 +389,7 @@ export const MsgTransferFrom = {
           message.contractId = reader.string();
           break;
         case 2:
-          message.proxy = reader.string();
+          message.operator = reader.string();
           break;
         case 3:
           message.from = reader.string();
@@ -495,32 +408,32 @@ export const MsgTransferFrom = {
     return message;
   },
 
-  fromJSON(object: any): MsgTransferFrom {
+  fromJSON(object: any): MsgOperatorSend {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
-      proxy: isSet(object.proxy) ? String(object.proxy) : "",
+      operator: isSet(object.operator) ? String(object.operator) : "",
       from: isSet(object.from) ? String(object.from) : "",
       to: isSet(object.to) ? String(object.to) : "",
       amount: isSet(object.amount) ? String(object.amount) : "",
     };
   },
 
-  toJSON(message: MsgTransferFrom): unknown {
+  toJSON(message: MsgOperatorSend): unknown {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
-    message.proxy !== undefined && (obj.proxy = message.proxy);
+    message.operator !== undefined && (obj.operator = message.operator);
     message.from !== undefined && (obj.from = message.from);
     message.to !== undefined && (obj.to = message.to);
     message.amount !== undefined && (obj.amount = message.amount);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgTransferFrom>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgOperatorSend>, I>>(
     object: I
-  ): MsgTransferFrom {
-    const message = createBaseMsgTransferFrom();
+  ): MsgOperatorSend {
+    const message = createBaseMsgOperatorSend();
     message.contractId = object.contractId ?? "";
-    message.proxy = object.proxy ?? "";
+    message.operator = object.operator ?? "";
     message.from = object.from ?? "";
     message.to = object.to ?? "";
     message.amount = object.amount ?? "";
@@ -528,13 +441,13 @@ export const MsgTransferFrom = {
   },
 };
 
-function createBaseMsgTransferFromResponse(): MsgTransferFromResponse {
+function createBaseMsgOperatorSendResponse(): MsgOperatorSendResponse {
   return {};
 }
 
-export const MsgTransferFromResponse = {
+export const MsgOperatorSendResponse = {
   encode(
-    _: MsgTransferFromResponse,
+    _: MsgOperatorSendResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     return writer;
@@ -543,10 +456,10 @@ export const MsgTransferFromResponse = {
   decode(
     input: _m0.Reader | Uint8Array,
     length?: number
-  ): MsgTransferFromResponse {
+  ): MsgOperatorSendResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgTransferFromResponse();
+    const message = createBaseMsgOperatorSendResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -558,19 +471,19 @@ export const MsgTransferFromResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgTransferFromResponse {
+  fromJSON(_: any): MsgOperatorSendResponse {
     return {};
   },
 
-  toJSON(_: MsgTransferFromResponse): unknown {
+  toJSON(_: MsgOperatorSendResponse): unknown {
     const obj: any = {};
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgTransferFromResponse>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgOperatorSendResponse>, I>>(
     _: I
-  ): MsgTransferFromResponse {
-    const message = createBaseMsgTransferFromResponse();
+  ): MsgOperatorSendResponse {
+    const message = createBaseMsgOperatorSendResponse();
     return message;
   },
 };
@@ -694,31 +607,34 @@ export const MsgRevokeOperatorResponse = {
   },
 };
 
-function createBaseMsgApprove(): MsgApprove {
-  return { contractId: "", approver: "", proxy: "" };
+function createBaseMsgAuthorizeOperator(): MsgAuthorizeOperator {
+  return { contractId: "", holder: "", operator: "" };
 }
 
-export const MsgApprove = {
+export const MsgAuthorizeOperator = {
   encode(
-    message: MsgApprove,
+    message: MsgAuthorizeOperator,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.contractId !== "") {
       writer.uint32(10).string(message.contractId);
     }
-    if (message.approver !== "") {
-      writer.uint32(18).string(message.approver);
+    if (message.holder !== "") {
+      writer.uint32(18).string(message.holder);
     }
-    if (message.proxy !== "") {
-      writer.uint32(26).string(message.proxy);
+    if (message.operator !== "") {
+      writer.uint32(26).string(message.operator);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgApprove {
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): MsgAuthorizeOperator {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgApprove();
+    const message = createBaseMsgAuthorizeOperator();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -726,10 +642,10 @@ export const MsgApprove = {
           message.contractId = reader.string();
           break;
         case 2:
-          message.approver = reader.string();
+          message.holder = reader.string();
           break;
         case 3:
-          message.proxy = reader.string();
+          message.operator = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -739,49 +655,52 @@ export const MsgApprove = {
     return message;
   },
 
-  fromJSON(object: any): MsgApprove {
+  fromJSON(object: any): MsgAuthorizeOperator {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
-      approver: isSet(object.approver) ? String(object.approver) : "",
-      proxy: isSet(object.proxy) ? String(object.proxy) : "",
+      holder: isSet(object.holder) ? String(object.holder) : "",
+      operator: isSet(object.operator) ? String(object.operator) : "",
     };
   },
 
-  toJSON(message: MsgApprove): unknown {
+  toJSON(message: MsgAuthorizeOperator): unknown {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
-    message.approver !== undefined && (obj.approver = message.approver);
-    message.proxy !== undefined && (obj.proxy = message.proxy);
+    message.holder !== undefined && (obj.holder = message.holder);
+    message.operator !== undefined && (obj.operator = message.operator);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgApprove>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgAuthorizeOperator>, I>>(
     object: I
-  ): MsgApprove {
-    const message = createBaseMsgApprove();
+  ): MsgAuthorizeOperator {
+    const message = createBaseMsgAuthorizeOperator();
     message.contractId = object.contractId ?? "";
-    message.approver = object.approver ?? "";
-    message.proxy = object.proxy ?? "";
+    message.holder = object.holder ?? "";
+    message.operator = object.operator ?? "";
     return message;
   },
 };
 
-function createBaseMsgApproveResponse(): MsgApproveResponse {
+function createBaseMsgAuthorizeOperatorResponse(): MsgAuthorizeOperatorResponse {
   return {};
 }
 
-export const MsgApproveResponse = {
+export const MsgAuthorizeOperatorResponse = {
   encode(
-    _: MsgApproveResponse,
+    _: MsgAuthorizeOperatorResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgApproveResponse {
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): MsgAuthorizeOperatorResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgApproveResponse();
+    const message = createBaseMsgAuthorizeOperatorResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -793,19 +712,19 @@ export const MsgApproveResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgApproveResponse {
+  fromJSON(_: any): MsgAuthorizeOperatorResponse {
     return {};
   },
 
-  toJSON(_: MsgApproveResponse): unknown {
+  toJSON(_: MsgAuthorizeOperatorResponse): unknown {
     const obj: any = {};
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgApproveResponse>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgAuthorizeOperatorResponse>, I>>(
     _: I
-  ): MsgApproveResponse {
-    const message = createBaseMsgApproveResponse();
+  ): MsgAuthorizeOperatorResponse {
+    const message = createBaseMsgAuthorizeOperatorResponse();
     return message;
   },
 };
@@ -814,7 +733,7 @@ function createBaseMsgIssue(): MsgIssue {
   return {
     name: "",
     symbol: "",
-    imageUri: "",
+    uri: "",
     meta: "",
     decimals: 0,
     mintable: false,
@@ -835,8 +754,8 @@ export const MsgIssue = {
     if (message.symbol !== "") {
       writer.uint32(18).string(message.symbol);
     }
-    if (message.imageUri !== "") {
-      writer.uint32(26).string(message.imageUri);
+    if (message.uri !== "") {
+      writer.uint32(26).string(message.uri);
     }
     if (message.meta !== "") {
       writer.uint32(34).string(message.meta);
@@ -873,7 +792,7 @@ export const MsgIssue = {
           message.symbol = reader.string();
           break;
         case 3:
-          message.imageUri = reader.string();
+          message.uri = reader.string();
           break;
         case 4:
           message.meta = reader.string();
@@ -905,7 +824,7 @@ export const MsgIssue = {
     return {
       name: isSet(object.name) ? String(object.name) : "",
       symbol: isSet(object.symbol) ? String(object.symbol) : "",
-      imageUri: isSet(object.imageUri) ? String(object.imageUri) : "",
+      uri: isSet(object.uri) ? String(object.uri) : "",
       meta: isSet(object.meta) ? String(object.meta) : "",
       decimals: isSet(object.decimals) ? Number(object.decimals) : 0,
       mintable: isSet(object.mintable) ? Boolean(object.mintable) : false,
@@ -919,7 +838,7 @@ export const MsgIssue = {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
     message.symbol !== undefined && (obj.symbol = message.symbol);
-    message.imageUri !== undefined && (obj.imageUri = message.imageUri);
+    message.uri !== undefined && (obj.uri = message.uri);
     message.meta !== undefined && (obj.meta = message.meta);
     message.decimals !== undefined &&
       (obj.decimals = Math.round(message.decimals));
@@ -934,7 +853,7 @@ export const MsgIssue = {
     const message = createBaseMsgIssue();
     message.name = object.name ?? "";
     message.symbol = object.symbol ?? "";
-    message.imageUri = object.imageUri ?? "";
+    message.uri = object.uri ?? "";
     message.meta = object.meta ?? "";
     message.decimals = object.decimals ?? 0;
     message.mintable = object.mintable ?? false;
@@ -946,7 +865,7 @@ export const MsgIssue = {
 };
 
 function createBaseMsgIssueResponse(): MsgIssueResponse {
-  return { id: "" };
+  return { contractId: "" };
 }
 
 export const MsgIssueResponse = {
@@ -954,8 +873,8 @@ export const MsgIssueResponse = {
     message: MsgIssueResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
     }
     return writer;
   },
@@ -968,7 +887,7 @@ export const MsgIssueResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.id = reader.string();
+          message.contractId = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -980,13 +899,13 @@ export const MsgIssueResponse = {
 
   fromJSON(object: any): MsgIssueResponse {
     return {
-      id: isSet(object.id) ? String(object.id) : "",
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
     };
   },
 
   toJSON(message: MsgIssueResponse): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
+    message.contractId !== undefined && (obj.contractId = message.contractId);
     return obj;
   },
 
@@ -994,7 +913,7 @@ export const MsgIssueResponse = {
     object: I
   ): MsgIssueResponse {
     const message = createBaseMsgIssueResponse();
-    message.id = object.id ?? "";
+    message.contractId = object.contractId ?? "";
     return message;
   },
 };
@@ -1483,20 +1402,20 @@ export const MsgBurnResponse = {
   },
 };
 
-function createBaseMsgBurnFrom(): MsgBurnFrom {
-  return { contractId: "", proxy: "", from: "", amount: "" };
+function createBaseMsgOperatorBurn(): MsgOperatorBurn {
+  return { contractId: "", operator: "", from: "", amount: "" };
 }
 
-export const MsgBurnFrom = {
+export const MsgOperatorBurn = {
   encode(
-    message: MsgBurnFrom,
+    message: MsgOperatorBurn,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.contractId !== "") {
       writer.uint32(10).string(message.contractId);
     }
-    if (message.proxy !== "") {
-      writer.uint32(18).string(message.proxy);
+    if (message.operator !== "") {
+      writer.uint32(18).string(message.operator);
     }
     if (message.from !== "") {
       writer.uint32(26).string(message.from);
@@ -1507,10 +1426,10 @@ export const MsgBurnFrom = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgBurnFrom {
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgOperatorBurn {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgBurnFrom();
+    const message = createBaseMsgOperatorBurn();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1518,7 +1437,7 @@ export const MsgBurnFrom = {
           message.contractId = reader.string();
           break;
         case 2:
-          message.proxy = reader.string();
+          message.operator = reader.string();
           break;
         case 3:
           message.from = reader.string();
@@ -1534,52 +1453,55 @@ export const MsgBurnFrom = {
     return message;
   },
 
-  fromJSON(object: any): MsgBurnFrom {
+  fromJSON(object: any): MsgOperatorBurn {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
-      proxy: isSet(object.proxy) ? String(object.proxy) : "",
+      operator: isSet(object.operator) ? String(object.operator) : "",
       from: isSet(object.from) ? String(object.from) : "",
       amount: isSet(object.amount) ? String(object.amount) : "",
     };
   },
 
-  toJSON(message: MsgBurnFrom): unknown {
+  toJSON(message: MsgOperatorBurn): unknown {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
-    message.proxy !== undefined && (obj.proxy = message.proxy);
+    message.operator !== undefined && (obj.operator = message.operator);
     message.from !== undefined && (obj.from = message.from);
     message.amount !== undefined && (obj.amount = message.amount);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgBurnFrom>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgOperatorBurn>, I>>(
     object: I
-  ): MsgBurnFrom {
-    const message = createBaseMsgBurnFrom();
+  ): MsgOperatorBurn {
+    const message = createBaseMsgOperatorBurn();
     message.contractId = object.contractId ?? "";
-    message.proxy = object.proxy ?? "";
+    message.operator = object.operator ?? "";
     message.from = object.from ?? "";
     message.amount = object.amount ?? "";
     return message;
   },
 };
 
-function createBaseMsgBurnFromResponse(): MsgBurnFromResponse {
+function createBaseMsgOperatorBurnResponse(): MsgOperatorBurnResponse {
   return {};
 }
 
-export const MsgBurnFromResponse = {
+export const MsgOperatorBurnResponse = {
   encode(
-    _: MsgBurnFromResponse,
+    _: MsgOperatorBurnResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgBurnFromResponse {
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): MsgOperatorBurnResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgBurnFromResponse();
+    const message = createBaseMsgOperatorBurnResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1591,19 +1513,19 @@ export const MsgBurnFromResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgBurnFromResponse {
+  fromJSON(_: any): MsgOperatorBurnResponse {
     return {};
   },
 
-  toJSON(_: MsgBurnFromResponse): unknown {
+  toJSON(_: MsgOperatorBurnResponse): unknown {
     const obj: any = {};
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgBurnFromResponse>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgOperatorBurnResponse>, I>>(
     _: I
-  ): MsgBurnFromResponse {
-    const message = createBaseMsgBurnFromResponse();
+  ): MsgOperatorBurnResponse {
+    const message = createBaseMsgOperatorBurnResponse();
     return message;
   },
 };
@@ -1624,7 +1546,7 @@ export const MsgModify = {
       writer.uint32(18).string(message.owner);
     }
     for (const v of message.changes) {
-      Pair.encode(v!, writer.uint32(26).fork()).ldelim();
+      Attribute.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -1643,7 +1565,7 @@ export const MsgModify = {
           message.owner = reader.string();
           break;
         case 3:
-          message.changes.push(Pair.decode(reader, reader.uint32()));
+          message.changes.push(Attribute.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -1658,7 +1580,7 @@ export const MsgModify = {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
       owner: isSet(object.owner) ? String(object.owner) : "",
       changes: Array.isArray(object?.changes)
-        ? object.changes.map((e: any) => Pair.fromJSON(e))
+        ? object.changes.map((e: any) => Attribute.fromJSON(e))
         : [],
     };
   },
@@ -1669,7 +1591,7 @@ export const MsgModify = {
     message.owner !== undefined && (obj.owner = message.owner);
     if (message.changes) {
       obj.changes = message.changes.map((e) =>
-        e ? Pair.toJSON(e) : undefined
+        e ? Attribute.toJSON(e) : undefined
       );
     } else {
       obj.changes = [];
@@ -1683,7 +1605,8 @@ export const MsgModify = {
     const message = createBaseMsgModify();
     message.contractId = object.contractId ?? "";
     message.owner = object.owner ?? "";
-    message.changes = object.changes?.map((e) => Pair.fromPartial(e)) || [];
+    message.changes =
+      object.changes?.map((e) => Attribute.fromPartial(e)) || [];
     return message;
   },
 };
@@ -1739,32 +1662,20 @@ export interface Msg {
    * Fires:
    * - EventSent
    * - transfer (deprecated, not typed)
-   * Throws:
-   * - ErrInvalidRequest:
-   *   - the balance of `from` does not have enough tokens to spend.
    */
   Send(request: MsgSend): Promise<MsgSendResponse>;
   /**
-   * TransferFrom defines a method to send tokens from one account to another account by the proxy.
+   * OperatorSend defines a method to send tokens from one account to another account by the operator.
    * Fires:
    * - EventSent
    * - transfer_from (deprecated, not typed)
-   * Throws:
-   * - ErrUnauthorized:
-   *   - the approver has not authorized the proxy.
-   * - ErrInvalidRequest:
-   *   - the balance of `from` does not have enough tokens to spend.
    * Note: the approval has no value of limit (not ERC20 compliant).
    */
-  TransferFrom(request: MsgTransferFrom): Promise<MsgTransferFromResponse>;
+  OperatorSend(request: MsgOperatorSend): Promise<MsgOperatorSendResponse>;
   /**
    * RevokeOperator revoke the authorization of the operator to send the holder's tokens.
    * Fires:
    * - EventRevokedOperator
-   * Throws:
-   * - ErrNotFound:
-   *   - there is no token class of `contract_id`.
-   *   - there is no authorization by `holder` to `operator`.
    * Note: it introduces breaking change, because the legacy clients cannot track this revocation.
    * Since: 0.46.0 (finschia)
    */
@@ -1772,17 +1683,14 @@ export interface Msg {
     request: MsgRevokeOperator
   ): Promise<MsgRevokeOperatorResponse>;
   /**
-   * Approve allows one to send tokens on behalf of the approver.
+   * AuthorizeOperator allows one to send tokens on behalf of the holder.
    * Fires:
    * - EventAuthorizedOperator
    * - approve_token (deprecated, not typed)
-   * Throws:
-   * - ErrNotFound:
-   *   - there is no token class of `contract_id`.
-   * - ErrInvalidRequest:
-   *   - `approver` has already authorized `proxy`.
    */
-  Approve(request: MsgApprove): Promise<MsgApproveResponse>;
+  AuthorizeOperator(
+    request: MsgAuthorizeOperator
+  ): Promise<MsgAuthorizeOperatorResponse>;
   /**
    * Issue defines a method to create a class of token.
    * it grants `mint`, `burn` and `modify` permissions on the token class to its creator (see also `mintable`).
@@ -1797,11 +1705,6 @@ export interface Msg {
    * Fires:
    * - EventGrant
    * - grant_perm (deprecated, not typed)
-   * Throws:
-   * - ErrUnauthorized
-   *   - `granter` does not have `permission`.
-   * - ErrInvalidRequest
-   *   - `grantee` already has `permission`.
    */
   GrantPermission(
     request: MsgGrantPermission
@@ -1811,9 +1714,6 @@ export interface Msg {
    * Fires:
    * - EventAbandon
    * - revoke_perm (deprecated, not typed)
-   * Throws:
-   * - ErrUnauthorized
-   *   - `grantee` does not have `permission`.
    */
   RevokePermission(
     request: MsgRevokePermission
@@ -1823,9 +1723,6 @@ export interface Msg {
    * Fires:
    * - EventMinted
    * - mint (deprecated, not typed)
-   * Throws:
-   * - ErrUnauthorized
-   *   - `from` does not have `mint` permission.
    */
   Mint(request: MsgMint): Promise<MsgMintResponse>;
   /**
@@ -1833,36 +1730,20 @@ export interface Msg {
    * Fires:
    * - EventBurned
    * - burn (deprecated, not typed)
-   * Throws:
-   * - ErrUnauthorized
-   *   - `from` does not have `burn` permission.
-   * - ErrInvalidRequest:
-   *   - the balance of `from` does not have enough tokens to burn.
    */
   Burn(request: MsgBurn): Promise<MsgBurnResponse>;
   /**
-   * BurnFrom defines a method to burn tokens by the proxy.
+   * OperatorBurn defines a method to burn tokens by the operator.
    * Fires:
    * - EventBurned
    * - burn_from (deprecated, not typed)
-   * Throws:
-   * - ErrUnauthorized
-   *   - `proxy` does not have `burn` permission.
-   *   - the approver has not authorized `proxy`.
-   * - ErrInvalidRequest:
-   *   - the balance of `from` does not have enough tokens to burn.
    */
-  BurnFrom(request: MsgBurnFrom): Promise<MsgBurnFromResponse>;
+  OperatorBurn(request: MsgOperatorBurn): Promise<MsgOperatorBurnResponse>;
   /**
    * Modify defines a method to modify a token class.
    * Fires:
    * - EventModified
    * - modify_token (deprecated, not typed)
-   * Throws:
-   * - ErrUnauthorized
-   *   - the proxy does not have `modify` permission.
-   * - ErrNotFound
-   *   - there is no token class of `contract_id`.
    */
   Modify(request: MsgModify): Promise<MsgModifyResponse>;
 }
@@ -1872,15 +1753,15 @@ export class MsgClientImpl implements Msg {
   constructor(rpc: Rpc) {
     this.rpc = rpc;
     this.Send = this.Send.bind(this);
-    this.TransferFrom = this.TransferFrom.bind(this);
+    this.OperatorSend = this.OperatorSend.bind(this);
     this.RevokeOperator = this.RevokeOperator.bind(this);
-    this.Approve = this.Approve.bind(this);
+    this.AuthorizeOperator = this.AuthorizeOperator.bind(this);
     this.Issue = this.Issue.bind(this);
     this.GrantPermission = this.GrantPermission.bind(this);
     this.RevokePermission = this.RevokePermission.bind(this);
     this.Mint = this.Mint.bind(this);
     this.Burn = this.Burn.bind(this);
-    this.BurnFrom = this.BurnFrom.bind(this);
+    this.OperatorBurn = this.OperatorBurn.bind(this);
     this.Modify = this.Modify.bind(this);
   }
   Send(request: MsgSend): Promise<MsgSendResponse> {
@@ -1889,11 +1770,11 @@ export class MsgClientImpl implements Msg {
     return promise.then((data) => MsgSendResponse.decode(new _m0.Reader(data)));
   }
 
-  TransferFrom(request: MsgTransferFrom): Promise<MsgTransferFromResponse> {
-    const data = MsgTransferFrom.encode(request).finish();
-    const promise = this.rpc.request("lbm.token.v1.Msg", "TransferFrom", data);
+  OperatorSend(request: MsgOperatorSend): Promise<MsgOperatorSendResponse> {
+    const data = MsgOperatorSend.encode(request).finish();
+    const promise = this.rpc.request("lbm.token.v1.Msg", "OperatorSend", data);
     return promise.then((data) =>
-      MsgTransferFromResponse.decode(new _m0.Reader(data))
+      MsgOperatorSendResponse.decode(new _m0.Reader(data))
     );
   }
 
@@ -1911,11 +1792,17 @@ export class MsgClientImpl implements Msg {
     );
   }
 
-  Approve(request: MsgApprove): Promise<MsgApproveResponse> {
-    const data = MsgApprove.encode(request).finish();
-    const promise = this.rpc.request("lbm.token.v1.Msg", "Approve", data);
+  AuthorizeOperator(
+    request: MsgAuthorizeOperator
+  ): Promise<MsgAuthorizeOperatorResponse> {
+    const data = MsgAuthorizeOperator.encode(request).finish();
+    const promise = this.rpc.request(
+      "lbm.token.v1.Msg",
+      "AuthorizeOperator",
+      data
+    );
     return promise.then((data) =>
-      MsgApproveResponse.decode(new _m0.Reader(data))
+      MsgAuthorizeOperatorResponse.decode(new _m0.Reader(data))
     );
   }
 
@@ -1967,11 +1854,11 @@ export class MsgClientImpl implements Msg {
     return promise.then((data) => MsgBurnResponse.decode(new _m0.Reader(data)));
   }
 
-  BurnFrom(request: MsgBurnFrom): Promise<MsgBurnFromResponse> {
-    const data = MsgBurnFrom.encode(request).finish();
-    const promise = this.rpc.request("lbm.token.v1.Msg", "BurnFrom", data);
+  OperatorBurn(request: MsgOperatorBurn): Promise<MsgOperatorBurnResponse> {
+    const data = MsgOperatorBurn.encode(request).finish();
+    const promise = this.rpc.request("lbm.token.v1.Msg", "OperatorBurn", data);
     return promise.then((data) =>
-      MsgBurnFromResponse.decode(new _m0.Reader(data))
+      MsgOperatorBurnResponse.decode(new _m0.Reader(data))
     );
   }
 

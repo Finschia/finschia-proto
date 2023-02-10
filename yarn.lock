@@ -86,9 +86,9 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:>=13.7.0":
-  version: 18.0.0
-  resolution: "@types/node@npm:18.0.0"
-  checksum: aab2b325727a2599f6d25ebe0dedf58c40fb66a51ce4ca9c0226ceb70fcda2d3afccdca29db5942eb48b158ee8585a274a1e3750c718bbd5399d7f41d62dfdcc
+  version: 18.13.0
+  resolution: "@types/node@npm:18.13.0"
+  checksum: 4ea10f8802848b01672bce938f678b6774ca2cee0c9774f12275ab064ae07818419c3e2e41d6257ce7ba846d1ea26c63214aa1dfa4166fa3746291752b8c6416
   languageName: node
   linkType: hard
 
@@ -122,7 +122,7 @@ __metadata:
     long: ^4.0.0
     prettier: ^2.5.1
     protobufjs: ~6.11.2
-    ts-proto: ^1.92.1
+    ts-proto: 1.115.5
     typescript: ~4.2
   languageName: unknown
   linkType: soft
@@ -149,11 +149,11 @@ __metadata:
   linkType: hard
 
 "prettier@npm:^2.5.1":
-  version: 2.7.1
-  resolution: "prettier@npm:2.7.1"
+  version: 2.8.4
+  resolution: "prettier@npm:2.8.4"
   bin:
     prettier: bin-prettier.js
-  checksum: 55a4409182260866ab31284d929b3cb961e5fdb91fe0d2e099dac92eaecec890f36e524b4c19e6ceae839c99c6d7195817579cdffc8e2c80da0cb794463a748b
+  checksum: c173064bf3df57b6d93d19aa98753b9b9dd7657212e33b41ada8e2e9f9884066bb9ca0b4005b89b3ab137efffdf8fbe0b462785aba20364798ff4303aadda57e
   languageName: node
   linkType: hard
 
@@ -182,12 +182,12 @@ __metadata:
   linkType: hard
 
 "ts-poet@npm:^4.11.0":
-  version: 4.14.0
-  resolution: "ts-poet@npm:4.14.0"
+  version: 4.15.0
+  resolution: "ts-poet@npm:4.15.0"
   dependencies:
     lodash: ^4.17.15
     prettier: ^2.5.1
-  checksum: 989fd9f36f821b5bbb0c31f590d929e30dcdd3a0e1ce14b0796b89de96a8d1c2bd8645ce259e678ca630086130f6752ced7d76d8ca627ff38bfe54bf0a53215e
+  checksum: 93490e8b5921e23ac65afdecc00b4dd53f3560d7d9c19778a3f0bd9a300ba7ca71585a989d564508313bc73e8c431413714d513ebca2d5c428f909ec36bcf6e9
   languageName: node
   linkType: hard
 
@@ -201,7 +201,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-proto@npm:^1.92.1":
+"ts-proto@npm:1.115.5":
   version: 1.115.5
   resolution: "ts-proto@npm:1.115.5"
   dependencies:

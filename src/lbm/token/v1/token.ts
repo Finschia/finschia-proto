@@ -4,7 +4,7 @@ import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.token.v1";
 
-/** Permission enumerates the valid permissions on a token class. */
+/** Permission enumerates the valid permissions on a contract. */
 export enum Permission {
   /** PERMISSION_UNSPECIFIED - unspecified defines the default permission which is invalid. */
   PERMISSION_UNSPECIFIED = 0,
@@ -57,7 +57,7 @@ export function permissionToJSON(object: Permission): string {
 /**
  * Deprecated: use Permission
  *
- * LegacyPermission enumerates the valid permissions on a token class.
+ * LegacyPermission enumerates the valid permissions on a contract.
  */
 export enum LegacyPermission {
   /** LEGACY_PERMISSION_UNSPECIFIED - unspecified defines the default permission which is invalid. */
@@ -111,17 +111,17 @@ export function legacyPermissionToJSON(object: LegacyPermission): string {
 /** Params defines the parameters for the token module. */
 export interface Params {}
 
-/** TokenClass defines token information. */
-export interface TokenClass {
-  /** contract_id defines the unique identifier of the token class. */
-  contractId: string;
-  /** name defines the human-readable name of the token class. mandatory (not ERC20 compliant). */
+/** Contract defines token information. */
+export interface Contract {
+  /** id defines the unique identifier of the contract. */
+  id: string;
+  /** name defines the human-readable name of the contract. mandatory (not ERC20 compliant). */
   name: string;
-  /** symbol is an abbreviated name for token class. mandatory (not ERC20 compliant). */
+  /** symbol is an abbreviated name for contract. mandatory (not ERC20 compliant). */
   symbol: string;
-  /** image_uri is an uri for the image of the token class stored off chain. */
-  imageUri: string;
-  /** meta is a brief description of token class. */
+  /** an uri for the image of the contract stored off chain. */
+  uri: string;
+  /** meta is a brief description of contract. */
   meta: string;
   /** decimals is the number of decimals which one must divide the amount by to get its user representation. */
   decimals: number;
@@ -129,9 +129,9 @@ export interface TokenClass {
   mintable: boolean;
 }
 
-/** Pair defines a key-value pair. */
-export interface Pair {
-  field: string;
+/** Attribute defines a key and value of the attribute. */
+export interface Attribute {
+  key: string;
   value: string;
 }
 
@@ -147,7 +147,7 @@ export interface Authorization {
 export interface Grant {
   /** address of the grantee. */
   grantee: string;
-  /** permission on the token class. */
+  /** permission on the contract. */
   permission: Permission;
 }
 
@@ -190,25 +190,25 @@ export const Params = {
   },
 };
 
-function createBaseTokenClass(): TokenClass {
+function createBaseContract(): Contract {
   return {
-    contractId: "",
+    id: "",
     name: "",
     symbol: "",
-    imageUri: "",
+    uri: "",
     meta: "",
     decimals: 0,
     mintable: false,
   };
 }
 
-export const TokenClass = {
+export const Contract = {
   encode(
-    message: TokenClass,
+    message: Contract,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.contractId !== "") {
-      writer.uint32(10).string(message.contractId);
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
     }
     if (message.name !== "") {
       writer.uint32(18).string(message.name);
@@ -216,8 +216,8 @@ export const TokenClass = {
     if (message.symbol !== "") {
       writer.uint32(26).string(message.symbol);
     }
-    if (message.imageUri !== "") {
-      writer.uint32(34).string(message.imageUri);
+    if (message.uri !== "") {
+      writer.uint32(34).string(message.uri);
     }
     if (message.meta !== "") {
       writer.uint32(42).string(message.meta);
@@ -231,15 +231,15 @@ export const TokenClass = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): TokenClass {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Contract {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseTokenClass();
+    const message = createBaseContract();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.contractId = reader.string();
+          message.id = reader.string();
           break;
         case 2:
           message.name = reader.string();
@@ -248,7 +248,7 @@ export const TokenClass = {
           message.symbol = reader.string();
           break;
         case 4:
-          message.imageUri = reader.string();
+          message.uri = reader.string();
           break;
         case 5:
           message.meta = reader.string();
@@ -267,24 +267,24 @@ export const TokenClass = {
     return message;
   },
 
-  fromJSON(object: any): TokenClass {
+  fromJSON(object: any): Contract {
     return {
-      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      id: isSet(object.id) ? String(object.id) : "",
       name: isSet(object.name) ? String(object.name) : "",
       symbol: isSet(object.symbol) ? String(object.symbol) : "",
-      imageUri: isSet(object.imageUri) ? String(object.imageUri) : "",
+      uri: isSet(object.uri) ? String(object.uri) : "",
       meta: isSet(object.meta) ? String(object.meta) : "",
       decimals: isSet(object.decimals) ? Number(object.decimals) : 0,
       mintable: isSet(object.mintable) ? Boolean(object.mintable) : false,
     };
   },
 
-  toJSON(message: TokenClass): unknown {
+  toJSON(message: Contract): unknown {
     const obj: any = {};
-    message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.id !== undefined && (obj.id = message.id);
     message.name !== undefined && (obj.name = message.name);
     message.symbol !== undefined && (obj.symbol = message.symbol);
-    message.imageUri !== undefined && (obj.imageUri = message.imageUri);
+    message.uri !== undefined && (obj.uri = message.uri);
     message.meta !== undefined && (obj.meta = message.meta);
     message.decimals !== undefined &&
       (obj.decimals = Math.round(message.decimals));
@@ -292,14 +292,12 @@ export const TokenClass = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<TokenClass>, I>>(
-    object: I
-  ): TokenClass {
-    const message = createBaseTokenClass();
-    message.contractId = object.contractId ?? "";
+  fromPartial<I extends Exact<DeepPartial<Contract>, I>>(object: I): Contract {
+    const message = createBaseContract();
+    message.id = object.id ?? "";
     message.name = object.name ?? "";
     message.symbol = object.symbol ?? "";
-    message.imageUri = object.imageUri ?? "";
+    message.uri = object.uri ?? "";
     message.meta = object.meta ?? "";
     message.decimals = object.decimals ?? 0;
     message.mintable = object.mintable ?? false;
@@ -307,14 +305,17 @@ export const TokenClass = {
   },
 };
 
-function createBasePair(): Pair {
-  return { field: "", value: "" };
+function createBaseAttribute(): Attribute {
+  return { key: "", value: "" };
 }
 
-export const Pair = {
-  encode(message: Pair, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.field !== "") {
-      writer.uint32(10).string(message.field);
+export const Attribute = {
+  encode(
+    message: Attribute,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.key !== "") {
+      writer.uint32(10).string(message.key);
     }
     if (message.value !== "") {
       writer.uint32(18).string(message.value);
@@ -322,15 +323,15 @@ export const Pair = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Pair {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Attribute {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePair();
+    const message = createBaseAttribute();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.field = reader.string();
+          message.key = reader.string();
           break;
         case 2:
           message.value = reader.string();
@@ -343,23 +344,25 @@ export const Pair = {
     return message;
   },
 
-  fromJSON(object: any): Pair {
+  fromJSON(object: any): Attribute {
     return {
-      field: isSet(object.field) ? String(object.field) : "",
+      key: isSet(object.key) ? String(object.key) : "",
       value: isSet(object.value) ? String(object.value) : "",
     };
   },
 
-  toJSON(message: Pair): unknown {
+  toJSON(message: Attribute): unknown {
     const obj: any = {};
-    message.field !== undefined && (obj.field = message.field);
+    message.key !== undefined && (obj.key = message.key);
     message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<Pair>, I>>(object: I): Pair {
-    const message = createBasePair();
-    message.field = object.field ?? "";
+  fromPartial<I extends Exact<DeepPartial<Attribute>, I>>(
+    object: I
+  ): Attribute {
+    const message = createBaseAttribute();
+    message.key = object.key ?? "";
     message.value = object.value ?? "";
     return message;
   },

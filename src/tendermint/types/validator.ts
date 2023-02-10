@@ -3,7 +3,7 @@ import { PublicKey } from "../crypto/keys";
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = "ostracon.types";
+export const protobufPackage = "tendermint.types";
 
 export interface ValidatorSet {
   validators: Validator[];
@@ -16,8 +16,6 @@ export interface Validator {
   pubKey?: PublicKey;
   votingPower: Long;
   proposerPriority: Long;
-  /** ** Ostracon Extended Fields *** */
-  votingWeight: Long;
 }
 
 export interface SimpleValidator {
@@ -128,7 +126,6 @@ function createBaseValidator(): Validator {
     pubKey: undefined,
     votingPower: Long.ZERO,
     proposerPriority: Long.ZERO,
-    votingWeight: Long.ZERO,
   };
 }
 
@@ -148,9 +145,6 @@ export const Validator = {
     }
     if (!message.proposerPriority.isZero()) {
       writer.uint32(32).int64(message.proposerPriority);
-    }
-    if (!message.votingWeight.isZero()) {
-      writer.uint32(8000).int64(message.votingWeight);
     }
     return writer;
   },
@@ -174,9 +168,6 @@ export const Validator = {
         case 4:
           message.proposerPriority = reader.int64() as Long;
           break;
-        case 1000:
-          message.votingWeight = reader.int64() as Long;
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -199,9 +190,6 @@ export const Validator = {
       proposerPriority: isSet(object.proposerPriority)
         ? Long.fromValue(object.proposerPriority)
         : Long.ZERO,
-      votingWeight: isSet(object.votingWeight)
-        ? Long.fromValue(object.votingWeight)
-        : Long.ZERO,
     };
   },
 
@@ -221,8 +209,6 @@ export const Validator = {
       (obj.proposerPriority = (
         message.proposerPriority || Long.ZERO
       ).toString());
-    message.votingWeight !== undefined &&
-      (obj.votingWeight = (message.votingWeight || Long.ZERO).toString());
     return obj;
   },
 
@@ -242,10 +228,6 @@ export const Validator = {
     message.proposerPriority =
       object.proposerPriority !== undefined && object.proposerPriority !== null
         ? Long.fromValue(object.proposerPriority)
-        : Long.ZERO;
-    message.votingWeight =
-      object.votingWeight !== undefined && object.votingWeight !== null
-        ? Long.fromValue(object.votingWeight)
         : Long.ZERO;
     return message;
   },

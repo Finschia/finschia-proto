@@ -2,7 +2,7 @@
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = "ostracon.libs.bits";
+export const protobufPackage = "tendermint.libs.bits";
 
 export interface BitArray {
   bits: Long;

@@ -1,7 +1,7 @@
 /* eslint-disable */
 import {
   Permission,
-  Pair,
+  Attribute,
   permissionFromJSON,
   permissionToJSON,
 } from "./token";
@@ -220,7 +220,7 @@ export function attributeKeyToJSON(object: AttributeKey): string {
  * Since: 0.46.0 (finschia)
  */
 export interface EventSent {
-  /** contract id associated with the token class. */
+  /** contract id associated with the contract. */
   contractId: string;
   /** address which triggered the send. */
   operator: string;
@@ -238,7 +238,7 @@ export interface EventSent {
  * Since: 0.46.0 (finschia)
  */
 export interface EventAuthorizedOperator {
-  /** contract id associated with the token class. */
+  /** contract id associated with the contract. */
   contractId: string;
   /** address of a holder which authorized the `operator` address as an operator. */
   holder: string;
@@ -252,7 +252,7 @@ export interface EventAuthorizedOperator {
  * Since: 0.46.0 (finschia)
  */
 export interface EventRevokedOperator {
-  /** contract id associated with the token class. */
+  /** contract id associated with the contract. */
   contractId: string;
   /** address of a holder which revoked the `operator` address as an operator. */
   holder: string;
@@ -261,22 +261,22 @@ export interface EventRevokedOperator {
 }
 
 /**
- * EventIssued is emitted when a new token class is created.
+ * EventIssued is emitted when a new contract is created.
  *
  * Since: 0.46.0 (finschia)
  */
 export interface EventIssued {
   /** address which created the contract. */
   creator: string;
-  /** contract id associated with the token class. */
+  /** contract id associated with the contract. */
   contractId: string;
-  /** name defines the human-readable name of the token class. */
+  /** name defines the human-readable name of the contract. */
   name: string;
-  /** symbol is an abbreviated name for token class. */
+  /** symbol is an abbreviated name for contract. */
   symbol: string;
-  /** uri is an uri for the resource of the token class stored off chain. */
+  /** uri is an uri for the resource of the contract stored off chain. */
   uri: string;
-  /** meta is a brief description of token class. */
+  /** meta is a brief description of contract. */
   meta: string;
   /** decimals is the number of decimals which one must divide the amount by to get its user representation. */
   decimals: number;
@@ -292,7 +292,7 @@ export interface EventIssued {
  * Since: 0.46.0 (finschia)
  */
 export interface EventGranted {
-  /** contract id associated with the token class. */
+  /** contract id associated with the contract. */
   contractId: string;
   /**
    * address which granted the permission to `grantee`.
@@ -301,7 +301,7 @@ export interface EventGranted {
   granter: string;
   /** address of the grantee. */
   grantee: string;
-  /** permission on the token class. */
+  /** permission on the contract. */
   permission: Permission;
 }
 
@@ -311,11 +311,11 @@ export interface EventGranted {
  * Since: 0.46.0 (finschia)
  */
 export interface EventRenounced {
-  /** contract id associated with the token class. */
+  /** contract id associated with the contract. */
   contractId: string;
   /** address of the grantee which abandons its grant. */
   grantee: string;
-  /** permission on the token class. */
+  /** permission on the contract. */
   permission: Permission;
 }
 
@@ -325,7 +325,7 @@ export interface EventRenounced {
  * Since: 0.46.0 (finschia)
  */
 export interface EventMinted {
-  /** contract id associated with the token class. */
+  /** contract id associated with the contract. */
   contractId: string;
   /** address which triggered the mint. */
   operator: string;
@@ -341,7 +341,7 @@ export interface EventMinted {
  * Since: 0.46.0 (finschia)
  */
 export interface EventBurned {
-  /** contract id associated with the token class. */
+  /** contract id associated with the contract. */
   contractId: string;
   /** address which triggered the burn. */
   operator: string;
@@ -352,17 +352,20 @@ export interface EventBurned {
 }
 
 /**
- * EventModified is emitted when the information of a token class is modified.
+ * EventModified is emitted when the information of a contract is modified.
  *
  * Since: 0.46.0 (finschia)
  */
 export interface EventModified {
-  /** contract id associated with the token class. */
+  /** contract id associated with the contract. */
   contractId: string;
   /** address which triggered the modify. */
   operator: string;
-  /** changes on the metadata of the class. */
-  changes: Pair[];
+  /**
+   * changes on the metadata of the class.
+   * possible attribute keys are same as those of MsgModify.
+   */
+  changes: Attribute[];
 }
 
 function createBaseEventSent(): EventSent {
@@ -1069,7 +1072,7 @@ export const EventModified = {
       writer.uint32(18).string(message.operator);
     }
     for (const v of message.changes) {
-      Pair.encode(v!, writer.uint32(26).fork()).ldelim();
+      Attribute.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -1088,7 +1091,7 @@ export const EventModified = {
           message.operator = reader.string();
           break;
         case 3:
-          message.changes.push(Pair.decode(reader, reader.uint32()));
+          message.changes.push(Attribute.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -1103,7 +1106,7 @@ export const EventModified = {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
       operator: isSet(object.operator) ? String(object.operator) : "",
       changes: Array.isArray(object?.changes)
-        ? object.changes.map((e: any) => Pair.fromJSON(e))
+        ? object.changes.map((e: any) => Attribute.fromJSON(e))
         : [],
     };
   },
@@ -1114,7 +1117,7 @@ export const EventModified = {
     message.operator !== undefined && (obj.operator = message.operator);
     if (message.changes) {
       obj.changes = message.changes.map((e) =>
-        e ? Pair.toJSON(e) : undefined
+        e ? Attribute.toJSON(e) : undefined
       );
     } else {
       obj.changes = [];
@@ -1128,7 +1131,8 @@ export const EventModified = {
     const message = createBaseEventModified();
     message.contractId = object.contractId ?? "";
     message.operator = object.operator ?? "";
-    message.changes = object.changes?.map((e) => Pair.fromPartial(e)) || [];
+    message.changes =
+      object.changes?.map((e) => Attribute.fromPartial(e)) || [];
     return message;
   },
 };

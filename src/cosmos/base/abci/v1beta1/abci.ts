@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { Any } from "../../../../google/protobuf/any";
 import Long from "long";
-import { Event } from "../../../../ostracon/abci/types";
+import { Event } from "../../../../tendermint/abci/types";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "cosmos.base.abci.v1beta1";

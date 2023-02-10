@@ -2,3 +2,9 @@
 	path = lbm-sdk
 	url = https://github.com/line/lbm-sdk.git
 	branch = main
+[submodule "ibc-go"]
+	path = ibc-go
+	url = https://github.com/line/ibc-go.git
+[submodule "wasmd"]
+	path = wasmd
+	url = https://github.com/line/wasmd.git

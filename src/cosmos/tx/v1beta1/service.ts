@@ -2,8 +2,8 @@
 import { PageRequest, PageResponse } from "../../base/query/v1beta1/pagination";
 import { TxResponse, GasInfo, Result } from "../../base/abci/v1beta1/abci";
 import { Tx } from "./tx";
-import { BlockID } from "../../../ostracon/types/types";
-import { Block } from "../../../ostracon/types/block";
+import { BlockID } from "../../../tendermint/types/types";
+import { Block } from "../../../tendermint/types/block";
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
 
