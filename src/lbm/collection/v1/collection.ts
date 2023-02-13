@@ -131,13 +131,13 @@ export interface Params {
 /** Contract defines the information of the contract for the collection. */
 export interface Contract {
   /** contract_id defines the unique identifier of the contract. */
-  contractId: string;
+  id: string;
   /** name defines the human-readable name of the contract. */
   name: string;
   /** meta is a brief description of the contract. */
   meta: string;
-  /** base img uri is an uri for the contract image stored off chain. */
-  baseImgUri: string;
+  /** uri for the contract image stored off chain. */
+  uri: string;
 }
 
 /**
@@ -185,8 +185,8 @@ export interface NFTClass {
  * Since: 0.46.0 (finschia)
  */
 export interface NFT {
-  /** id defines the unique identifier of the token. */
-  id: string;
+  /** token id defines the unique identifier of the token. */
+  tokenId: string;
   /** name defines the human-readable name of the token. */
   name: string;
   /** meta is a brief description of the token. */
@@ -235,11 +235,17 @@ export interface FT {
  * Deprecated: use TokenClass
  *
  * TokenType defines the information of token type.
+ * It represents a NFTClass whose class_id is token_type.
+ *
+ * Note: There is no TokenType instance for FTClass.
  */
 export interface TokenType {
   /** contract id associated with the contract. */
   contractId: string;
-  /** token type defines the unique identifier of the token type. */
+  /**
+   * token type defines the unique identifier of the token type.
+   * the format of the value is identical to that of class_id.
+   */
   tokenType: string;
   /** name defines the human-readable name of the token type. */
   name: string;
@@ -286,16 +292,6 @@ export interface Authorization {
  */
 export interface Attribute {
   key: string;
-  value: string;
-}
-
-/**
- * Deprecated: use Attribute
- *
- * Change defines a field-value pair.
- */
-export interface Change {
-  field: string;
   value: string;
 }
 
@@ -363,7 +359,7 @@ export const Params = {
 };
 
 function createBaseContract(): Contract {
-  return { contractId: "", name: "", meta: "", baseImgUri: "" };
+  return { id: "", name: "", meta: "", uri: "" };
 }
 
 export const Contract = {
@@ -371,8 +367,8 @@ export const Contract = {
     message: Contract,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.contractId !== "") {
-      writer.uint32(10).string(message.contractId);
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
     }
     if (message.name !== "") {
       writer.uint32(18).string(message.name);
@@ -380,8 +376,8 @@ export const Contract = {
     if (message.meta !== "") {
       writer.uint32(26).string(message.meta);
     }
-    if (message.baseImgUri !== "") {
-      writer.uint32(34).string(message.baseImgUri);
+    if (message.uri !== "") {
+      writer.uint32(34).string(message.uri);
     }
     return writer;
   },
@@ -394,7 +390,7 @@ export const Contract = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.contractId = reader.string();
+          message.id = reader.string();
           break;
         case 2:
           message.name = reader.string();
@@ -403,7 +399,7 @@ export const Contract = {
           message.meta = reader.string();
           break;
         case 4:
-          message.baseImgUri = reader.string();
+          message.uri = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -415,28 +411,28 @@ export const Contract = {
 
   fromJSON(object: any): Contract {
     return {
-      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      id: isSet(object.id) ? String(object.id) : "",
       name: isSet(object.name) ? String(object.name) : "",
       meta: isSet(object.meta) ? String(object.meta) : "",
-      baseImgUri: isSet(object.baseImgUri) ? String(object.baseImgUri) : "",
+      uri: isSet(object.uri) ? String(object.uri) : "",
     };
   },
 
   toJSON(message: Contract): unknown {
     const obj: any = {};
-    message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.id !== undefined && (obj.id = message.id);
     message.name !== undefined && (obj.name = message.name);
     message.meta !== undefined && (obj.meta = message.meta);
-    message.baseImgUri !== undefined && (obj.baseImgUri = message.baseImgUri);
+    message.uri !== undefined && (obj.uri = message.uri);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<Contract>, I>>(object: I): Contract {
     const message = createBaseContract();
-    message.contractId = object.contractId ?? "";
+    message.id = object.id ?? "";
     message.name = object.name ?? "";
     message.meta = object.meta ?? "";
-    message.baseImgUri = object.baseImgUri ?? "";
+    message.uri = object.uri ?? "";
     return message;
   },
 };
@@ -601,13 +597,13 @@ export const NFTClass = {
 };
 
 function createBaseNFT(): NFT {
-  return { id: "", name: "", meta: "" };
+  return { tokenId: "", name: "", meta: "" };
 }
 
 export const NFT = {
   encode(message: NFT, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.tokenId !== "") {
+      writer.uint32(10).string(message.tokenId);
     }
     if (message.name !== "") {
       writer.uint32(18).string(message.name);
@@ -626,7 +622,7 @@ export const NFT = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.id = reader.string();
+          message.tokenId = reader.string();
           break;
         case 2:
           message.name = reader.string();
@@ -644,7 +640,7 @@ export const NFT = {
 
   fromJSON(object: any): NFT {
     return {
-      id: isSet(object.id) ? String(object.id) : "",
+      tokenId: isSet(object.tokenId) ? String(object.tokenId) : "",
       name: isSet(object.name) ? String(object.name) : "",
       meta: isSet(object.meta) ? String(object.meta) : "",
     };
@@ -652,7 +648,7 @@ export const NFT = {
 
   toJSON(message: NFT): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
+    message.tokenId !== undefined && (obj.tokenId = message.tokenId);
     message.name !== undefined && (obj.name = message.name);
     message.meta !== undefined && (obj.meta = message.meta);
     return obj;
@@ -660,7 +656,7 @@ export const NFT = {
 
   fromPartial<I extends Exact<DeepPartial<NFT>, I>>(object: I): NFT {
     const message = createBaseNFT();
-    message.id = object.id ?? "";
+    message.tokenId = object.tokenId ?? "";
     message.name = object.name ?? "";
     message.meta = object.meta ?? "";
     return message;
@@ -1178,67 +1174,6 @@ export const Attribute = {
   ): Attribute {
     const message = createBaseAttribute();
     message.key = object.key ?? "";
-    message.value = object.value ?? "";
-    return message;
-  },
-};
-
-function createBaseChange(): Change {
-  return { field: "", value: "" };
-}
-
-export const Change = {
-  encode(
-    message: Change,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.field !== "") {
-      writer.uint32(10).string(message.field);
-    }
-    if (message.value !== "") {
-      writer.uint32(18).string(message.value);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): Change {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseChange();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.field = reader.string();
-          break;
-        case 2:
-          message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): Change {
-    return {
-      field: isSet(object.field) ? String(object.field) : "",
-      value: isSet(object.value) ? String(object.value) : "",
-    };
-  },
-
-  toJSON(message: Change): unknown {
-    const obj: any = {};
-    message.field !== undefined && (obj.field = message.field);
-    message.value !== undefined && (obj.value = message.value);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<Change>, I>>(object: I): Change {
-    const message = createBaseChange();
-    message.field = object.field ?? "";
     message.value = object.value ?? "";
     return message;
   },

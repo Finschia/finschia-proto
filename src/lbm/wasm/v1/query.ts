@@ -305,6 +305,7 @@ export interface Query {
   InactiveContracts(
     request: QueryInactiveContractsRequest
   ): Promise<QueryInactiveContractsResponse>;
+  /** InactiveContract check it the contract is inactive state or not */
   InactiveContract(
     request: QueryInactiveContractRequest
   ): Promise<QueryInactiveContractResponse>;

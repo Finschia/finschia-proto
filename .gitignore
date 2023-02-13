@@ -1,18 +1,21 @@
 /node_modules/
+
 /build/
 /package
 
-proofs.d.ts
-proofs.js
-proofs.js.map
+/proofs.*
 /confio
 /cosmos
 /cosmos_proto
+/cosmwasm
 /gogoproto
 /google
 /ibc
 /lbm
 /ostracon
-/cosmwasm
+/tendermint
+
+
+# yarn
 /.yarn/unplugged/
 /.yarn/install-state.gz

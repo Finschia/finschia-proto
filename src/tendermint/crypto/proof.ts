@@ -2,7 +2,7 @@
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = "ostracon.crypto";
+export const protobufPackage = "tendermint.crypto";
 
 export interface Proof {
   total: Long;

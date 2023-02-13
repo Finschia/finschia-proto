@@ -18,9 +18,14 @@ export interface StoreCodeProposal {
   wasmByteCode: Uint8Array;
   /** InstantiatePermission to apply on contract creation, optional */
   instantiatePermission?: AccessConfig;
+  /** UnpinCode code on upload, optional */
+  unpinCode: boolean;
 }
 
-/** InstantiateContractProposal gov proposal content type to instantiate a contract. */
+/**
+ * InstantiateContractProposal gov proposal content type to instantiate a
+ * contract.
+ */
 export interface InstantiateContractProposal {
   /** Title is a short summary */
   title: string;
@@ -97,7 +102,10 @@ export interface UpdateAdminProposal {
   contract: string;
 }
 
-/** ClearAdminProposal gov proposal content type to clear the admin of a contract. */
+/**
+ * ClearAdminProposal gov proposal content type to clear the admin of a
+ * contract.
+ */
 export interface ClearAdminProposal {
   /** Title is a short summary */
   title: string;
@@ -107,7 +115,10 @@ export interface ClearAdminProposal {
   contract: string;
 }
 
-/** PinCodesProposal gov proposal content type to pin a set of code ids in the wasmvm cache. */
+/**
+ * PinCodesProposal gov proposal content type to pin a set of code ids in the
+ * wasmvm cache.
+ */
 export interface PinCodesProposal {
   /** Title is a short summary */
   title: string;
@@ -117,7 +128,10 @@ export interface PinCodesProposal {
   codeIds: Long[];
 }
 
-/** UnpinCodesProposal gov proposal content type to unpin a set of code ids in the wasmvm cache. */
+/**
+ * UnpinCodesProposal gov proposal content type to unpin a set of code ids in
+ * the wasmvm cache.
+ */
 export interface UnpinCodesProposal {
   /** Title is a short summary */
   title: string;
@@ -161,6 +175,7 @@ function createBaseStoreCodeProposal(): StoreCodeProposal {
     runAs: "",
     wasmByteCode: new Uint8Array(),
     instantiatePermission: undefined,
+    unpinCode: false,
   };
 }
 
@@ -186,6 +201,9 @@ export const StoreCodeProposal = {
         message.instantiatePermission,
         writer.uint32(58).fork()
       ).ldelim();
+    }
+    if (message.unpinCode === true) {
+      writer.uint32(64).bool(message.unpinCode);
     }
     return writer;
   },
@@ -215,6 +233,9 @@ export const StoreCodeProposal = {
             reader.uint32()
           );
           break;
+        case 8:
+          message.unpinCode = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -234,6 +255,7 @@ export const StoreCodeProposal = {
       instantiatePermission: isSet(object.instantiatePermission)
         ? AccessConfig.fromJSON(object.instantiatePermission)
         : undefined,
+      unpinCode: isSet(object.unpinCode) ? Boolean(object.unpinCode) : false,
     };
   },
 
@@ -253,6 +275,7 @@ export const StoreCodeProposal = {
       (obj.instantiatePermission = message.instantiatePermission
         ? AccessConfig.toJSON(message.instantiatePermission)
         : undefined);
+    message.unpinCode !== undefined && (obj.unpinCode = message.unpinCode);
     return obj;
   },
 
@@ -269,6 +292,7 @@ export const StoreCodeProposal = {
       object.instantiatePermission !== null
         ? AccessConfig.fromPartial(object.instantiatePermission)
         : undefined;
+    message.unpinCode = object.unpinCode ?? false;
     return message;
   },
 };

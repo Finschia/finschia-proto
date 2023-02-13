@@ -218,16 +218,6 @@ export interface MsgRevoke {
 /** MsgRevokeResponse is the Msg/MsgRevokeResponse response type. */
 export interface MsgRevokeResponse {}
 
-/** MsgGovMint is the Msg/GovMint request type. */
-export interface MsgGovMint {
-  /** authority is the address of the privileged account. */
-  authority: string;
-  amount: Coin[];
-}
-
-/** MsgGovMintResponse is the Msg/GovMint response type. */
-export interface MsgGovMintResponse {}
-
 function createBaseMsgUpdateParams(): MsgUpdateParams {
   return { authority: "", params: undefined };
 }
@@ -1697,119 +1687,6 @@ export const MsgRevokeResponse = {
   },
 };
 
-function createBaseMsgGovMint(): MsgGovMint {
-  return { authority: "", amount: [] };
-}
-
-export const MsgGovMint = {
-  encode(
-    message: MsgGovMint,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.authority !== "") {
-      writer.uint32(10).string(message.authority);
-    }
-    for (const v of message.amount) {
-      Coin.encode(v!, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgGovMint {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgGovMint();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.authority = reader.string();
-          break;
-        case 2:
-          message.amount.push(Coin.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MsgGovMint {
-    return {
-      authority: isSet(object.authority) ? String(object.authority) : "",
-      amount: Array.isArray(object?.amount)
-        ? object.amount.map((e: any) => Coin.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: MsgGovMint): unknown {
-    const obj: any = {};
-    message.authority !== undefined && (obj.authority = message.authority);
-    if (message.amount) {
-      obj.amount = message.amount.map((e) => (e ? Coin.toJSON(e) : undefined));
-    } else {
-      obj.amount = [];
-    }
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgGovMint>, I>>(
-    object: I
-  ): MsgGovMint {
-    const message = createBaseMsgGovMint();
-    message.authority = object.authority ?? "";
-    message.amount = object.amount?.map((e) => Coin.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBaseMsgGovMintResponse(): MsgGovMintResponse {
-  return {};
-}
-
-export const MsgGovMintResponse = {
-  encode(
-    _: MsgGovMintResponse,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgGovMintResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgGovMintResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(_: any): MsgGovMintResponse {
-    return {};
-  },
-
-  toJSON(_: MsgGovMintResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgGovMintResponse>, I>>(
-    _: I
-  ): MsgGovMintResponse {
-    const message = createBaseMsgGovMintResponse();
-    return message;
-  },
-};
-
 /** Msg defines the foundation Msg service. */
 export interface Msg {
   /**
@@ -1856,8 +1733,6 @@ export interface Msg {
    * that has been granted to the grantee.
    */
   Revoke(request: MsgRevoke): Promise<MsgRevokeResponse>;
-  /** GovMint defines a gov mint coins to the treasury. */
-  GovMint(request: MsgGovMint): Promise<MsgGovMintResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -1876,7 +1751,6 @@ export class MsgClientImpl implements Msg {
     this.LeaveFoundation = this.LeaveFoundation.bind(this);
     this.Grant = this.Grant.bind(this);
     this.Revoke = this.Revoke.bind(this);
-    this.GovMint = this.GovMint.bind(this);
   }
   UpdateParams(request: MsgUpdateParams): Promise<MsgUpdateParamsResponse> {
     const data = MsgUpdateParams.encode(request).finish();
@@ -2009,14 +1883,6 @@ export class MsgClientImpl implements Msg {
     const promise = this.rpc.request("lbm.foundation.v1.Msg", "Revoke", data);
     return promise.then((data) =>
       MsgRevokeResponse.decode(new _m0.Reader(data))
-    );
-  }
-
-  GovMint(request: MsgGovMint): Promise<MsgGovMintResponse> {
-    const data = MsgGovMint.encode(request).finish();
-    const promise = this.rpc.request("lbm.foundation.v1.Msg", "GovMint", data);
-    return promise.then((data) =>
-      MsgGovMintResponse.decode(new _m0.Reader(data))
     );
   }
 }

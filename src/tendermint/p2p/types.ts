@@ -2,7 +2,7 @@
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = "ostracon.p2p";
+export const protobufPackage = "tendermint.p2p";
 
 export interface NetAddress {
   id: string;

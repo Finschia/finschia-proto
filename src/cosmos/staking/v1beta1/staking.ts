@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Header } from "../../../ostracon/types/types";
+import { Header } from "../../../tendermint/types/types";
 import { Timestamp } from "../../../google/protobuf/timestamp";
 import { Any } from "../../../google/protobuf/any";
 import { Duration } from "../../../google/protobuf/duration";

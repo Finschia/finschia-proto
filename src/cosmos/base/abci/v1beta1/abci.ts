@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { Any } from "../../../../google/protobuf/any";
 import Long from "long";
-import { Event } from "../../../../ostracon/abci/types";
+import { Event } from "../../../../tendermint/abci/types";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "cosmos.base.abci.v1beta1";
@@ -51,8 +51,6 @@ export interface TxResponse {
    * Since: cosmos-sdk 0.42.11, 0.44.5, 0.45
    */
   events: Event[];
-  /** The transaction index within block */
-  index: number;
 }
 
 /** ABCIMessageLog defines a structure containing an indexed tx ABCI message log. */
@@ -165,7 +163,6 @@ function createBaseTxResponse(): TxResponse {
     tx: undefined,
     timestamp: "",
     events: [],
-    index: 0,
   };
 }
 
@@ -212,9 +209,6 @@ export const TxResponse = {
     }
     for (const v of message.events) {
       Event.encode(v!, writer.uint32(106).fork()).ldelim();
-    }
-    if (message.index !== 0) {
-      writer.uint32(112).uint32(message.index);
     }
     return writer;
   },
@@ -265,9 +259,6 @@ export const TxResponse = {
         case 13:
           message.events.push(Event.decode(reader, reader.uint32()));
           break;
-        case 14:
-          message.index = reader.uint32();
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -299,7 +290,6 @@ export const TxResponse = {
       events: Array.isArray(object?.events)
         ? object.events.map((e: any) => Event.fromJSON(e))
         : [],
-      index: isSet(object.index) ? Number(object.index) : 0,
     };
   },
 
@@ -332,7 +322,6 @@ export const TxResponse = {
     } else {
       obj.events = [];
     }
-    message.index !== undefined && (obj.index = Math.round(message.index));
     return obj;
   },
 
@@ -365,7 +354,6 @@ export const TxResponse = {
         : undefined;
     message.timestamp = object.timestamp ?? "";
     message.events = object.events?.map((e) => Event.fromPartial(e)) || [];
-    message.index = object.index ?? 0;
     return message;
   },
 };

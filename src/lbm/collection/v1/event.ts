@@ -419,7 +419,7 @@ export interface EventCreatedContract {
   /** metadata of the contract. */
   meta: string;
   /** uri for the contract image stored off chain. */
-  baseImgUri: string;
+  uri: string;
 }
 
 /**
@@ -432,8 +432,8 @@ export interface EventCreatedFTClass {
   contractId: string;
   /** address which triggered the create. */
   operator: string;
-  /** class id associated with the token class. */
-  classId: string;
+  /** token id associated with the token class. */
+  tokenId: string;
   /** name of the token class. */
   name: string;
   /** metadata of the token class. */
@@ -454,8 +454,11 @@ export interface EventCreatedNFTClass {
   contractId: string;
   /** address which triggered the create. */
   operator: string;
-  /** class id associated with the token class. */
-  classId: string;
+  /**
+   * token type associated with the token class.
+   * refer to TokenType for the definition.
+   */
+  tokenType: string;
   /** name of the token class. */
   name: string;
   /** metadata of the token class. */
@@ -552,7 +555,10 @@ export interface EventModifiedContract {
   contractId: string;
   /** address which triggered the modify. */
   operator: string;
-  /** changes of the attributes applied. */
+  /**
+   * changes of the attributes applied.
+   * possible attribute keys are same as those of MsgModify.
+   */
   changes: Attribute[];
 }
 
@@ -566,9 +572,15 @@ export interface EventModifiedTokenClass {
   contractId: string;
   /** address which triggered the modify. */
   operator: string;
-  /** class id associated with the token class. */
-  classId: string;
-  /** changes of the attributes applied. */
+  /**
+   * token type associated with the token class.
+   * refer to TokenType for the definition.
+   */
+  tokenType: string;
+  /**
+   * changes of the attributes applied.
+   * possible attribute keys are same as those of MsgModify.
+   */
   changes: Attribute[];
   /** type name of the token class. */
   typeName: string;
@@ -586,7 +598,10 @@ export interface EventModifiedNFT {
   operator: string;
   /** token id associated with the non-fungible token. */
   tokenId: string;
-  /** changes of the attributes applied. */
+  /**
+   * changes of the attributes applied.
+   * possible attribute keys are same as those of MsgModify.
+   */
   changes: Attribute[];
 }
 
@@ -905,7 +920,7 @@ export const EventRevokedOperator = {
 };
 
 function createBaseEventCreatedContract(): EventCreatedContract {
-  return { creator: "", contractId: "", name: "", meta: "", baseImgUri: "" };
+  return { creator: "", contractId: "", name: "", meta: "", uri: "" };
 }
 
 export const EventCreatedContract = {
@@ -925,8 +940,8 @@ export const EventCreatedContract = {
     if (message.meta !== "") {
       writer.uint32(34).string(message.meta);
     }
-    if (message.baseImgUri !== "") {
-      writer.uint32(42).string(message.baseImgUri);
+    if (message.uri !== "") {
+      writer.uint32(42).string(message.uri);
     }
     return writer;
   },
@@ -954,7 +969,7 @@ export const EventCreatedContract = {
           message.meta = reader.string();
           break;
         case 5:
-          message.baseImgUri = reader.string();
+          message.uri = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -970,7 +985,7 @@ export const EventCreatedContract = {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
       name: isSet(object.name) ? String(object.name) : "",
       meta: isSet(object.meta) ? String(object.meta) : "",
-      baseImgUri: isSet(object.baseImgUri) ? String(object.baseImgUri) : "",
+      uri: isSet(object.uri) ? String(object.uri) : "",
     };
   },
 
@@ -980,7 +995,7 @@ export const EventCreatedContract = {
     message.contractId !== undefined && (obj.contractId = message.contractId);
     message.name !== undefined && (obj.name = message.name);
     message.meta !== undefined && (obj.meta = message.meta);
-    message.baseImgUri !== undefined && (obj.baseImgUri = message.baseImgUri);
+    message.uri !== undefined && (obj.uri = message.uri);
     return obj;
   },
 
@@ -992,7 +1007,7 @@ export const EventCreatedContract = {
     message.contractId = object.contractId ?? "";
     message.name = object.name ?? "";
     message.meta = object.meta ?? "";
-    message.baseImgUri = object.baseImgUri ?? "";
+    message.uri = object.uri ?? "";
     return message;
   },
 };
@@ -1001,7 +1016,7 @@ function createBaseEventCreatedFTClass(): EventCreatedFTClass {
   return {
     contractId: "",
     operator: "",
-    classId: "",
+    tokenId: "",
     name: "",
     meta: "",
     decimals: 0,
@@ -1020,8 +1035,8 @@ export const EventCreatedFTClass = {
     if (message.operator !== "") {
       writer.uint32(18).string(message.operator);
     }
-    if (message.classId !== "") {
-      writer.uint32(26).string(message.classId);
+    if (message.tokenId !== "") {
+      writer.uint32(26).string(message.tokenId);
     }
     if (message.name !== "") {
       writer.uint32(34).string(message.name);
@@ -1052,7 +1067,7 @@ export const EventCreatedFTClass = {
           message.operator = reader.string();
           break;
         case 3:
-          message.classId = reader.string();
+          message.tokenId = reader.string();
           break;
         case 4:
           message.name = reader.string();
@@ -1078,7 +1093,7 @@ export const EventCreatedFTClass = {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
       operator: isSet(object.operator) ? String(object.operator) : "",
-      classId: isSet(object.classId) ? String(object.classId) : "",
+      tokenId: isSet(object.tokenId) ? String(object.tokenId) : "",
       name: isSet(object.name) ? String(object.name) : "",
       meta: isSet(object.meta) ? String(object.meta) : "",
       decimals: isSet(object.decimals) ? Number(object.decimals) : 0,
@@ -1090,7 +1105,7 @@ export const EventCreatedFTClass = {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
     message.operator !== undefined && (obj.operator = message.operator);
-    message.classId !== undefined && (obj.classId = message.classId);
+    message.tokenId !== undefined && (obj.tokenId = message.tokenId);
     message.name !== undefined && (obj.name = message.name);
     message.meta !== undefined && (obj.meta = message.meta);
     message.decimals !== undefined &&
@@ -1105,7 +1120,7 @@ export const EventCreatedFTClass = {
     const message = createBaseEventCreatedFTClass();
     message.contractId = object.contractId ?? "";
     message.operator = object.operator ?? "";
-    message.classId = object.classId ?? "";
+    message.tokenId = object.tokenId ?? "";
     message.name = object.name ?? "";
     message.meta = object.meta ?? "";
     message.decimals = object.decimals ?? 0;
@@ -1115,7 +1130,7 @@ export const EventCreatedFTClass = {
 };
 
 function createBaseEventCreatedNFTClass(): EventCreatedNFTClass {
-  return { contractId: "", operator: "", classId: "", name: "", meta: "" };
+  return { contractId: "", operator: "", tokenType: "", name: "", meta: "" };
 }
 
 export const EventCreatedNFTClass = {
@@ -1129,8 +1144,8 @@ export const EventCreatedNFTClass = {
     if (message.operator !== "") {
       writer.uint32(18).string(message.operator);
     }
-    if (message.classId !== "") {
-      writer.uint32(26).string(message.classId);
+    if (message.tokenType !== "") {
+      writer.uint32(26).string(message.tokenType);
     }
     if (message.name !== "") {
       writer.uint32(34).string(message.name);
@@ -1158,7 +1173,7 @@ export const EventCreatedNFTClass = {
           message.operator = reader.string();
           break;
         case 3:
-          message.classId = reader.string();
+          message.tokenType = reader.string();
           break;
         case 4:
           message.name = reader.string();
@@ -1178,7 +1193,7 @@ export const EventCreatedNFTClass = {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
       operator: isSet(object.operator) ? String(object.operator) : "",
-      classId: isSet(object.classId) ? String(object.classId) : "",
+      tokenType: isSet(object.tokenType) ? String(object.tokenType) : "",
       name: isSet(object.name) ? String(object.name) : "",
       meta: isSet(object.meta) ? String(object.meta) : "",
     };
@@ -1188,7 +1203,7 @@ export const EventCreatedNFTClass = {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
     message.operator !== undefined && (obj.operator = message.operator);
-    message.classId !== undefined && (obj.classId = message.classId);
+    message.tokenType !== undefined && (obj.tokenType = message.tokenType);
     message.name !== undefined && (obj.name = message.name);
     message.meta !== undefined && (obj.meta = message.meta);
     return obj;
@@ -1200,7 +1215,7 @@ export const EventCreatedNFTClass = {
     const message = createBaseEventCreatedNFTClass();
     message.contractId = object.contractId ?? "";
     message.operator = object.operator ?? "";
-    message.classId = object.classId ?? "";
+    message.tokenType = object.tokenType ?? "";
     message.name = object.name ?? "";
     message.meta = object.meta ?? "";
     return message;
@@ -1715,7 +1730,7 @@ function createBaseEventModifiedTokenClass(): EventModifiedTokenClass {
   return {
     contractId: "",
     operator: "",
-    classId: "",
+    tokenType: "",
     changes: [],
     typeName: "",
   };
@@ -1732,8 +1747,8 @@ export const EventModifiedTokenClass = {
     if (message.operator !== "") {
       writer.uint32(18).string(message.operator);
     }
-    if (message.classId !== "") {
-      writer.uint32(26).string(message.classId);
+    if (message.tokenType !== "") {
+      writer.uint32(26).string(message.tokenType);
     }
     for (const v of message.changes) {
       Attribute.encode(v!, writer.uint32(34).fork()).ldelim();
@@ -1761,7 +1776,7 @@ export const EventModifiedTokenClass = {
           message.operator = reader.string();
           break;
         case 3:
-          message.classId = reader.string();
+          message.tokenType = reader.string();
           break;
         case 4:
           message.changes.push(Attribute.decode(reader, reader.uint32()));
@@ -1781,7 +1796,7 @@ export const EventModifiedTokenClass = {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
       operator: isSet(object.operator) ? String(object.operator) : "",
-      classId: isSet(object.classId) ? String(object.classId) : "",
+      tokenType: isSet(object.tokenType) ? String(object.tokenType) : "",
       changes: Array.isArray(object?.changes)
         ? object.changes.map((e: any) => Attribute.fromJSON(e))
         : [],
@@ -1793,7 +1808,7 @@ export const EventModifiedTokenClass = {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
     message.operator !== undefined && (obj.operator = message.operator);
-    message.classId !== undefined && (obj.classId = message.classId);
+    message.tokenType !== undefined && (obj.tokenType = message.tokenType);
     if (message.changes) {
       obj.changes = message.changes.map((e) =>
         e ? Attribute.toJSON(e) : undefined
@@ -1811,7 +1826,7 @@ export const EventModifiedTokenClass = {
     const message = createBaseEventModifiedTokenClass();
     message.contractId = object.contractId ?? "";
     message.operator = object.operator ?? "";
-    message.classId = object.classId ?? "";
+    message.tokenType = object.tokenType ?? "";
     message.changes =
       object.changes?.map((e) => Attribute.fromPartial(e)) || [];
     message.typeName = object.typeName ?? "";

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Params, TokenClass, Authorization, Grant } from "./token";
+import { Params, Contract, Authorization, Grant } from "./token";
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
 
@@ -14,7 +14,7 @@ export interface GenesisState {
   /** balances is an array containing the balances of all the accounts. */
   balances: ContractBalances[];
   /** classes defines the metadata of the differents tokens. */
-  classes: TokenClass[];
+  classes: Contract[];
   /** grants defines the grant information. */
   grants: ContractGrants[];
   /** authorizations defines the approve information. */
@@ -109,7 +109,7 @@ export const GenesisState = {
       ContractBalances.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     for (const v of message.classes) {
-      TokenClass.encode(v!, writer.uint32(34).fork()).ldelim();
+      Contract.encode(v!, writer.uint32(34).fork()).ldelim();
     }
     for (const v of message.grants) {
       ContractGrants.encode(v!, writer.uint32(42).fork()).ldelim();
@@ -151,7 +151,7 @@ export const GenesisState = {
           );
           break;
         case 4:
-          message.classes.push(TokenClass.decode(reader, reader.uint32()));
+          message.classes.push(Contract.decode(reader, reader.uint32()));
           break;
         case 5:
           message.grants.push(ContractGrants.decode(reader, reader.uint32()));
@@ -188,7 +188,7 @@ export const GenesisState = {
         ? object.balances.map((e: any) => ContractBalances.fromJSON(e))
         : [],
       classes: Array.isArray(object?.classes)
-        ? object.classes.map((e: any) => TokenClass.fromJSON(e))
+        ? object.classes.map((e: any) => Contract.fromJSON(e))
         : [],
       grants: Array.isArray(object?.grants)
         ? object.grants.map((e: any) => ContractGrants.fromJSON(e))
@@ -227,7 +227,7 @@ export const GenesisState = {
     }
     if (message.classes) {
       obj.classes = message.classes.map((e) =>
-        e ? TokenClass.toJSON(e) : undefined
+        e ? Contract.toJSON(e) : undefined
       );
     } else {
       obj.classes = [];
@@ -284,8 +284,7 @@ export const GenesisState = {
         : undefined;
     message.balances =
       object.balances?.map((e) => ContractBalances.fromPartial(e)) || [];
-    message.classes =
-      object.classes?.map((e) => TokenClass.fromPartial(e)) || [];
+    message.classes = object.classes?.map((e) => Contract.fromPartial(e)) || [];
     message.grants =
       object.grants?.map((e) => ContractGrants.fromPartial(e)) || [];
     message.authorizations =

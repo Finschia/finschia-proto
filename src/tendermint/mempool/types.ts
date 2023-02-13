@@ -2,44 +2,37 @@
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = "ostracon.crypto";
+export const protobufPackage = "tendermint.mempool";
 
-/** PublicKey defines the keys available for use with Ostracon Validators */
-export interface PublicKey {
-  ed25519: Uint8Array | undefined;
-  secp256k1: Uint8Array | undefined;
+export interface Txs {
+  txs: Uint8Array[];
 }
 
-function createBasePublicKey(): PublicKey {
-  return { ed25519: undefined, secp256k1: undefined };
+export interface Message {
+  txs?: Txs | undefined;
 }
 
-export const PublicKey = {
-  encode(
-    message: PublicKey,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.ed25519 !== undefined) {
-      writer.uint32(10).bytes(message.ed25519);
-    }
-    if (message.secp256k1 !== undefined) {
-      writer.uint32(18).bytes(message.secp256k1);
+function createBaseTxs(): Txs {
+  return { txs: [] };
+}
+
+export const Txs = {
+  encode(message: Txs, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.txs) {
+      writer.uint32(10).bytes(v!);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): PublicKey {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Txs {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePublicKey();
+    const message = createBaseTxs();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.ed25519 = reader.bytes();
-          break;
-        case 2:
-          message.secp256k1 = reader.bytes();
+          message.txs.push(reader.bytes());
           break;
         default:
           reader.skipType(tag & 7);
@@ -49,38 +42,85 @@ export const PublicKey = {
     return message;
   },
 
-  fromJSON(object: any): PublicKey {
+  fromJSON(object: any): Txs {
     return {
-      ed25519: isSet(object.ed25519)
-        ? bytesFromBase64(object.ed25519)
-        : undefined,
-      secp256k1: isSet(object.secp256k1)
-        ? bytesFromBase64(object.secp256k1)
-        : undefined,
+      txs: Array.isArray(object?.txs)
+        ? object.txs.map((e: any) => bytesFromBase64(e))
+        : [],
     };
   },
 
-  toJSON(message: PublicKey): unknown {
+  toJSON(message: Txs): unknown {
     const obj: any = {};
-    message.ed25519 !== undefined &&
-      (obj.ed25519 =
-        message.ed25519 !== undefined
-          ? base64FromBytes(message.ed25519)
-          : undefined);
-    message.secp256k1 !== undefined &&
-      (obj.secp256k1 =
-        message.secp256k1 !== undefined
-          ? base64FromBytes(message.secp256k1)
-          : undefined);
+    if (message.txs) {
+      obj.txs = message.txs.map((e) =>
+        base64FromBytes(e !== undefined ? e : new Uint8Array())
+      );
+    } else {
+      obj.txs = [];
+    }
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<PublicKey>, I>>(
-    object: I
-  ): PublicKey {
-    const message = createBasePublicKey();
-    message.ed25519 = object.ed25519 ?? undefined;
-    message.secp256k1 = object.secp256k1 ?? undefined;
+  fromPartial<I extends Exact<DeepPartial<Txs>, I>>(object: I): Txs {
+    const message = createBaseTxs();
+    message.txs = object.txs?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseMessage(): Message {
+  return { txs: undefined };
+}
+
+export const Message = {
+  encode(
+    message: Message,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.txs !== undefined) {
+      Txs.encode(message.txs, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): Message {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMessage();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.txs = Txs.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Message {
+    return {
+      txs: isSet(object.txs) ? Txs.fromJSON(object.txs) : undefined,
+    };
+  },
+
+  toJSON(message: Message): unknown {
+    const obj: any = {};
+    message.txs !== undefined &&
+      (obj.txs = message.txs ? Txs.toJSON(message.txs) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<Message>, I>>(object: I): Message {
+    const message = createBaseMessage();
+    message.txs =
+      object.txs !== undefined && object.txs !== null
+        ? Txs.fromPartial(object.txs)
+        : undefined;
     return message;
   },
 };

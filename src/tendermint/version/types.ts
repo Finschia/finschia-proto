@@ -2,7 +2,7 @@
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = "ostracon.version";
+export const protobufPackage = "tendermint.version";
 
 /**
  * App includes the protocol and software version for the application.

@@ -3,9 +3,8 @@ import { Duration } from "../../../../google/protobuf/duration";
 import { Height } from "../../../core/client/v1/client";
 import { Timestamp } from "../../../../google/protobuf/timestamp";
 import { MerkleRoot } from "../../../core/commitment/v1/commitment";
-import { SignedHeader } from "../../../../ostracon/types/types";
-import { ValidatorSet } from "../../../../ostracon/types/validator";
-import { VoterSet } from "../../../../ostracon/types/voter";
+import { SignedHeader } from "../../../../tendermint/types/types";
+import { ValidatorSet } from "../../../../tendermint/types/validator";
 import Long from "long";
 import { ProofSpec } from "../../../../proofs";
 import * as _m0 from "protobufjs/minimal";
@@ -102,10 +101,8 @@ export interface Misbehaviour {
 export interface Header {
   signedHeader?: SignedHeader;
   validatorSet?: ValidatorSet;
-  voterSet?: VoterSet;
   trustedHeight?: Height;
   trustedValidators?: ValidatorSet;
-  trustedVoters?: VoterSet;
 }
 
 /**
@@ -534,10 +531,8 @@ function createBaseHeader(): Header {
   return {
     signedHeader: undefined,
     validatorSet: undefined,
-    voterSet: undefined,
     trustedHeight: undefined,
     trustedValidators: undefined,
-    trustedVoters: undefined,
   };
 }
 
@@ -558,20 +553,14 @@ export const Header = {
         writer.uint32(18).fork()
       ).ldelim();
     }
-    if (message.voterSet !== undefined) {
-      VoterSet.encode(message.voterSet, writer.uint32(26).fork()).ldelim();
-    }
     if (message.trustedHeight !== undefined) {
-      Height.encode(message.trustedHeight, writer.uint32(34).fork()).ldelim();
+      Height.encode(message.trustedHeight, writer.uint32(26).fork()).ldelim();
     }
     if (message.trustedValidators !== undefined) {
       ValidatorSet.encode(
         message.trustedValidators,
-        writer.uint32(42).fork()
+        writer.uint32(34).fork()
       ).ldelim();
-    }
-    if (message.trustedVoters !== undefined) {
-      VoterSet.encode(message.trustedVoters, writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -590,19 +579,13 @@ export const Header = {
           message.validatorSet = ValidatorSet.decode(reader, reader.uint32());
           break;
         case 3:
-          message.voterSet = VoterSet.decode(reader, reader.uint32());
-          break;
-        case 4:
           message.trustedHeight = Height.decode(reader, reader.uint32());
           break;
-        case 5:
+        case 4:
           message.trustedValidators = ValidatorSet.decode(
             reader,
             reader.uint32()
           );
-          break;
-        case 6:
-          message.trustedVoters = VoterSet.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -620,17 +603,11 @@ export const Header = {
       validatorSet: isSet(object.validatorSet)
         ? ValidatorSet.fromJSON(object.validatorSet)
         : undefined,
-      voterSet: isSet(object.voterSet)
-        ? VoterSet.fromJSON(object.voterSet)
-        : undefined,
       trustedHeight: isSet(object.trustedHeight)
         ? Height.fromJSON(object.trustedHeight)
         : undefined,
       trustedValidators: isSet(object.trustedValidators)
         ? ValidatorSet.fromJSON(object.trustedValidators)
-        : undefined,
-      trustedVoters: isSet(object.trustedVoters)
-        ? VoterSet.fromJSON(object.trustedVoters)
         : undefined,
     };
   },
@@ -645,10 +622,6 @@ export const Header = {
       (obj.validatorSet = message.validatorSet
         ? ValidatorSet.toJSON(message.validatorSet)
         : undefined);
-    message.voterSet !== undefined &&
-      (obj.voterSet = message.voterSet
-        ? VoterSet.toJSON(message.voterSet)
-        : undefined);
     message.trustedHeight !== undefined &&
       (obj.trustedHeight = message.trustedHeight
         ? Height.toJSON(message.trustedHeight)
@@ -656,10 +629,6 @@ export const Header = {
     message.trustedValidators !== undefined &&
       (obj.trustedValidators = message.trustedValidators
         ? ValidatorSet.toJSON(message.trustedValidators)
-        : undefined);
-    message.trustedVoters !== undefined &&
-      (obj.trustedVoters = message.trustedVoters
-        ? VoterSet.toJSON(message.trustedVoters)
         : undefined);
     return obj;
   },
@@ -674,10 +643,6 @@ export const Header = {
       object.validatorSet !== undefined && object.validatorSet !== null
         ? ValidatorSet.fromPartial(object.validatorSet)
         : undefined;
-    message.voterSet =
-      object.voterSet !== undefined && object.voterSet !== null
-        ? VoterSet.fromPartial(object.voterSet)
-        : undefined;
     message.trustedHeight =
       object.trustedHeight !== undefined && object.trustedHeight !== null
         ? Height.fromPartial(object.trustedHeight)
@@ -686,10 +651,6 @@ export const Header = {
       object.trustedValidators !== undefined &&
       object.trustedValidators !== null
         ? ValidatorSet.fromPartial(object.trustedValidators)
-        : undefined;
-    message.trustedVoters =
-      object.trustedVoters !== undefined && object.trustedVoters !== null
-        ? VoterSet.fromPartial(object.trustedVoters)
         : undefined;
     return message;
   },

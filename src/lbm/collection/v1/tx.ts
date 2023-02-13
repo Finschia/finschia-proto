@@ -1,12 +1,12 @@
 /* eslint-disable */
 import Long from "long";
-import { Coin, Change } from "./collection";
+import { Coin, Attribute } from "./collection";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.collection.v1";
 
-/** MsgTransferFT is the Msg/TransferFT request type. */
-export interface MsgTransferFT {
+/** MsgSendFT is the Msg/SendFT request type. */
+export interface MsgSendFT {
   /** contract id associated with the contract. */
   contractId: string;
   /** the address which the transfer is from. */
@@ -20,15 +20,15 @@ export interface MsgTransferFT {
   amount: Coin[];
 }
 
-/** MsgTransferFTResponse is the Msg/TransferFT response type. */
-export interface MsgTransferFTResponse {}
+/** MsgSendFTResponse is the Msg/SendFT response type. */
+export interface MsgSendFTResponse {}
 
-/** MsgTransferFTFrom is the Msg/TransferFTFrom request type. */
-export interface MsgTransferFTFrom {
+/** MsgOperatorSendFT is the Msg/OperatorSendFT request type. */
+export interface MsgOperatorSendFT {
   /** contract id associated with the contract. */
   contractId: string;
-  /** the address of the proxy. */
-  proxy: string;
+  /** the address of the operator. */
+  operator: string;
   /** the address which the transfer is from. */
   from: string;
   /** the address which the transfer is to. */
@@ -40,11 +40,11 @@ export interface MsgTransferFTFrom {
   amount: Coin[];
 }
 
-/** MsgTransferFTFromResponse is the Msg/TransferFTFrom response type. */
-export interface MsgTransferFTFromResponse {}
+/** MsgOperatorSendFTResponse is the Msg/OperatorSendFT response type. */
+export interface MsgOperatorSendFTResponse {}
 
-/** MsgTransferNFT is the Msg/TransferNFT request type. */
-export interface MsgTransferNFT {
+/** MsgSendNFT is the Msg/SendNFT request type. */
+export interface MsgSendNFT {
   /** contract id associated with the contract. */
   contractId: string;
   /** the address which the transfer is from. */
@@ -55,15 +55,15 @@ export interface MsgTransferNFT {
   tokenIds: string[];
 }
 
-/** MsgTransferNFTResponse is the Msg/TransferNFT response type. */
-export interface MsgTransferNFTResponse {}
+/** MsgSendNFTResponse is the Msg/SendNFT response type. */
+export interface MsgSendNFTResponse {}
 
-/** MsgTransferNFTFrom is the Msg/TransferNFTFrom request type. */
-export interface MsgTransferNFTFrom {
+/** MsgOperatorSendNFT is the Msg/OperatorSendNFT request type. */
+export interface MsgOperatorSendNFT {
   /** contract id associated with the contract. */
   contractId: string;
-  /** the address of the proxy. */
-  proxy: string;
+  /** the address of the operator. */
+  operator: string;
   /** the address which the transfer is from. */
   from: string;
   /** the address which the transfer is to. */
@@ -72,45 +72,37 @@ export interface MsgTransferNFTFrom {
   tokenIds: string[];
 }
 
-/** MsgTransferNFTFromResponse is the Msg/TransferNFTFrom response type. */
-export interface MsgTransferNFTFromResponse {}
+/** MsgOperatorSendNFTResponse is the Msg/OperatorSendNFT response type. */
+export interface MsgOperatorSendNFTResponse {}
 
-/** MsgApprove is the Msg/Approve request type. */
-export interface MsgApprove {
+/** MsgAuthorizeOperator is the Msg/AuthorizeOperator request type. */
+export interface MsgAuthorizeOperator {
   /** contract id associated with the contract. */
   contractId: string;
-  /** address of the approver who allows the manipulation of its token. */
-  approver: string;
+  /** address of the holder who allows the manipulation of its token. */
+  holder: string;
   /** address which the manipulation is allowed to. */
-  proxy: string;
+  operator: string;
 }
 
-/** MsgApproveResponse is the Msg/Approve response type. */
-export interface MsgApproveResponse {}
+/** MsgAuthorizeOperatorResponse is the Msg/AuthorizeOperator response type. */
+export interface MsgAuthorizeOperatorResponse {}
 
-/** MsgDisapprove is the Msg/Disapprove request type. */
-export interface MsgDisapprove {
+/** MsgRevokeOperator is the Msg/RevokeOperator request type. */
+export interface MsgRevokeOperator {
   /** contract id associated with the contract. */
   contractId: string;
-  /** address of the approver who allows the manipulation of its token. */
-  approver: string;
+  /** address of the holder who allows the manipulation of its token. */
+  holder: string;
   /** address which the manipulation is allowed to. */
-  proxy: string;
+  operator: string;
 }
 
-/** MsgDisapproveResponse is the Msg/Disapprove response type. */
-export interface MsgDisapproveResponse {}
+/** MsgRevokeOperatorResponse is the Msg/RevokeOperator response type. */
+export interface MsgRevokeOperatorResponse {}
 
 /**
  * MsgCreateContract is the Msg/CreateContract request type.
- *
- * Throws:
- * - ErrInvalidAddress
- *   - `owner` is of invalid format.
- * - ErrInvalidRequest
- *   - `name` exceeds the app-specific limit in length.
- *   - `base_img_uri` exceeds the app-specific limit in length.
- *   - `meta` exceeds the app-specific limit in length.
  *
  * Signer: `owner`
  */
@@ -119,8 +111,8 @@ export interface MsgCreateContract {
   owner: string;
   /** name defines the human-readable name of the contract. */
   name: string;
-  /** base img uri is an uri for the contract image stored off chain. */
-  baseImgUri: string;
+  /** uri for the contract image stored off chain. */
+  uri: string;
   /** meta is a brief description of the contract. */
   meta: string;
 }
@@ -128,24 +120,11 @@ export interface MsgCreateContract {
 /** MsgCreateContractResponse is the Msg/CreateContract response type. */
 export interface MsgCreateContractResponse {
   /** id of the new contract. */
-  id: string;
+  contractId: string;
 }
 
 /**
  * MsgIssueFT is the Msg/IssueFT request type.
- *
- * Throws:
- * - ErrInvalidAddress
- *   - `owner` is of invalid format.
- *   - `to` is of invalid format.
- * - ErrInvalidRequest
- *   - `contract_id` is of invalid format.
- *   - `name` is empty.
- *   - `name` exceeds the app-specific limit in length.
- *   - `meta` exceeds the app-specific limit in length.
- *   - `decimals` is lesser than 0 or greater than 18.
- *   - `amount` is not positive.
- *   - `mintable` == false, amount == 1 and decimals == 0 (weird, but for the backward compatibility).
  *
  * Signer: `owner`
  */
@@ -174,20 +153,12 @@ export interface MsgIssueFT {
 
 /** MsgIssueFTResponse is the Msg/IssueFT response type. */
 export interface MsgIssueFTResponse {
-  /** id of the new token type. */
-  id: string;
+  /** id of the token. */
+  tokenId: string;
 }
 
 /**
  * MsgIssueNFT is the Msg/IssueNFT request type.
- *
- * Throws:
- * - ErrInvalidAddress
- *   - `owner` is of invalid format.
- * - ErrInvalidRequest
- *   - `contract_id` is of invalid format.
- *   - `name` exceeds the app-specific limit in length.
- *   - `meta` exceeds the app-specific limit in length.
  *
  * Signer: `owner`
  */
@@ -204,20 +175,15 @@ export interface MsgIssueNFT {
 
 /** MsgIssueNFTResponse is the Msg/IssueNFT response type. */
 export interface MsgIssueNFTResponse {
-  /** id of the new token type. */
-  id: string;
+  /**
+   * id of the new token type.
+   * refer to TokenType for the definition.
+   */
+  tokenType: string;
 }
 
 /**
  * MsgMintFT is the Msg/MintFT request type.
- *
- * Throws:
- * - ErrInvalidAddress
- *   - `from` is of invalid format.
- *   - `to` is of invalid format.
- * - ErrInvalidRequest
- *   - `contract_id` is of invalid format.
- *   - `amount` is not positive.
  *
  * Signer: `from`
  */
@@ -241,15 +207,6 @@ export interface MsgMintFTResponse {}
 /**
  * MsgMintNFT is the Msg/MintNFT request type.
  *
- * Throws:
- * - ErrInvalidAddress
- *   - `from` is of invalid format.
- *   - `to` is of invalid format.
- * - ErrInvalidRequest
- *   - `contract_id` is of invalid format.
- *   - `params` is empty.
- *   - `params` has an invalid element.
- *
  * Signer: `from`
  */
 export interface MsgMintNFT {
@@ -266,7 +223,7 @@ export interface MsgMintNFT {
 /** MsgMintNFTResponse is the Msg/MintNFT response type. */
 export interface MsgMintNFTResponse {
   /** ids of the new non-fungible tokens. */
-  ids: string[];
+  tokenIds: string[];
 }
 
 /** MintNFTParam defines a parameter for minting nft. */
@@ -274,6 +231,7 @@ export interface MintNFTParam {
   /**
    * token type or class id of the nft.
    * Note: it cannot start with zero.
+   * refer to TokenType for the definition.
    */
   tokenType: string;
   /**
@@ -307,8 +265,8 @@ export interface MsgBurnFT {
 /** MsgBurnFTResponse is the Msg/BurnFT response type. */
 export interface MsgBurnFTResponse {}
 
-/** MsgBurnFTFrom is the Msg/BurnFTFrom request type. */
-export interface MsgBurnFTFrom {
+/** MsgOperatorBurnFT is the Msg/OperatorBurnFT request type. */
+export interface MsgOperatorBurnFT {
   /** contract id associated with the contract. */
   contractId: string;
   /**
@@ -316,7 +274,7 @@ export interface MsgBurnFTFrom {
    * Note: it must have the permission for the burn.
    * Note: it must have been authorized by from.
    */
-  proxy: string;
+  operator: string;
   /** address which the tokens will be burnt from. */
   from: string;
   /**
@@ -326,8 +284,8 @@ export interface MsgBurnFTFrom {
   amount: Coin[];
 }
 
-/** MsgBurnFTFromResponse is the Msg/BurnFTFrom response type. */
-export interface MsgBurnFTFromResponse {}
+/** MsgOperatorBurnFTResponse is the Msg/OperatorBurnFT response type. */
+export interface MsgOperatorBurnFTResponse {}
 
 /** MsgBurnNFT is the Msg/BurnNFT request type. */
 export interface MsgBurnNFT {
@@ -348,8 +306,8 @@ export interface MsgBurnNFT {
 /** MsgBurnNFTResponse is the Msg/BurnNFT response type. */
 export interface MsgBurnNFTResponse {}
 
-/** MsgBurnNFTFrom is the Msg/BurnNFTFrom request type. */
-export interface MsgBurnNFTFrom {
+/** MsgOperatorBurnNFT is the Msg/OperatorBurnNFT request type. */
+export interface MsgOperatorBurnNFT {
   /** contract id associated with the contract. */
   contractId: string;
   /**
@@ -357,7 +315,7 @@ export interface MsgBurnNFTFrom {
    * Note: it must have the permission for the burn.
    * Note: it must have been authorized by from.
    */
-  proxy: string;
+  operator: string;
   /** address which the tokens will be burnt from. */
   from: string;
   /**
@@ -367,8 +325,8 @@ export interface MsgBurnNFTFrom {
   tokenIds: string[];
 }
 
-/** MsgBurnNFTFromResponse is the Msg/BurnNFTFrom response type. */
-export interface MsgBurnNFTFromResponse {}
+/** MsgOperatorBurnNFTResponse is the Msg/OperatorBurnNFT response type. */
+export interface MsgOperatorBurnNFTResponse {}
 
 /** MsgModify is the Msg/Modify request type. */
 export interface MsgModify {
@@ -376,7 +334,10 @@ export interface MsgModify {
   contractId: string;
   /** the address of the grantee which must have modify permission. */
   owner: string;
-  /** token type of the token. */
+  /**
+   * token type of the token.
+   * refer to TokenType for the definition.
+   */
   tokenType: string;
   /**
    * token index of the token.
@@ -387,10 +348,10 @@ export interface MsgModify {
   tokenIndex: string;
   /**
    * changes to apply.
-   * on modifying collection: name, base_img_uri, meta.
-   * on modifying token type and token: name, meta.
+   * possible attribute keys on modifying collection: name, base_img_uri, meta.
+   * possible attribute keys on modifying token type and token: name, meta.
    */
-  changes: Change[];
+  changes: Attribute[];
 }
 
 /** MsgModifyResponse is the Msg/Modify response type. */
@@ -427,15 +388,6 @@ export interface MsgRevokePermissionResponse {}
 /**
  * MsgAttach is the Msg/Attach request type.
  *
- * Throws:
- * - ErrInvalidAddress
- *   - `from` is of invalid format.
- * - ErrInvalidRequest
- *   - `contract_id` is of invalid format.
- *   - `token_id` is of invalid format.
- *   - `to_token_id` is of invalid format.
- *   - `token_id` is equal to `to_token_id`.
- *
  * Signer: `from`
  */
 export interface MsgAttach {
@@ -455,13 +407,6 @@ export interface MsgAttachResponse {}
 /**
  * MsgDetach is the Msg/Detach request type.
  *
- * Throws:
- * - ErrInvalidAddress
- *   - `from` is of invalid format.
- * - ErrInvalidRequest
- *   - `contract_id` is of invalid format.
- *   - `token_id` is of invalid format.
- *
  * Signer: `from`
  */
 export interface MsgDetach {
@@ -476,12 +421,12 @@ export interface MsgDetach {
 /** MsgDetachResponse is the Msg/Detach response type. */
 export interface MsgDetachResponse {}
 
-/** MsgAttachFrom is the Msg/AttachFrom request type. */
-export interface MsgAttachFrom {
+/** MsgOperatorAttach is the Msg/OperatorAttach request type. */
+export interface MsgOperatorAttach {
   /** contract id associated with the contract. */
   contractId: string;
-  /** address of the proxy. */
-  proxy: string;
+  /** address of the operator. */
+  operator: string;
   /** address of the owner of the token. */
   from: string;
   /** token id of the token to attach. */
@@ -490,31 +435,31 @@ export interface MsgAttachFrom {
   toTokenId: string;
 }
 
-/** MsgAttachFromResponse is the Msg/AttachFrom response type. */
-export interface MsgAttachFromResponse {}
+/** MsgOperatorAttachResponse is the Msg/OperatorAttach response type. */
+export interface MsgOperatorAttachResponse {}
 
-/** MsgDetachFrom is the Msg/DetachFrom request type. */
-export interface MsgDetachFrom {
+/** MsgOperatorDetach is the Msg/OperatorDetach request type. */
+export interface MsgOperatorDetach {
   /** contract id associated with the contract. */
   contractId: string;
-  /** address of the proxy. */
-  proxy: string;
+  /** address of the operator. */
+  operator: string;
   /** address of the owner of the token. */
   from: string;
   /** token id of the token to detach. */
   tokenId: string;
 }
 
-/** MsgDetachFromResponse is the Msg/DetachFrom response type. */
-export interface MsgDetachFromResponse {}
+/** MsgOperatorDetachResponse is the Msg/OperatorDetach response type. */
+export interface MsgOperatorDetachResponse {}
 
-function createBaseMsgTransferFT(): MsgTransferFT {
+function createBaseMsgSendFT(): MsgSendFT {
   return { contractId: "", from: "", to: "", amount: [] };
 }
 
-export const MsgTransferFT = {
+export const MsgSendFT = {
   encode(
-    message: MsgTransferFT,
+    message: MsgSendFT,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.contractId !== "") {
@@ -532,10 +477,10 @@ export const MsgTransferFT = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgTransferFT {
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgSendFT {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgTransferFT();
+    const message = createBaseMsgSendFT();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -559,7 +504,7 @@ export const MsgTransferFT = {
     return message;
   },
 
-  fromJSON(object: any): MsgTransferFT {
+  fromJSON(object: any): MsgSendFT {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
       from: isSet(object.from) ? String(object.from) : "",
@@ -570,7 +515,7 @@ export const MsgTransferFT = {
     };
   },
 
-  toJSON(message: MsgTransferFT): unknown {
+  toJSON(message: MsgSendFT): unknown {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
     message.from !== undefined && (obj.from = message.from);
@@ -583,10 +528,10 @@ export const MsgTransferFT = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgTransferFT>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgSendFT>, I>>(
     object: I
-  ): MsgTransferFT {
-    const message = createBaseMsgTransferFT();
+  ): MsgSendFT {
+    const message = createBaseMsgSendFT();
     message.contractId = object.contractId ?? "";
     message.from = object.from ?? "";
     message.to = object.to ?? "";
@@ -595,25 +540,22 @@ export const MsgTransferFT = {
   },
 };
 
-function createBaseMsgTransferFTResponse(): MsgTransferFTResponse {
+function createBaseMsgSendFTResponse(): MsgSendFTResponse {
   return {};
 }
 
-export const MsgTransferFTResponse = {
+export const MsgSendFTResponse = {
   encode(
-    _: MsgTransferFTResponse,
+    _: MsgSendFTResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): MsgTransferFTResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgSendFTResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgTransferFTResponse();
+    const message = createBaseMsgSendFTResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -625,37 +567,37 @@ export const MsgTransferFTResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgTransferFTResponse {
+  fromJSON(_: any): MsgSendFTResponse {
     return {};
   },
 
-  toJSON(_: MsgTransferFTResponse): unknown {
+  toJSON(_: MsgSendFTResponse): unknown {
     const obj: any = {};
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgTransferFTResponse>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgSendFTResponse>, I>>(
     _: I
-  ): MsgTransferFTResponse {
-    const message = createBaseMsgTransferFTResponse();
+  ): MsgSendFTResponse {
+    const message = createBaseMsgSendFTResponse();
     return message;
   },
 };
 
-function createBaseMsgTransferFTFrom(): MsgTransferFTFrom {
-  return { contractId: "", proxy: "", from: "", to: "", amount: [] };
+function createBaseMsgOperatorSendFT(): MsgOperatorSendFT {
+  return { contractId: "", operator: "", from: "", to: "", amount: [] };
 }
 
-export const MsgTransferFTFrom = {
+export const MsgOperatorSendFT = {
   encode(
-    message: MsgTransferFTFrom,
+    message: MsgOperatorSendFT,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.contractId !== "") {
       writer.uint32(10).string(message.contractId);
     }
-    if (message.proxy !== "") {
-      writer.uint32(18).string(message.proxy);
+    if (message.operator !== "") {
+      writer.uint32(18).string(message.operator);
     }
     if (message.from !== "") {
       writer.uint32(26).string(message.from);
@@ -669,10 +611,10 @@ export const MsgTransferFTFrom = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgTransferFTFrom {
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgOperatorSendFT {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgTransferFTFrom();
+    const message = createBaseMsgOperatorSendFT();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -680,7 +622,7 @@ export const MsgTransferFTFrom = {
           message.contractId = reader.string();
           break;
         case 2:
-          message.proxy = reader.string();
+          message.operator = reader.string();
           break;
         case 3:
           message.from = reader.string();
@@ -699,10 +641,10 @@ export const MsgTransferFTFrom = {
     return message;
   },
 
-  fromJSON(object: any): MsgTransferFTFrom {
+  fromJSON(object: any): MsgOperatorSendFT {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
-      proxy: isSet(object.proxy) ? String(object.proxy) : "",
+      operator: isSet(object.operator) ? String(object.operator) : "",
       from: isSet(object.from) ? String(object.from) : "",
       to: isSet(object.to) ? String(object.to) : "",
       amount: Array.isArray(object?.amount)
@@ -711,10 +653,10 @@ export const MsgTransferFTFrom = {
     };
   },
 
-  toJSON(message: MsgTransferFTFrom): unknown {
+  toJSON(message: MsgOperatorSendFT): unknown {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
-    message.proxy !== undefined && (obj.proxy = message.proxy);
+    message.operator !== undefined && (obj.operator = message.operator);
     message.from !== undefined && (obj.from = message.from);
     message.to !== undefined && (obj.to = message.to);
     if (message.amount) {
@@ -725,12 +667,12 @@ export const MsgTransferFTFrom = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgTransferFTFrom>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgOperatorSendFT>, I>>(
     object: I
-  ): MsgTransferFTFrom {
-    const message = createBaseMsgTransferFTFrom();
+  ): MsgOperatorSendFT {
+    const message = createBaseMsgOperatorSendFT();
     message.contractId = object.contractId ?? "";
-    message.proxy = object.proxy ?? "";
+    message.operator = object.operator ?? "";
     message.from = object.from ?? "";
     message.to = object.to ?? "";
     message.amount = object.amount?.map((e) => Coin.fromPartial(e)) || [];
@@ -738,13 +680,13 @@ export const MsgTransferFTFrom = {
   },
 };
 
-function createBaseMsgTransferFTFromResponse(): MsgTransferFTFromResponse {
+function createBaseMsgOperatorSendFTResponse(): MsgOperatorSendFTResponse {
   return {};
 }
 
-export const MsgTransferFTFromResponse = {
+export const MsgOperatorSendFTResponse = {
   encode(
-    _: MsgTransferFTFromResponse,
+    _: MsgOperatorSendFTResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     return writer;
@@ -753,10 +695,10 @@ export const MsgTransferFTFromResponse = {
   decode(
     input: _m0.Reader | Uint8Array,
     length?: number
-  ): MsgTransferFTFromResponse {
+  ): MsgOperatorSendFTResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgTransferFTFromResponse();
+    const message = createBaseMsgOperatorSendFTResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -768,30 +710,30 @@ export const MsgTransferFTFromResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgTransferFTFromResponse {
+  fromJSON(_: any): MsgOperatorSendFTResponse {
     return {};
   },
 
-  toJSON(_: MsgTransferFTFromResponse): unknown {
+  toJSON(_: MsgOperatorSendFTResponse): unknown {
     const obj: any = {};
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgTransferFTFromResponse>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgOperatorSendFTResponse>, I>>(
     _: I
-  ): MsgTransferFTFromResponse {
-    const message = createBaseMsgTransferFTFromResponse();
+  ): MsgOperatorSendFTResponse {
+    const message = createBaseMsgOperatorSendFTResponse();
     return message;
   },
 };
 
-function createBaseMsgTransferNFT(): MsgTransferNFT {
+function createBaseMsgSendNFT(): MsgSendNFT {
   return { contractId: "", from: "", to: "", tokenIds: [] };
 }
 
-export const MsgTransferNFT = {
+export const MsgSendNFT = {
   encode(
-    message: MsgTransferNFT,
+    message: MsgSendNFT,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.contractId !== "") {
@@ -809,10 +751,10 @@ export const MsgTransferNFT = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgTransferNFT {
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgSendNFT {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgTransferNFT();
+    const message = createBaseMsgSendNFT();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -836,7 +778,7 @@ export const MsgTransferNFT = {
     return message;
   },
 
-  fromJSON(object: any): MsgTransferNFT {
+  fromJSON(object: any): MsgSendNFT {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
       from: isSet(object.from) ? String(object.from) : "",
@@ -847,7 +789,7 @@ export const MsgTransferNFT = {
     };
   },
 
-  toJSON(message: MsgTransferNFT): unknown {
+  toJSON(message: MsgSendNFT): unknown {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
     message.from !== undefined && (obj.from = message.from);
@@ -860,10 +802,10 @@ export const MsgTransferNFT = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgTransferNFT>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgSendNFT>, I>>(
     object: I
-  ): MsgTransferNFT {
-    const message = createBaseMsgTransferNFT();
+  ): MsgSendNFT {
+    const message = createBaseMsgSendNFT();
     message.contractId = object.contractId ?? "";
     message.from = object.from ?? "";
     message.to = object.to ?? "";
@@ -872,25 +814,22 @@ export const MsgTransferNFT = {
   },
 };
 
-function createBaseMsgTransferNFTResponse(): MsgTransferNFTResponse {
+function createBaseMsgSendNFTResponse(): MsgSendNFTResponse {
   return {};
 }
 
-export const MsgTransferNFTResponse = {
+export const MsgSendNFTResponse = {
   encode(
-    _: MsgTransferNFTResponse,
+    _: MsgSendNFTResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): MsgTransferNFTResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgSendNFTResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgTransferNFTResponse();
+    const message = createBaseMsgSendNFTResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -902,37 +841,37 @@ export const MsgTransferNFTResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgTransferNFTResponse {
+  fromJSON(_: any): MsgSendNFTResponse {
     return {};
   },
 
-  toJSON(_: MsgTransferNFTResponse): unknown {
+  toJSON(_: MsgSendNFTResponse): unknown {
     const obj: any = {};
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgTransferNFTResponse>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgSendNFTResponse>, I>>(
     _: I
-  ): MsgTransferNFTResponse {
-    const message = createBaseMsgTransferNFTResponse();
+  ): MsgSendNFTResponse {
+    const message = createBaseMsgSendNFTResponse();
     return message;
   },
 };
 
-function createBaseMsgTransferNFTFrom(): MsgTransferNFTFrom {
-  return { contractId: "", proxy: "", from: "", to: "", tokenIds: [] };
+function createBaseMsgOperatorSendNFT(): MsgOperatorSendNFT {
+  return { contractId: "", operator: "", from: "", to: "", tokenIds: [] };
 }
 
-export const MsgTransferNFTFrom = {
+export const MsgOperatorSendNFT = {
   encode(
-    message: MsgTransferNFTFrom,
+    message: MsgOperatorSendNFT,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.contractId !== "") {
       writer.uint32(10).string(message.contractId);
     }
-    if (message.proxy !== "") {
-      writer.uint32(18).string(message.proxy);
+    if (message.operator !== "") {
+      writer.uint32(18).string(message.operator);
     }
     if (message.from !== "") {
       writer.uint32(26).string(message.from);
@@ -946,10 +885,10 @@ export const MsgTransferNFTFrom = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgTransferNFTFrom {
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgOperatorSendNFT {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgTransferNFTFrom();
+    const message = createBaseMsgOperatorSendNFT();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -957,7 +896,7 @@ export const MsgTransferNFTFrom = {
           message.contractId = reader.string();
           break;
         case 2:
-          message.proxy = reader.string();
+          message.operator = reader.string();
           break;
         case 3:
           message.from = reader.string();
@@ -976,10 +915,10 @@ export const MsgTransferNFTFrom = {
     return message;
   },
 
-  fromJSON(object: any): MsgTransferNFTFrom {
+  fromJSON(object: any): MsgOperatorSendNFT {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
-      proxy: isSet(object.proxy) ? String(object.proxy) : "",
+      operator: isSet(object.operator) ? String(object.operator) : "",
       from: isSet(object.from) ? String(object.from) : "",
       to: isSet(object.to) ? String(object.to) : "",
       tokenIds: Array.isArray(object?.tokenIds)
@@ -988,10 +927,10 @@ export const MsgTransferNFTFrom = {
     };
   },
 
-  toJSON(message: MsgTransferNFTFrom): unknown {
+  toJSON(message: MsgOperatorSendNFT): unknown {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
-    message.proxy !== undefined && (obj.proxy = message.proxy);
+    message.operator !== undefined && (obj.operator = message.operator);
     message.from !== undefined && (obj.from = message.from);
     message.to !== undefined && (obj.to = message.to);
     if (message.tokenIds) {
@@ -1002,12 +941,12 @@ export const MsgTransferNFTFrom = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgTransferNFTFrom>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgOperatorSendNFT>, I>>(
     object: I
-  ): MsgTransferNFTFrom {
-    const message = createBaseMsgTransferNFTFrom();
+  ): MsgOperatorSendNFT {
+    const message = createBaseMsgOperatorSendNFT();
     message.contractId = object.contractId ?? "";
-    message.proxy = object.proxy ?? "";
+    message.operator = object.operator ?? "";
     message.from = object.from ?? "";
     message.to = object.to ?? "";
     message.tokenIds = object.tokenIds?.map((e) => e) || [];
@@ -1015,13 +954,13 @@ export const MsgTransferNFTFrom = {
   },
 };
 
-function createBaseMsgTransferNFTFromResponse(): MsgTransferNFTFromResponse {
+function createBaseMsgOperatorSendNFTResponse(): MsgOperatorSendNFTResponse {
   return {};
 }
 
-export const MsgTransferNFTFromResponse = {
+export const MsgOperatorSendNFTResponse = {
   encode(
-    _: MsgTransferNFTFromResponse,
+    _: MsgOperatorSendNFTResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     return writer;
@@ -1030,10 +969,10 @@ export const MsgTransferNFTFromResponse = {
   decode(
     input: _m0.Reader | Uint8Array,
     length?: number
-  ): MsgTransferNFTFromResponse {
+  ): MsgOperatorSendNFTResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgTransferNFTFromResponse();
+    const message = createBaseMsgOperatorSendNFTResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1045,48 +984,51 @@ export const MsgTransferNFTFromResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgTransferNFTFromResponse {
+  fromJSON(_: any): MsgOperatorSendNFTResponse {
     return {};
   },
 
-  toJSON(_: MsgTransferNFTFromResponse): unknown {
+  toJSON(_: MsgOperatorSendNFTResponse): unknown {
     const obj: any = {};
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgTransferNFTFromResponse>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgOperatorSendNFTResponse>, I>>(
     _: I
-  ): MsgTransferNFTFromResponse {
-    const message = createBaseMsgTransferNFTFromResponse();
+  ): MsgOperatorSendNFTResponse {
+    const message = createBaseMsgOperatorSendNFTResponse();
     return message;
   },
 };
 
-function createBaseMsgApprove(): MsgApprove {
-  return { contractId: "", approver: "", proxy: "" };
+function createBaseMsgAuthorizeOperator(): MsgAuthorizeOperator {
+  return { contractId: "", holder: "", operator: "" };
 }
 
-export const MsgApprove = {
+export const MsgAuthorizeOperator = {
   encode(
-    message: MsgApprove,
+    message: MsgAuthorizeOperator,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.contractId !== "") {
       writer.uint32(10).string(message.contractId);
     }
-    if (message.approver !== "") {
-      writer.uint32(18).string(message.approver);
+    if (message.holder !== "") {
+      writer.uint32(18).string(message.holder);
     }
-    if (message.proxy !== "") {
-      writer.uint32(26).string(message.proxy);
+    if (message.operator !== "") {
+      writer.uint32(26).string(message.operator);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgApprove {
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): MsgAuthorizeOperator {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgApprove();
+    const message = createBaseMsgAuthorizeOperator();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1094,10 +1036,10 @@ export const MsgApprove = {
           message.contractId = reader.string();
           break;
         case 2:
-          message.approver = reader.string();
+          message.holder = reader.string();
           break;
         case 3:
-          message.proxy = reader.string();
+          message.operator = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -1107,156 +1049,40 @@ export const MsgApprove = {
     return message;
   },
 
-  fromJSON(object: any): MsgApprove {
+  fromJSON(object: any): MsgAuthorizeOperator {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
-      approver: isSet(object.approver) ? String(object.approver) : "",
-      proxy: isSet(object.proxy) ? String(object.proxy) : "",
+      holder: isSet(object.holder) ? String(object.holder) : "",
+      operator: isSet(object.operator) ? String(object.operator) : "",
     };
   },
 
-  toJSON(message: MsgApprove): unknown {
+  toJSON(message: MsgAuthorizeOperator): unknown {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
-    message.approver !== undefined && (obj.approver = message.approver);
-    message.proxy !== undefined && (obj.proxy = message.proxy);
+    message.holder !== undefined && (obj.holder = message.holder);
+    message.operator !== undefined && (obj.operator = message.operator);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgApprove>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgAuthorizeOperator>, I>>(
     object: I
-  ): MsgApprove {
-    const message = createBaseMsgApprove();
+  ): MsgAuthorizeOperator {
+    const message = createBaseMsgAuthorizeOperator();
     message.contractId = object.contractId ?? "";
-    message.approver = object.approver ?? "";
-    message.proxy = object.proxy ?? "";
+    message.holder = object.holder ?? "";
+    message.operator = object.operator ?? "";
     return message;
   },
 };
 
-function createBaseMsgApproveResponse(): MsgApproveResponse {
+function createBaseMsgAuthorizeOperatorResponse(): MsgAuthorizeOperatorResponse {
   return {};
 }
 
-export const MsgApproveResponse = {
+export const MsgAuthorizeOperatorResponse = {
   encode(
-    _: MsgApproveResponse,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgApproveResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgApproveResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(_: any): MsgApproveResponse {
-    return {};
-  },
-
-  toJSON(_: MsgApproveResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgApproveResponse>, I>>(
-    _: I
-  ): MsgApproveResponse {
-    const message = createBaseMsgApproveResponse();
-    return message;
-  },
-};
-
-function createBaseMsgDisapprove(): MsgDisapprove {
-  return { contractId: "", approver: "", proxy: "" };
-}
-
-export const MsgDisapprove = {
-  encode(
-    message: MsgDisapprove,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.contractId !== "") {
-      writer.uint32(10).string(message.contractId);
-    }
-    if (message.approver !== "") {
-      writer.uint32(18).string(message.approver);
-    }
-    if (message.proxy !== "") {
-      writer.uint32(26).string(message.proxy);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgDisapprove {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgDisapprove();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.contractId = reader.string();
-          break;
-        case 2:
-          message.approver = reader.string();
-          break;
-        case 3:
-          message.proxy = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MsgDisapprove {
-    return {
-      contractId: isSet(object.contractId) ? String(object.contractId) : "",
-      approver: isSet(object.approver) ? String(object.approver) : "",
-      proxy: isSet(object.proxy) ? String(object.proxy) : "",
-    };
-  },
-
-  toJSON(message: MsgDisapprove): unknown {
-    const obj: any = {};
-    message.contractId !== undefined && (obj.contractId = message.contractId);
-    message.approver !== undefined && (obj.approver = message.approver);
-    message.proxy !== undefined && (obj.proxy = message.proxy);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgDisapprove>, I>>(
-    object: I
-  ): MsgDisapprove {
-    const message = createBaseMsgDisapprove();
-    message.contractId = object.contractId ?? "";
-    message.approver = object.approver ?? "";
-    message.proxy = object.proxy ?? "";
-    return message;
-  },
-};
-
-function createBaseMsgDisapproveResponse(): MsgDisapproveResponse {
-  return {};
-}
-
-export const MsgDisapproveResponse = {
-  encode(
-    _: MsgDisapproveResponse,
+    _: MsgAuthorizeOperatorResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     return writer;
@@ -1265,10 +1091,10 @@ export const MsgDisapproveResponse = {
   decode(
     input: _m0.Reader | Uint8Array,
     length?: number
-  ): MsgDisapproveResponse {
+  ): MsgAuthorizeOperatorResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgDisapproveResponse();
+    const message = createBaseMsgAuthorizeOperatorResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1280,25 +1106,144 @@ export const MsgDisapproveResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgDisapproveResponse {
+  fromJSON(_: any): MsgAuthorizeOperatorResponse {
     return {};
   },
 
-  toJSON(_: MsgDisapproveResponse): unknown {
+  toJSON(_: MsgAuthorizeOperatorResponse): unknown {
     const obj: any = {};
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgDisapproveResponse>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgAuthorizeOperatorResponse>, I>>(
     _: I
-  ): MsgDisapproveResponse {
-    const message = createBaseMsgDisapproveResponse();
+  ): MsgAuthorizeOperatorResponse {
+    const message = createBaseMsgAuthorizeOperatorResponse();
+    return message;
+  },
+};
+
+function createBaseMsgRevokeOperator(): MsgRevokeOperator {
+  return { contractId: "", holder: "", operator: "" };
+}
+
+export const MsgRevokeOperator = {
+  encode(
+    message: MsgRevokeOperator,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
+    }
+    if (message.holder !== "") {
+      writer.uint32(18).string(message.holder);
+    }
+    if (message.operator !== "") {
+      writer.uint32(26).string(message.operator);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgRevokeOperator {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgRevokeOperator();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.contractId = reader.string();
+          break;
+        case 2:
+          message.holder = reader.string();
+          break;
+        case 3:
+          message.operator = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgRevokeOperator {
+    return {
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      holder: isSet(object.holder) ? String(object.holder) : "",
+      operator: isSet(object.operator) ? String(object.operator) : "",
+    };
+  },
+
+  toJSON(message: MsgRevokeOperator): unknown {
+    const obj: any = {};
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.holder !== undefined && (obj.holder = message.holder);
+    message.operator !== undefined && (obj.operator = message.operator);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgRevokeOperator>, I>>(
+    object: I
+  ): MsgRevokeOperator {
+    const message = createBaseMsgRevokeOperator();
+    message.contractId = object.contractId ?? "";
+    message.holder = object.holder ?? "";
+    message.operator = object.operator ?? "";
+    return message;
+  },
+};
+
+function createBaseMsgRevokeOperatorResponse(): MsgRevokeOperatorResponse {
+  return {};
+}
+
+export const MsgRevokeOperatorResponse = {
+  encode(
+    _: MsgRevokeOperatorResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): MsgRevokeOperatorResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgRevokeOperatorResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgRevokeOperatorResponse {
+    return {};
+  },
+
+  toJSON(_: MsgRevokeOperatorResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgRevokeOperatorResponse>, I>>(
+    _: I
+  ): MsgRevokeOperatorResponse {
+    const message = createBaseMsgRevokeOperatorResponse();
     return message;
   },
 };
 
 function createBaseMsgCreateContract(): MsgCreateContract {
-  return { owner: "", name: "", baseImgUri: "", meta: "" };
+  return { owner: "", name: "", uri: "", meta: "" };
 }
 
 export const MsgCreateContract = {
@@ -1312,8 +1257,8 @@ export const MsgCreateContract = {
     if (message.name !== "") {
       writer.uint32(18).string(message.name);
     }
-    if (message.baseImgUri !== "") {
-      writer.uint32(26).string(message.baseImgUri);
+    if (message.uri !== "") {
+      writer.uint32(26).string(message.uri);
     }
     if (message.meta !== "") {
       writer.uint32(34).string(message.meta);
@@ -1335,7 +1280,7 @@ export const MsgCreateContract = {
           message.name = reader.string();
           break;
         case 3:
-          message.baseImgUri = reader.string();
+          message.uri = reader.string();
           break;
         case 4:
           message.meta = reader.string();
@@ -1352,7 +1297,7 @@ export const MsgCreateContract = {
     return {
       owner: isSet(object.owner) ? String(object.owner) : "",
       name: isSet(object.name) ? String(object.name) : "",
-      baseImgUri: isSet(object.baseImgUri) ? String(object.baseImgUri) : "",
+      uri: isSet(object.uri) ? String(object.uri) : "",
       meta: isSet(object.meta) ? String(object.meta) : "",
     };
   },
@@ -1361,7 +1306,7 @@ export const MsgCreateContract = {
     const obj: any = {};
     message.owner !== undefined && (obj.owner = message.owner);
     message.name !== undefined && (obj.name = message.name);
-    message.baseImgUri !== undefined && (obj.baseImgUri = message.baseImgUri);
+    message.uri !== undefined && (obj.uri = message.uri);
     message.meta !== undefined && (obj.meta = message.meta);
     return obj;
   },
@@ -1372,14 +1317,14 @@ export const MsgCreateContract = {
     const message = createBaseMsgCreateContract();
     message.owner = object.owner ?? "";
     message.name = object.name ?? "";
-    message.baseImgUri = object.baseImgUri ?? "";
+    message.uri = object.uri ?? "";
     message.meta = object.meta ?? "";
     return message;
   },
 };
 
 function createBaseMsgCreateContractResponse(): MsgCreateContractResponse {
-  return { id: "" };
+  return { contractId: "" };
 }
 
 export const MsgCreateContractResponse = {
@@ -1387,8 +1332,8 @@ export const MsgCreateContractResponse = {
     message: MsgCreateContractResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
     }
     return writer;
   },
@@ -1404,7 +1349,7 @@ export const MsgCreateContractResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.id = reader.string();
+          message.contractId = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -1416,13 +1361,13 @@ export const MsgCreateContractResponse = {
 
   fromJSON(object: any): MsgCreateContractResponse {
     return {
-      id: isSet(object.id) ? String(object.id) : "",
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
     };
   },
 
   toJSON(message: MsgCreateContractResponse): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
+    message.contractId !== undefined && (obj.contractId = message.contractId);
     return obj;
   },
 
@@ -1430,7 +1375,7 @@ export const MsgCreateContractResponse = {
     object: I
   ): MsgCreateContractResponse {
     const message = createBaseMsgCreateContractResponse();
-    message.id = object.id ?? "";
+    message.contractId = object.contractId ?? "";
     return message;
   },
 };
@@ -1563,7 +1508,7 @@ export const MsgIssueFT = {
 };
 
 function createBaseMsgIssueFTResponse(): MsgIssueFTResponse {
-  return { id: "" };
+  return { tokenId: "" };
 }
 
 export const MsgIssueFTResponse = {
@@ -1571,8 +1516,8 @@ export const MsgIssueFTResponse = {
     message: MsgIssueFTResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.tokenId !== "") {
+      writer.uint32(10).string(message.tokenId);
     }
     return writer;
   },
@@ -1585,7 +1530,7 @@ export const MsgIssueFTResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.id = reader.string();
+          message.tokenId = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -1597,13 +1542,13 @@ export const MsgIssueFTResponse = {
 
   fromJSON(object: any): MsgIssueFTResponse {
     return {
-      id: isSet(object.id) ? String(object.id) : "",
+      tokenId: isSet(object.tokenId) ? String(object.tokenId) : "",
     };
   },
 
   toJSON(message: MsgIssueFTResponse): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
+    message.tokenId !== undefined && (obj.tokenId = message.tokenId);
     return obj;
   },
 
@@ -1611,7 +1556,7 @@ export const MsgIssueFTResponse = {
     object: I
   ): MsgIssueFTResponse {
     const message = createBaseMsgIssueFTResponse();
-    message.id = object.id ?? "";
+    message.tokenId = object.tokenId ?? "";
     return message;
   },
 };
@@ -1698,7 +1643,7 @@ export const MsgIssueNFT = {
 };
 
 function createBaseMsgIssueNFTResponse(): MsgIssueNFTResponse {
-  return { id: "" };
+  return { tokenType: "" };
 }
 
 export const MsgIssueNFTResponse = {
@@ -1706,8 +1651,8 @@ export const MsgIssueNFTResponse = {
     message: MsgIssueNFTResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.tokenType !== "") {
+      writer.uint32(10).string(message.tokenType);
     }
     return writer;
   },
@@ -1720,7 +1665,7 @@ export const MsgIssueNFTResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.id = reader.string();
+          message.tokenType = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -1732,13 +1677,13 @@ export const MsgIssueNFTResponse = {
 
   fromJSON(object: any): MsgIssueNFTResponse {
     return {
-      id: isSet(object.id) ? String(object.id) : "",
+      tokenType: isSet(object.tokenType) ? String(object.tokenType) : "",
     };
   },
 
   toJSON(message: MsgIssueNFTResponse): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
+    message.tokenType !== undefined && (obj.tokenType = message.tokenType);
     return obj;
   },
 
@@ -1746,7 +1691,7 @@ export const MsgIssueNFTResponse = {
     object: I
   ): MsgIssueNFTResponse {
     const message = createBaseMsgIssueNFTResponse();
-    message.id = object.id ?? "";
+    message.tokenType = object.tokenType ?? "";
     return message;
   },
 };
@@ -1973,7 +1918,7 @@ export const MsgMintNFT = {
 };
 
 function createBaseMsgMintNFTResponse(): MsgMintNFTResponse {
-  return { ids: [] };
+  return { tokenIds: [] };
 }
 
 export const MsgMintNFTResponse = {
@@ -1981,7 +1926,7 @@ export const MsgMintNFTResponse = {
     message: MsgMintNFTResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    for (const v of message.ids) {
+    for (const v of message.tokenIds) {
       writer.uint32(10).string(v!);
     }
     return writer;
@@ -1995,7 +1940,7 @@ export const MsgMintNFTResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.ids.push(reader.string());
+          message.tokenIds.push(reader.string());
           break;
         default:
           reader.skipType(tag & 7);
@@ -2007,18 +1952,18 @@ export const MsgMintNFTResponse = {
 
   fromJSON(object: any): MsgMintNFTResponse {
     return {
-      ids: Array.isArray(object?.ids)
-        ? object.ids.map((e: any) => String(e))
+      tokenIds: Array.isArray(object?.tokenIds)
+        ? object.tokenIds.map((e: any) => String(e))
         : [],
     };
   },
 
   toJSON(message: MsgMintNFTResponse): unknown {
     const obj: any = {};
-    if (message.ids) {
-      obj.ids = message.ids.map((e) => e);
+    if (message.tokenIds) {
+      obj.tokenIds = message.tokenIds.map((e) => e);
     } else {
-      obj.ids = [];
+      obj.tokenIds = [];
     }
     return obj;
   },
@@ -2027,7 +1972,7 @@ export const MsgMintNFTResponse = {
     object: I
   ): MsgMintNFTResponse {
     const message = createBaseMsgMintNFTResponse();
-    message.ids = object.ids?.map((e) => e) || [];
+    message.tokenIds = object.tokenIds?.map((e) => e) || [];
     return message;
   },
 };
@@ -2226,20 +2171,20 @@ export const MsgBurnFTResponse = {
   },
 };
 
-function createBaseMsgBurnFTFrom(): MsgBurnFTFrom {
-  return { contractId: "", proxy: "", from: "", amount: [] };
+function createBaseMsgOperatorBurnFT(): MsgOperatorBurnFT {
+  return { contractId: "", operator: "", from: "", amount: [] };
 }
 
-export const MsgBurnFTFrom = {
+export const MsgOperatorBurnFT = {
   encode(
-    message: MsgBurnFTFrom,
+    message: MsgOperatorBurnFT,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.contractId !== "") {
       writer.uint32(10).string(message.contractId);
     }
-    if (message.proxy !== "") {
-      writer.uint32(18).string(message.proxy);
+    if (message.operator !== "") {
+      writer.uint32(18).string(message.operator);
     }
     if (message.from !== "") {
       writer.uint32(26).string(message.from);
@@ -2250,10 +2195,10 @@ export const MsgBurnFTFrom = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgBurnFTFrom {
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgOperatorBurnFT {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgBurnFTFrom();
+    const message = createBaseMsgOperatorBurnFT();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -2261,7 +2206,7 @@ export const MsgBurnFTFrom = {
           message.contractId = reader.string();
           break;
         case 2:
-          message.proxy = reader.string();
+          message.operator = reader.string();
           break;
         case 3:
           message.from = reader.string();
@@ -2277,10 +2222,10 @@ export const MsgBurnFTFrom = {
     return message;
   },
 
-  fromJSON(object: any): MsgBurnFTFrom {
+  fromJSON(object: any): MsgOperatorBurnFT {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
-      proxy: isSet(object.proxy) ? String(object.proxy) : "",
+      operator: isSet(object.operator) ? String(object.operator) : "",
       from: isSet(object.from) ? String(object.from) : "",
       amount: Array.isArray(object?.amount)
         ? object.amount.map((e: any) => Coin.fromJSON(e))
@@ -2288,10 +2233,10 @@ export const MsgBurnFTFrom = {
     };
   },
 
-  toJSON(message: MsgBurnFTFrom): unknown {
+  toJSON(message: MsgOperatorBurnFT): unknown {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
-    message.proxy !== undefined && (obj.proxy = message.proxy);
+    message.operator !== undefined && (obj.operator = message.operator);
     message.from !== undefined && (obj.from = message.from);
     if (message.amount) {
       obj.amount = message.amount.map((e) => (e ? Coin.toJSON(e) : undefined));
@@ -2301,25 +2246,25 @@ export const MsgBurnFTFrom = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgBurnFTFrom>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgOperatorBurnFT>, I>>(
     object: I
-  ): MsgBurnFTFrom {
-    const message = createBaseMsgBurnFTFrom();
+  ): MsgOperatorBurnFT {
+    const message = createBaseMsgOperatorBurnFT();
     message.contractId = object.contractId ?? "";
-    message.proxy = object.proxy ?? "";
+    message.operator = object.operator ?? "";
     message.from = object.from ?? "";
     message.amount = object.amount?.map((e) => Coin.fromPartial(e)) || [];
     return message;
   },
 };
 
-function createBaseMsgBurnFTFromResponse(): MsgBurnFTFromResponse {
+function createBaseMsgOperatorBurnFTResponse(): MsgOperatorBurnFTResponse {
   return {};
 }
 
-export const MsgBurnFTFromResponse = {
+export const MsgOperatorBurnFTResponse = {
   encode(
-    _: MsgBurnFTFromResponse,
+    _: MsgOperatorBurnFTResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     return writer;
@@ -2328,10 +2273,10 @@ export const MsgBurnFTFromResponse = {
   decode(
     input: _m0.Reader | Uint8Array,
     length?: number
-  ): MsgBurnFTFromResponse {
+  ): MsgOperatorBurnFTResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgBurnFTFromResponse();
+    const message = createBaseMsgOperatorBurnFTResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -2343,19 +2288,19 @@ export const MsgBurnFTFromResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgBurnFTFromResponse {
+  fromJSON(_: any): MsgOperatorBurnFTResponse {
     return {};
   },
 
-  toJSON(_: MsgBurnFTFromResponse): unknown {
+  toJSON(_: MsgOperatorBurnFTResponse): unknown {
     const obj: any = {};
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgBurnFTFromResponse>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgOperatorBurnFTResponse>, I>>(
     _: I
-  ): MsgBurnFTFromResponse {
-    const message = createBaseMsgBurnFTFromResponse();
+  ): MsgOperatorBurnFTResponse {
+    const message = createBaseMsgOperatorBurnFTResponse();
     return message;
   },
 };
@@ -2482,20 +2427,20 @@ export const MsgBurnNFTResponse = {
   },
 };
 
-function createBaseMsgBurnNFTFrom(): MsgBurnNFTFrom {
-  return { contractId: "", proxy: "", from: "", tokenIds: [] };
+function createBaseMsgOperatorBurnNFT(): MsgOperatorBurnNFT {
+  return { contractId: "", operator: "", from: "", tokenIds: [] };
 }
 
-export const MsgBurnNFTFrom = {
+export const MsgOperatorBurnNFT = {
   encode(
-    message: MsgBurnNFTFrom,
+    message: MsgOperatorBurnNFT,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.contractId !== "") {
       writer.uint32(10).string(message.contractId);
     }
-    if (message.proxy !== "") {
-      writer.uint32(18).string(message.proxy);
+    if (message.operator !== "") {
+      writer.uint32(18).string(message.operator);
     }
     if (message.from !== "") {
       writer.uint32(26).string(message.from);
@@ -2506,10 +2451,10 @@ export const MsgBurnNFTFrom = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgBurnNFTFrom {
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgOperatorBurnNFT {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgBurnNFTFrom();
+    const message = createBaseMsgOperatorBurnNFT();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -2517,7 +2462,7 @@ export const MsgBurnNFTFrom = {
           message.contractId = reader.string();
           break;
         case 2:
-          message.proxy = reader.string();
+          message.operator = reader.string();
           break;
         case 3:
           message.from = reader.string();
@@ -2533,10 +2478,10 @@ export const MsgBurnNFTFrom = {
     return message;
   },
 
-  fromJSON(object: any): MsgBurnNFTFrom {
+  fromJSON(object: any): MsgOperatorBurnNFT {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
-      proxy: isSet(object.proxy) ? String(object.proxy) : "",
+      operator: isSet(object.operator) ? String(object.operator) : "",
       from: isSet(object.from) ? String(object.from) : "",
       tokenIds: Array.isArray(object?.tokenIds)
         ? object.tokenIds.map((e: any) => String(e))
@@ -2544,10 +2489,10 @@ export const MsgBurnNFTFrom = {
     };
   },
 
-  toJSON(message: MsgBurnNFTFrom): unknown {
+  toJSON(message: MsgOperatorBurnNFT): unknown {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
-    message.proxy !== undefined && (obj.proxy = message.proxy);
+    message.operator !== undefined && (obj.operator = message.operator);
     message.from !== undefined && (obj.from = message.from);
     if (message.tokenIds) {
       obj.tokenIds = message.tokenIds.map((e) => e);
@@ -2557,25 +2502,25 @@ export const MsgBurnNFTFrom = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgBurnNFTFrom>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgOperatorBurnNFT>, I>>(
     object: I
-  ): MsgBurnNFTFrom {
-    const message = createBaseMsgBurnNFTFrom();
+  ): MsgOperatorBurnNFT {
+    const message = createBaseMsgOperatorBurnNFT();
     message.contractId = object.contractId ?? "";
-    message.proxy = object.proxy ?? "";
+    message.operator = object.operator ?? "";
     message.from = object.from ?? "";
     message.tokenIds = object.tokenIds?.map((e) => e) || [];
     return message;
   },
 };
 
-function createBaseMsgBurnNFTFromResponse(): MsgBurnNFTFromResponse {
+function createBaseMsgOperatorBurnNFTResponse(): MsgOperatorBurnNFTResponse {
   return {};
 }
 
-export const MsgBurnNFTFromResponse = {
+export const MsgOperatorBurnNFTResponse = {
   encode(
-    _: MsgBurnNFTFromResponse,
+    _: MsgOperatorBurnNFTResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     return writer;
@@ -2584,10 +2529,10 @@ export const MsgBurnNFTFromResponse = {
   decode(
     input: _m0.Reader | Uint8Array,
     length?: number
-  ): MsgBurnNFTFromResponse {
+  ): MsgOperatorBurnNFTResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgBurnNFTFromResponse();
+    const message = createBaseMsgOperatorBurnNFTResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -2599,19 +2544,19 @@ export const MsgBurnNFTFromResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgBurnNFTFromResponse {
+  fromJSON(_: any): MsgOperatorBurnNFTResponse {
     return {};
   },
 
-  toJSON(_: MsgBurnNFTFromResponse): unknown {
+  toJSON(_: MsgOperatorBurnNFTResponse): unknown {
     const obj: any = {};
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgBurnNFTFromResponse>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgOperatorBurnNFTResponse>, I>>(
     _: I
-  ): MsgBurnNFTFromResponse {
-    const message = createBaseMsgBurnNFTFromResponse();
+  ): MsgOperatorBurnNFTResponse {
+    const message = createBaseMsgOperatorBurnNFTResponse();
     return message;
   },
 };
@@ -2644,7 +2589,7 @@ export const MsgModify = {
       writer.uint32(34).string(message.tokenIndex);
     }
     for (const v of message.changes) {
-      Change.encode(v!, writer.uint32(42).fork()).ldelim();
+      Attribute.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -2669,7 +2614,7 @@ export const MsgModify = {
           message.tokenIndex = reader.string();
           break;
         case 5:
-          message.changes.push(Change.decode(reader, reader.uint32()));
+          message.changes.push(Attribute.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -2686,7 +2631,7 @@ export const MsgModify = {
       tokenType: isSet(object.tokenType) ? String(object.tokenType) : "",
       tokenIndex: isSet(object.tokenIndex) ? String(object.tokenIndex) : "",
       changes: Array.isArray(object?.changes)
-        ? object.changes.map((e: any) => Change.fromJSON(e))
+        ? object.changes.map((e: any) => Attribute.fromJSON(e))
         : [],
     };
   },
@@ -2699,7 +2644,7 @@ export const MsgModify = {
     message.tokenIndex !== undefined && (obj.tokenIndex = message.tokenIndex);
     if (message.changes) {
       obj.changes = message.changes.map((e) =>
-        e ? Change.toJSON(e) : undefined
+        e ? Attribute.toJSON(e) : undefined
       );
     } else {
       obj.changes = [];
@@ -2715,7 +2660,8 @@ export const MsgModify = {
     message.owner = object.owner ?? "";
     message.tokenType = object.tokenType ?? "";
     message.tokenIndex = object.tokenIndex ?? "";
-    message.changes = object.changes?.map((e) => Change.fromPartial(e)) || [];
+    message.changes =
+      object.changes?.map((e) => Attribute.fromPartial(e)) || [];
     return message;
   },
 };
@@ -3252,20 +3198,20 @@ export const MsgDetachResponse = {
   },
 };
 
-function createBaseMsgAttachFrom(): MsgAttachFrom {
-  return { contractId: "", proxy: "", from: "", tokenId: "", toTokenId: "" };
+function createBaseMsgOperatorAttach(): MsgOperatorAttach {
+  return { contractId: "", operator: "", from: "", tokenId: "", toTokenId: "" };
 }
 
-export const MsgAttachFrom = {
+export const MsgOperatorAttach = {
   encode(
-    message: MsgAttachFrom,
+    message: MsgOperatorAttach,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.contractId !== "") {
       writer.uint32(10).string(message.contractId);
     }
-    if (message.proxy !== "") {
-      writer.uint32(18).string(message.proxy);
+    if (message.operator !== "") {
+      writer.uint32(18).string(message.operator);
     }
     if (message.from !== "") {
       writer.uint32(26).string(message.from);
@@ -3279,10 +3225,10 @@ export const MsgAttachFrom = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgAttachFrom {
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgOperatorAttach {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgAttachFrom();
+    const message = createBaseMsgOperatorAttach();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -3290,7 +3236,7 @@ export const MsgAttachFrom = {
           message.contractId = reader.string();
           break;
         case 2:
-          message.proxy = reader.string();
+          message.operator = reader.string();
           break;
         case 3:
           message.from = reader.string();
@@ -3309,32 +3255,32 @@ export const MsgAttachFrom = {
     return message;
   },
 
-  fromJSON(object: any): MsgAttachFrom {
+  fromJSON(object: any): MsgOperatorAttach {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
-      proxy: isSet(object.proxy) ? String(object.proxy) : "",
+      operator: isSet(object.operator) ? String(object.operator) : "",
       from: isSet(object.from) ? String(object.from) : "",
       tokenId: isSet(object.tokenId) ? String(object.tokenId) : "",
       toTokenId: isSet(object.toTokenId) ? String(object.toTokenId) : "",
     };
   },
 
-  toJSON(message: MsgAttachFrom): unknown {
+  toJSON(message: MsgOperatorAttach): unknown {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
-    message.proxy !== undefined && (obj.proxy = message.proxy);
+    message.operator !== undefined && (obj.operator = message.operator);
     message.from !== undefined && (obj.from = message.from);
     message.tokenId !== undefined && (obj.tokenId = message.tokenId);
     message.toTokenId !== undefined && (obj.toTokenId = message.toTokenId);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgAttachFrom>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgOperatorAttach>, I>>(
     object: I
-  ): MsgAttachFrom {
-    const message = createBaseMsgAttachFrom();
+  ): MsgOperatorAttach {
+    const message = createBaseMsgOperatorAttach();
     message.contractId = object.contractId ?? "";
-    message.proxy = object.proxy ?? "";
+    message.operator = object.operator ?? "";
     message.from = object.from ?? "";
     message.tokenId = object.tokenId ?? "";
     message.toTokenId = object.toTokenId ?? "";
@@ -3342,13 +3288,13 @@ export const MsgAttachFrom = {
   },
 };
 
-function createBaseMsgAttachFromResponse(): MsgAttachFromResponse {
+function createBaseMsgOperatorAttachResponse(): MsgOperatorAttachResponse {
   return {};
 }
 
-export const MsgAttachFromResponse = {
+export const MsgOperatorAttachResponse = {
   encode(
-    _: MsgAttachFromResponse,
+    _: MsgOperatorAttachResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     return writer;
@@ -3357,10 +3303,10 @@ export const MsgAttachFromResponse = {
   decode(
     input: _m0.Reader | Uint8Array,
     length?: number
-  ): MsgAttachFromResponse {
+  ): MsgOperatorAttachResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgAttachFromResponse();
+    const message = createBaseMsgOperatorAttachResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -3372,37 +3318,37 @@ export const MsgAttachFromResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgAttachFromResponse {
+  fromJSON(_: any): MsgOperatorAttachResponse {
     return {};
   },
 
-  toJSON(_: MsgAttachFromResponse): unknown {
+  toJSON(_: MsgOperatorAttachResponse): unknown {
     const obj: any = {};
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgAttachFromResponse>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgOperatorAttachResponse>, I>>(
     _: I
-  ): MsgAttachFromResponse {
-    const message = createBaseMsgAttachFromResponse();
+  ): MsgOperatorAttachResponse {
+    const message = createBaseMsgOperatorAttachResponse();
     return message;
   },
 };
 
-function createBaseMsgDetachFrom(): MsgDetachFrom {
-  return { contractId: "", proxy: "", from: "", tokenId: "" };
+function createBaseMsgOperatorDetach(): MsgOperatorDetach {
+  return { contractId: "", operator: "", from: "", tokenId: "" };
 }
 
-export const MsgDetachFrom = {
+export const MsgOperatorDetach = {
   encode(
-    message: MsgDetachFrom,
+    message: MsgOperatorDetach,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.contractId !== "") {
       writer.uint32(10).string(message.contractId);
     }
-    if (message.proxy !== "") {
-      writer.uint32(18).string(message.proxy);
+    if (message.operator !== "") {
+      writer.uint32(18).string(message.operator);
     }
     if (message.from !== "") {
       writer.uint32(26).string(message.from);
@@ -3413,10 +3359,10 @@ export const MsgDetachFrom = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgDetachFrom {
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgOperatorDetach {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgDetachFrom();
+    const message = createBaseMsgOperatorDetach();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -3424,7 +3370,7 @@ export const MsgDetachFrom = {
           message.contractId = reader.string();
           break;
         case 2:
-          message.proxy = reader.string();
+          message.operator = reader.string();
           break;
         case 3:
           message.from = reader.string();
@@ -3440,43 +3386,43 @@ export const MsgDetachFrom = {
     return message;
   },
 
-  fromJSON(object: any): MsgDetachFrom {
+  fromJSON(object: any): MsgOperatorDetach {
     return {
       contractId: isSet(object.contractId) ? String(object.contractId) : "",
-      proxy: isSet(object.proxy) ? String(object.proxy) : "",
+      operator: isSet(object.operator) ? String(object.operator) : "",
       from: isSet(object.from) ? String(object.from) : "",
       tokenId: isSet(object.tokenId) ? String(object.tokenId) : "",
     };
   },
 
-  toJSON(message: MsgDetachFrom): unknown {
+  toJSON(message: MsgOperatorDetach): unknown {
     const obj: any = {};
     message.contractId !== undefined && (obj.contractId = message.contractId);
-    message.proxy !== undefined && (obj.proxy = message.proxy);
+    message.operator !== undefined && (obj.operator = message.operator);
     message.from !== undefined && (obj.from = message.from);
     message.tokenId !== undefined && (obj.tokenId = message.tokenId);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgDetachFrom>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgOperatorDetach>, I>>(
     object: I
-  ): MsgDetachFrom {
-    const message = createBaseMsgDetachFrom();
+  ): MsgOperatorDetach {
+    const message = createBaseMsgOperatorDetach();
     message.contractId = object.contractId ?? "";
-    message.proxy = object.proxy ?? "";
+    message.operator = object.operator ?? "";
     message.from = object.from ?? "";
     message.tokenId = object.tokenId ?? "";
     return message;
   },
 };
 
-function createBaseMsgDetachFromResponse(): MsgDetachFromResponse {
+function createBaseMsgOperatorDetachResponse(): MsgOperatorDetachResponse {
   return {};
 }
 
-export const MsgDetachFromResponse = {
+export const MsgOperatorDetachResponse = {
   encode(
-    _: MsgDetachFromResponse,
+    _: MsgOperatorDetachResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     return writer;
@@ -3485,10 +3431,10 @@ export const MsgDetachFromResponse = {
   decode(
     input: _m0.Reader | Uint8Array,
     length?: number
-  ): MsgDetachFromResponse {
+  ): MsgOperatorDetachResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgDetachFromResponse();
+    const message = createBaseMsgOperatorDetachResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -3500,19 +3446,19 @@ export const MsgDetachFromResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgDetachFromResponse {
+  fromJSON(_: any): MsgOperatorDetachResponse {
     return {};
   },
 
-  toJSON(_: MsgDetachFromResponse): unknown {
+  toJSON(_: MsgOperatorDetachResponse): unknown {
     const obj: any = {};
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgDetachFromResponse>, I>>(
+  fromPartial<I extends Exact<DeepPartial<MsgOperatorDetachResponse>, I>>(
     _: I
-  ): MsgDetachFromResponse {
-    const message = createBaseMsgDetachFromResponse();
+  ): MsgOperatorDetachResponse {
+    const message = createBaseMsgOperatorDetachResponse();
     return message;
   },
 };
@@ -3520,78 +3466,57 @@ export const MsgDetachFromResponse = {
 /** Msg defines the collection Msg service. */
 export interface Msg {
   /**
-   * TransferFT defines a method to send fungible tokens from one account to another account.
+   * SendFT defines a method to send fungible tokens from one account to another account.
    * Fires:
    * - EventSent
    * - transfer_ft (deprecated, not typed)
-   * Throws:
-   * - ErrInvalidRequest:
-   *   - the balance of `from` does not have enough tokens to spend.
    */
-  TransferFT(request: MsgTransferFT): Promise<MsgTransferFTResponse>;
+  SendFT(request: MsgSendFT): Promise<MsgSendFTResponse>;
   /**
-   * TransferFTFrom defines a method to send fungible tokens from one account to another account by the proxy.
+   * OperatorSendFT defines a method to send fungible tokens from one account to another account by the operator.
    * Fires:
    * - EventSent
    * - transfer_ft_from (deprecated, not typed)
-   * Throws:
-   * - ErrUnauthorized:
-   *   - the approver has not authorized the proxy.
-   * - ErrInvalidRequest:
-   *   - the balance of `from` does not have enough tokens to spend.
    */
-  TransferFTFrom(
-    request: MsgTransferFTFrom
-  ): Promise<MsgTransferFTFromResponse>;
+  OperatorSendFT(
+    request: MsgOperatorSendFT
+  ): Promise<MsgOperatorSendFTResponse>;
   /**
-   * TransferNFT defines a method to send non-fungible tokens from one account to another account.
+   * SendNFT defines a method to send non-fungible tokens from one account to another account.
    * Fires:
    * - EventSent
    * - transfer_nft (deprecated, not typed)
    * - operation_transfer_nft (deprecated, not typed)
-   * Throws:
-   * - ErrInvalidRequest:
-   *   - the balance of `from` does not have enough tokens to spend.
    */
-  TransferNFT(request: MsgTransferNFT): Promise<MsgTransferNFTResponse>;
+  SendNFT(request: MsgSendNFT): Promise<MsgSendNFTResponse>;
   /**
-   * TransferNFTFrom defines a method to send non-fungible tokens from one account to another account by the proxy.
+   * OperatorSendNFT defines a method to send non-fungible tokens from one account to another account by the operator.
    * Fires:
    * - EventSent
    * - transfer_nft_from (deprecated, not typed)
    * - operation_transfer_nft (deprecated, not typed)
-   * Throws:
-   * - ErrUnauthorized:
-   *   - the approver has not authorized the proxy.
-   * - ErrInvalidRequest:
-   *   - the balance of `from` does not have enough tokens to spend.
    */
-  TransferNFTFrom(
-    request: MsgTransferNFTFrom
-  ): Promise<MsgTransferNFTFromResponse>;
+  OperatorSendNFT(
+    request: MsgOperatorSendNFT
+  ): Promise<MsgOperatorSendNFTResponse>;
   /**
-   * Approve allows one to send tokens on behalf of the approver.
+   * AuthorizeOperator allows one to send tokens on behalf of the holder.
    * Fires:
    * - EventAuthorizedOperator
    * - approve_collection (deprecated, not typed)
-   * Throws:
-   * - ErrNotFound:
-   *   - there is no contract of `contract_id`.
-   * - ErrInvalidRequest:
-   *   - `approver` has already authorized `proxy`.
    */
-  Approve(request: MsgApprove): Promise<MsgApproveResponse>;
+  AuthorizeOperator(
+    request: MsgAuthorizeOperator
+  ): Promise<MsgAuthorizeOperatorResponse>;
   /**
-   * Disapprove revokes the authorization of the proxy to send the approver's token.
+   * RevokeOperator revokes the authorization of the operator to send the holder's token.
    * Fires:
    * - EventRevokedOperator
    * - disapprove_collection (deprecated, not typed)
-   * Throws:
-   * - ErrNotFound:
-   *   - there is no contract of `contract_id`.
-   *   - there is no authorization by `approver` to `proxy`.
    */
-  Disapprove(request: MsgDisapprove): Promise<MsgDisapproveResponse>;
+  RevokeOperator(
+    request: MsgRevokeOperator
+  ): Promise<MsgRevokeOperatorResponse>;
   /**
    * CreateContract defines a method to create a contract for collection.
    * it grants `mint`, `burn`, `modify` and `issue` permissions on the contract to its creator.
@@ -3624,9 +3549,6 @@ export interface Msg {
    * Fires:
    * - EventMintedFT
    * - mint_ft (deprecated, not typed)
-   * Throws:
-   * - ErrUnauthorized
-   *   - `from` does not have `mint` permission.
    */
   MintFT(request: MsgMintFT): Promise<MsgMintFTResponse>;
   /**
@@ -3634,9 +3556,6 @@ export interface Msg {
    * Fires:
    * - EventMintedNFT
    * - mint_nft (deprecated, not typed)
-   * Throws:
-   * - ErrUnauthorized
-   *   - `from` does not have `mint` permission.
    */
   MintNFT(request: MsgMintNFT): Promise<MsgMintNFTResponse>;
   /**
@@ -3646,28 +3565,19 @@ export interface Msg {
    * - burn_ft (deprecated, not typed)
    * - burn_nft (deprecated, not typed)
    * - operation_burn_nft (deprecated, not typed)
-   * Throws:
-   * - ErrUnauthorized
-   *   - `from` does not have `burn` permission.
-   * - ErrInvalidRequest:
-   *   - the balance of `from` does not have enough tokens to burn.
    */
   BurnFT(request: MsgBurnFT): Promise<MsgBurnFTResponse>;
   /**
-   * BurnFTFrom defines a method to burn fungible tokens of the approver by the proxy.
+   * OperatorBurnFT defines a method to burn fungible tokens of the holder by the operator.
    * Fires:
    * - EventBurned
    * - burn_ft_from (deprecated, not typed)
    * - burn_nft_from (deprecated, not typed)
    * - operation_burn_nft (deprecated, not typed)
-   * Throws:
-   * - ErrUnauthorized
-   *   - `proxy` does not have `burn` permission.
-   *   - the approver has not authorized `proxy`.
-   * - ErrInvalidRequest:
-   *   - the balance of `from` does not have enough tokens to burn.
    */
-  BurnFTFrom(request: MsgBurnFTFrom): Promise<MsgBurnFTFromResponse>;
+  OperatorBurnFT(
+    request: MsgOperatorBurnFT
+  ): Promise<MsgOperatorBurnFTResponse>;
   /**
    * BurnNFT defines a method to burn non-fungible tokens.
    * Fires:
@@ -3675,28 +3585,19 @@ export interface Msg {
    * - burn_ft (deprecated, not typed)
    * - burn_nft (deprecated, not typed)
    * - operation_burn_nft (deprecated, not typed)
-   * Throws:
-   * - ErrUnauthorized
-   *   - `from` does not have `burn` permission.
-   * - ErrInvalidRequest:
-   *   - the balance of `from` does not have enough tokens to burn.
    */
   BurnNFT(request: MsgBurnNFT): Promise<MsgBurnNFTResponse>;
   /**
-   * BurnNFTFrom defines a method to burn non-fungible tokens of the approver by the proxy.
+   * OperatorBurnNFT defines a method to burn non-fungible tokens of the holder by the operator.
    * Fires:
    * - EventBurned
    * - burn_ft_from (deprecated, not typed)
    * - burn_nft_from (deprecated, not typed)
    * - operation_burn_nft (deprecated, not typed)
-   * Throws:
-   * - ErrUnauthorized
-   *   - `proxy` does not have `burn` permission.
-   *   - the approver has not authorized `proxy`.
-   * - ErrInvalidRequest:
-   *   - the balance of `from` does not have enough tokens to burn.
    */
-  BurnNFTFrom(request: MsgBurnNFTFrom): Promise<MsgBurnNFTFromResponse>;
+  OperatorBurnNFT(
+    request: MsgOperatorBurnNFT
+  ): Promise<MsgOperatorBurnNFTResponse>;
   /**
    * Modify defines a method to modify metadata.
    * Fires:
@@ -3706,13 +3607,6 @@ export interface Msg {
    * - modify_token_type (deprecated, not typed)
    * - modify_token (deprecated, not typed)
    * - EventModifiedNFT
-   * Throws:
-   * - ErrUnauthorized
-   *   - the proxy does not have `modify` permission.
-   * - ErrNotFound
-   *   - there is no contract of `contract_id`.
-   *   - there is no token type of `token_type`.
-   *   - there is no token of `token_id`.
    */
   Modify(request: MsgModify): Promise<MsgModifyResponse>;
   /**
@@ -3720,11 +3614,6 @@ export interface Msg {
    * Fires:
    * - EventGranted
    * - grant_perm (deprecated, not typed)
-   * Throws:
-   * - ErrUnauthorized
-   *   - `granter` does not have `permission`.
-   * - ErrInvalidRequest
-   *   - `grantee` already has `permission`.
    */
   GrantPermission(
     request: MsgGrantPermission
@@ -3734,9 +3623,6 @@ export interface Msg {
    * Fires:
    * - EventRenounced
    * - revoke_perm (deprecated, not typed)
-   * Throws:
-   * - ErrUnauthorized
-   *   - `grantee` does not have `permission`.
    */
   RevokePermission(
     request: MsgRevokePermission
@@ -3747,13 +3633,6 @@ export interface Msg {
    * - EventAttach
    * - attach (deprecated, not typed)
    * - operation_root_changed (deprecated, not typed)
-   * Throws:
-   * - ErrInvalidRequest
-   *   - `owner` does not owns `id`.
-   *   - `owner` does not owns `to`.
-   *   - `token_id` is not root.
-   *   - `token_id` is an ancestor of `to_token_id`, which creates a cycle as a result.
-   *   - depth of `to_token_id` exceeds an app-specific limit.
    */
   Attach(request: MsgAttach): Promise<MsgAttachResponse>;
   /**
@@ -3762,139 +3641,126 @@ export interface Msg {
    * - EventDetach
    * - detach (deprecated, not typed)
    * - operation_root_changed (deprecated, not typed)
-   * Throws:
-   * - ErrInvalidRequest
-   *   - `owner` does not owns `token_id`.
    */
   Detach(request: MsgDetach): Promise<MsgDetachResponse>;
   /**
-   * AttachFrom defines a method to attach a token to another token by proxy.
+   * OperatorAttach defines a method to attach a token to another token by operator.
    * Fires:
    * - EventAttach
    * - attach_from (deprecated, not typed)
    * - operation_root_changed (deprecated, not typed)
-   * Throws:
-   * - ErrUnauthorized
-   *   - the approver has not authorized `proxy`.
-   * - ErrInvalidRequest
-   *   - `owner` does not owns `subject`.
-   *   - `owner` does not owns `target`.
-   *   - `subject` is not root.
-   *   - `subject` is an ancestor of `target`, which creates a cycle as a result.
-   *   - depth of `to` exceeds an app-specific limit.
    */
-  AttachFrom(request: MsgAttachFrom): Promise<MsgAttachFromResponse>;
+  OperatorAttach(
+    request: MsgOperatorAttach
+  ): Promise<MsgOperatorAttachResponse>;
   /**
-   * DetachFrom defines a method to detach a token from another token by proxy.
+   * OperatorDetach defines a method to detach a token from another token by operator.
    * Fires:
    * - EventDetach
    * - detach_from (deprecated, not typed)
    * - operation_root_changed (deprecated, not typed)
-   * Throws:
-   * - ErrUnauthorized
-   *   - the approver has not authorized `proxy`.
-   * - ErrInvalidRequest
-   *   - `owner` does not owns `subject`.
    */
-  DetachFrom(request: MsgDetachFrom): Promise<MsgDetachFromResponse>;
+  OperatorDetach(
+    request: MsgOperatorDetach
+  ): Promise<MsgOperatorDetachResponse>;
 }
 
 export class MsgClientImpl implements Msg {
   private readonly rpc: Rpc;
   constructor(rpc: Rpc) {
     this.rpc = rpc;
-    this.TransferFT = this.TransferFT.bind(this);
-    this.TransferFTFrom = this.TransferFTFrom.bind(this);
-    this.TransferNFT = this.TransferNFT.bind(this);
-    this.TransferNFTFrom = this.TransferNFTFrom.bind(this);
-    this.Approve = this.Approve.bind(this);
-    this.Disapprove = this.Disapprove.bind(this);
+    this.SendFT = this.SendFT.bind(this);
+    this.OperatorSendFT = this.OperatorSendFT.bind(this);
+    this.SendNFT = this.SendNFT.bind(this);
+    this.OperatorSendNFT = this.OperatorSendNFT.bind(this);
+    this.AuthorizeOperator = this.AuthorizeOperator.bind(this);
+    this.RevokeOperator = this.RevokeOperator.bind(this);
     this.CreateContract = this.CreateContract.bind(this);
     this.IssueFT = this.IssueFT.bind(this);
     this.IssueNFT = this.IssueNFT.bind(this);
     this.MintFT = this.MintFT.bind(this);
     this.MintNFT = this.MintNFT.bind(this);
     this.BurnFT = this.BurnFT.bind(this);
-    this.BurnFTFrom = this.BurnFTFrom.bind(this);
+    this.OperatorBurnFT = this.OperatorBurnFT.bind(this);
     this.BurnNFT = this.BurnNFT.bind(this);
-    this.BurnNFTFrom = this.BurnNFTFrom.bind(this);
+    this.OperatorBurnNFT = this.OperatorBurnNFT.bind(this);
     this.Modify = this.Modify.bind(this);
     this.GrantPermission = this.GrantPermission.bind(this);
     this.RevokePermission = this.RevokePermission.bind(this);
     this.Attach = this.Attach.bind(this);
     this.Detach = this.Detach.bind(this);
-    this.AttachFrom = this.AttachFrom.bind(this);
-    this.DetachFrom = this.DetachFrom.bind(this);
+    this.OperatorAttach = this.OperatorAttach.bind(this);
+    this.OperatorDetach = this.OperatorDetach.bind(this);
   }
-  TransferFT(request: MsgTransferFT): Promise<MsgTransferFTResponse> {
-    const data = MsgTransferFT.encode(request).finish();
-    const promise = this.rpc.request(
-      "lbm.collection.v1.Msg",
-      "TransferFT",
-      data
-    );
+  SendFT(request: MsgSendFT): Promise<MsgSendFTResponse> {
+    const data = MsgSendFT.encode(request).finish();
+    const promise = this.rpc.request("lbm.collection.v1.Msg", "SendFT", data);
     return promise.then((data) =>
-      MsgTransferFTResponse.decode(new _m0.Reader(data))
+      MsgSendFTResponse.decode(new _m0.Reader(data))
     );
   }
 
-  TransferFTFrom(
-    request: MsgTransferFTFrom
-  ): Promise<MsgTransferFTFromResponse> {
-    const data = MsgTransferFTFrom.encode(request).finish();
+  OperatorSendFT(
+    request: MsgOperatorSendFT
+  ): Promise<MsgOperatorSendFTResponse> {
+    const data = MsgOperatorSendFT.encode(request).finish();
     const promise = this.rpc.request(
       "lbm.collection.v1.Msg",
-      "TransferFTFrom",
+      "OperatorSendFT",
       data
     );
     return promise.then((data) =>
-      MsgTransferFTFromResponse.decode(new _m0.Reader(data))
+      MsgOperatorSendFTResponse.decode(new _m0.Reader(data))
     );
   }
 
-  TransferNFT(request: MsgTransferNFT): Promise<MsgTransferNFTResponse> {
-    const data = MsgTransferNFT.encode(request).finish();
+  SendNFT(request: MsgSendNFT): Promise<MsgSendNFTResponse> {
+    const data = MsgSendNFT.encode(request).finish();
+    const promise = this.rpc.request("lbm.collection.v1.Msg", "SendNFT", data);
+    return promise.then((data) =>
+      MsgSendNFTResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  OperatorSendNFT(
+    request: MsgOperatorSendNFT
+  ): Promise<MsgOperatorSendNFTResponse> {
+    const data = MsgOperatorSendNFT.encode(request).finish();
     const promise = this.rpc.request(
       "lbm.collection.v1.Msg",
-      "TransferNFT",
+      "OperatorSendNFT",
       data
     );
     return promise.then((data) =>
-      MsgTransferNFTResponse.decode(new _m0.Reader(data))
+      MsgOperatorSendNFTResponse.decode(new _m0.Reader(data))
     );
   }
 
-  TransferNFTFrom(
-    request: MsgTransferNFTFrom
-  ): Promise<MsgTransferNFTFromResponse> {
-    const data = MsgTransferNFTFrom.encode(request).finish();
+  AuthorizeOperator(
+    request: MsgAuthorizeOperator
+  ): Promise<MsgAuthorizeOperatorResponse> {
+    const data = MsgAuthorizeOperator.encode(request).finish();
     const promise = this.rpc.request(
       "lbm.collection.v1.Msg",
-      "TransferNFTFrom",
+      "AuthorizeOperator",
       data
     );
     return promise.then((data) =>
-      MsgTransferNFTFromResponse.decode(new _m0.Reader(data))
+      MsgAuthorizeOperatorResponse.decode(new _m0.Reader(data))
     );
   }
 
-  Approve(request: MsgApprove): Promise<MsgApproveResponse> {
-    const data = MsgApprove.encode(request).finish();
-    const promise = this.rpc.request("lbm.collection.v1.Msg", "Approve", data);
-    return promise.then((data) =>
-      MsgApproveResponse.decode(new _m0.Reader(data))
-    );
-  }
-
-  Disapprove(request: MsgDisapprove): Promise<MsgDisapproveResponse> {
-    const data = MsgDisapprove.encode(request).finish();
+  RevokeOperator(
+    request: MsgRevokeOperator
+  ): Promise<MsgRevokeOperatorResponse> {
+    const data = MsgRevokeOperator.encode(request).finish();
     const promise = this.rpc.request(
       "lbm.collection.v1.Msg",
-      "Disapprove",
+      "RevokeOperator",
       data
     );
     return promise.then((data) =>
-      MsgDisapproveResponse.decode(new _m0.Reader(data))
+      MsgRevokeOperatorResponse.decode(new _m0.Reader(data))
     );
   }
 
@@ -3952,15 +3818,17 @@ export class MsgClientImpl implements Msg {
     );
   }
 
-  BurnFTFrom(request: MsgBurnFTFrom): Promise<MsgBurnFTFromResponse> {
-    const data = MsgBurnFTFrom.encode(request).finish();
+  OperatorBurnFT(
+    request: MsgOperatorBurnFT
+  ): Promise<MsgOperatorBurnFTResponse> {
+    const data = MsgOperatorBurnFT.encode(request).finish();
     const promise = this.rpc.request(
       "lbm.collection.v1.Msg",
-      "BurnFTFrom",
+      "OperatorBurnFT",
       data
     );
     return promise.then((data) =>
-      MsgBurnFTFromResponse.decode(new _m0.Reader(data))
+      MsgOperatorBurnFTResponse.decode(new _m0.Reader(data))
     );
   }
 
@@ -3972,15 +3840,17 @@ export class MsgClientImpl implements Msg {
     );
   }
 
-  BurnNFTFrom(request: MsgBurnNFTFrom): Promise<MsgBurnNFTFromResponse> {
-    const data = MsgBurnNFTFrom.encode(request).finish();
+  OperatorBurnNFT(
+    request: MsgOperatorBurnNFT
+  ): Promise<MsgOperatorBurnNFTResponse> {
+    const data = MsgOperatorBurnNFT.encode(request).finish();
     const promise = this.rpc.request(
       "lbm.collection.v1.Msg",
-      "BurnNFTFrom",
+      "OperatorBurnNFT",
       data
     );
     return promise.then((data) =>
-      MsgBurnNFTFromResponse.decode(new _m0.Reader(data))
+      MsgOperatorBurnNFTResponse.decode(new _m0.Reader(data))
     );
   }
 
@@ -4036,27 +3906,31 @@ export class MsgClientImpl implements Msg {
     );
   }
 
-  AttachFrom(request: MsgAttachFrom): Promise<MsgAttachFromResponse> {
-    const data = MsgAttachFrom.encode(request).finish();
+  OperatorAttach(
+    request: MsgOperatorAttach
+  ): Promise<MsgOperatorAttachResponse> {
+    const data = MsgOperatorAttach.encode(request).finish();
     const promise = this.rpc.request(
       "lbm.collection.v1.Msg",
-      "AttachFrom",
+      "OperatorAttach",
       data
     );
     return promise.then((data) =>
-      MsgAttachFromResponse.decode(new _m0.Reader(data))
+      MsgOperatorAttachResponse.decode(new _m0.Reader(data))
     );
   }
 
-  DetachFrom(request: MsgDetachFrom): Promise<MsgDetachFromResponse> {
-    const data = MsgDetachFrom.encode(request).finish();
+  OperatorDetach(
+    request: MsgOperatorDetach
+  ): Promise<MsgOperatorDetachResponse> {
+    const data = MsgOperatorDetach.encode(request).finish();
     const promise = this.rpc.request(
       "lbm.collection.v1.Msg",
-      "DetachFrom",
+      "OperatorDetach",
       data
     );
     return promise.then((data) =>
-      MsgDetachFromResponse.decode(new _m0.Reader(data))
+      MsgOperatorDetachResponse.decode(new _m0.Reader(data))
     );
   }
 }

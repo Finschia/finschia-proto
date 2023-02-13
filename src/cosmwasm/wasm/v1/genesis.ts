@@ -13,17 +13,19 @@ export interface GenesisState {
   contracts: Contract[];
   sequences: Sequence[];
   genMsgs: GenesisState_GenMsgs[];
-  /** InactiveContractAddresses is a list of contract address that set inactive */
-  inactiveContractAddresses: string[];
 }
 
 /**
- * GenMsgs define the messages that can be executed during genesis phase in order.
- * The intention is to have more human readable data that is auditable.
+ * GenMsgs define the messages that can be executed during genesis phase in
+ * order. The intention is to have more human readable data that is auditable.
  */
 export interface GenesisState_GenMsgs {
   storeCode?: MsgStoreCode | undefined;
   instantiateContract?: MsgInstantiateContract | undefined;
+  /**
+   * MsgInstantiateContract2 intentionally not supported
+   * see https://github.com/CosmWasm/wasmd/issues/987
+   */
   executeContract?: MsgExecuteContract | undefined;
 }
 
@@ -56,7 +58,6 @@ function createBaseGenesisState(): GenesisState {
     contracts: [],
     sequences: [],
     genMsgs: [],
-    inactiveContractAddresses: [],
   };
 }
 
@@ -79,9 +80,6 @@ export const GenesisState = {
     }
     for (const v of message.genMsgs) {
       GenesisState_GenMsgs.encode(v!, writer.uint32(42).fork()).ldelim();
-    }
-    for (const v of message.inactiveContractAddresses) {
-      writer.uint32(50).string(v!);
     }
     return writer;
   },
@@ -110,9 +108,6 @@ export const GenesisState = {
             GenesisState_GenMsgs.decode(reader, reader.uint32())
           );
           break;
-        case 6:
-          message.inactiveContractAddresses.push(reader.string());
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -135,11 +130,6 @@ export const GenesisState = {
         : [],
       genMsgs: Array.isArray(object?.genMsgs)
         ? object.genMsgs.map((e: any) => GenesisState_GenMsgs.fromJSON(e))
-        : [],
-      inactiveContractAddresses: Array.isArray(
-        object?.inactiveContractAddresses
-      )
-        ? object.inactiveContractAddresses.map((e: any) => String(e))
         : [],
     };
   },
@@ -174,13 +164,6 @@ export const GenesisState = {
     } else {
       obj.genMsgs = [];
     }
-    if (message.inactiveContractAddresses) {
-      obj.inactiveContractAddresses = message.inactiveContractAddresses.map(
-        (e) => e
-      );
-    } else {
-      obj.inactiveContractAddresses = [];
-    }
     return obj;
   },
 
@@ -199,8 +182,6 @@ export const GenesisState = {
       object.sequences?.map((e) => Sequence.fromPartial(e)) || [];
     message.genMsgs =
       object.genMsgs?.map((e) => GenesisState_GenMsgs.fromPartial(e)) || [];
-    message.inactiveContractAddresses =
-      object.inactiveContractAddresses?.map((e) => e) || [];
     return message;
   },
 };
