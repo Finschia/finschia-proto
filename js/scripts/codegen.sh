@@ -14,10 +14,10 @@ mkdir -p "$OUT_DIR"
 
 echo "Processing LBM-SDK proto files ..."
 
-LBMSDK_DIR="./lbm-sdk/proto"
-LBMSDK_THIRD_PARTY_DIR="./lbm-sdk/third_party/proto"
-IBC_GO_DIR="./ibc-go/proto"
-WASMD_DIR="./wasmd/proto"
+LBMSDK_DIR="../repositories/lbm-sdk/proto"
+LBMSDK_THIRD_PARTY_DIR="../repositories/lbm-sdk/third_party/proto"
+IBC_GO_DIR="../repositories/ibc-go/proto"
+WASMD_DIR="../repositories/wasmd/proto"
 
 # shellcheck disable=SC2046
 # --plugin="protoc-gen-ts_proto=${PROTOC_GEN_TS_PROTO_PATH}" \
