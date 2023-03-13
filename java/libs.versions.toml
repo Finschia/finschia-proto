@@ -1,0 +1,12 @@
+[versions]
+proto = "3.19.0"
+grpc = "1.47.0"
+grpckotlin = "1.2.0"
+
+[libraries]
+protobuf-kotlin = { module = "com.google.protobuf:protobuf-kotlin", version.ref = "proto" }
+
+grpc-netty = { module = "io.grpc:grpc-netty", version.ref = "grpc" }
+grpc-kotlin-stub = { module = "io.grpc:grpc-kotlin-stub", version.ref = "grpckotlin" }
+grpc-protobuf = { module = "io.grpc:grpc-protobuf", version.ref = "grpc" }
+grpc-stub = { module = "io.grpc:grpc-stub", version.ref = "grpc" }
