@@ -1,10 +1,13 @@
-# lbmjs-types
+# finschia-proto for javascript
 
 ## Maintenance
+
 This section is for maintainers of this repo, not users.
 
 ## requirements
-* protoc
+
+- protoc
+
 ```shell
 // Mac OS X
 brew install protobuf
@@ -18,6 +21,7 @@ rm -f $PROTOC_ZIP
 ```
 
 ## Getting started
+
 ```shell
 # Pull external code
 git submodule init
@@ -31,7 +35,7 @@ yarn install
 
 ```shell
 # Update git submodule
-yarn lbmsdk_update
+yarn submodule_update
 
 # Generate .ts files into ./src
 yarn codegen

@@ -12,7 +12,7 @@ TS_PROTO_OPTS="esModuleInterop=true,forceLong=long,useOptionals=true,useDate=fal
 
 mkdir -p "$OUT_DIR"
 
-echo "Processing LBM-SDK proto files ..."
+echo "Processing proto files ..."
 
 LBMSDK_DIR="../repositories/lbm-sdk/proto"
 LBMSDK_THIRD_PARTY_DIR="../repositories/lbm-sdk/third_party/proto"
