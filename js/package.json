@@ -1,8 +1,8 @@
 {
   "name": "@finschia/finschia-proto",
-  "version": "0.47.0-alpha1",
+  "version": "1.0.0",
   "main": "index.js",
-  "description": "JS and TS types relating to Protocol Buffers used by LBM-SDK",
+  "description": "JS and TS types relating to Protocol Buffers used by FINSCHIA",
   "contributors": [
     "zemyblue <zemyblue@users.noreply.github.com>"
   ],
