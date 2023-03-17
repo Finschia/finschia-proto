@@ -1,8 +1,8 @@
 {
-  "name": "lbmjs-types",
-  "version": "0.47.0-alpha1",
+  "name": "@finschia/finschia-proto",
+  "version": "1.0.0",
   "main": "index.js",
-  "description": "JS and TS types relating to Protocol Buffers used by LBM-SDK",
+  "description": "JS and TS types relating to Protocol Buffers used by FINSCHIA",
   "contributors": [
     "zemyblue <zemyblue@users.noreply.github.com>"
   ],
@@ -32,7 +32,7 @@
     "clear": "./scripts/clear.sh",
     "prepare": "./scripts/prepare.sh",
     "codegen": "rm -rf ./src && ./scripts/codegen.sh && yarn run format",
-    "lbmsdk_update": "git submodule update --remote --merge",
+    "submodule_update": "git submodule update --remote --merge",
     "build": "rm -rf ./build && tsc && yarn run prepare"
   },
   "dependencies": {

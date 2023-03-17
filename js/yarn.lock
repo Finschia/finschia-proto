@@ -5,6 +5,20 @@ __metadata:
   version: 5
   cacheKey: 8
 
+"@finschia/finschia-proto@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@finschia/finschia-proto@workspace:."
+  dependencies:
+    "@types/long": ^4.0.1
+    "@types/node": ^15.6.2
+    long: ^4.0.0
+    prettier: ^2.5.1
+    protobufjs: ~6.11.2
+    ts-proto: 1.115.5
+    typescript: ~4.2
+  languageName: unknown
+  linkType: soft
+
 "@protobufjs/aspromise@npm:^1.1.1, @protobufjs/aspromise@npm:^1.1.2":
   version: 1.1.2
   resolution: "@protobufjs/aspromise@npm:1.1.2"
@@ -112,20 +126,6 @@ __metadata:
   checksum: e2c93d43afde68980efc0cd9ff48e9851116e27a9687f863e02b56d46f7e7868cc762cd6dcbaf4197e1ca850a03651510c165c2ae24b8e9843fd894002ad0e20
   languageName: node
   linkType: hard
-
-"lbmjs-types@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "lbmjs-types@workspace:."
-  dependencies:
-    "@types/long": ^4.0.1
-    "@types/node": ^15.6.2
-    long: ^4.0.0
-    prettier: ^2.5.1
-    protobufjs: ~6.11.2
-    ts-proto: 1.115.5
-    typescript: ~4.2
-  languageName: unknown
-  linkType: soft
 
 "lodash@npm:^4.17.15":
   version: 4.17.21
