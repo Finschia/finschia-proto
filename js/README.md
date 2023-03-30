@@ -35,7 +35,7 @@ yarn install
 
 ```shell
 # Update git submodule
-yarn lbmsdk_update
+yarn submodule_update
 
 # Generate .ts files into ./src
 yarn codegen
