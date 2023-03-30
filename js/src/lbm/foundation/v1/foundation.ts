@@ -8,6 +8,48 @@ import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.foundation.v1";
 
+export enum CensorshipAuthority {
+  /** CENSORSHIP_AUTHORITY_UNSPECIFIED - CENSORSHIP_AUTHORITY_UNSPECIFIED defines an invalid authority. */
+  CENSORSHIP_AUTHORITY_UNSPECIFIED = 0,
+  /** CENSORSHIP_AUTHORITY_GOVERNANCE - CENSORSHIP_AUTHORITY_GOVERNANCE defines x/gov authority. */
+  CENSORSHIP_AUTHORITY_GOVERNANCE = 1,
+  /** CENSORSHIP_AUTHORITY_FOUNDATION - CENSORSHIP_AUTHORITY_FOUNDATION defines x/foundation authority. */
+  CENSORSHIP_AUTHORITY_FOUNDATION = 2,
+  UNRECOGNIZED = -1,
+}
+
+export function censorshipAuthorityFromJSON(object: any): CensorshipAuthority {
+  switch (object) {
+    case 0:
+    case "CENSORSHIP_AUTHORITY_UNSPECIFIED":
+      return CensorshipAuthority.CENSORSHIP_AUTHORITY_UNSPECIFIED;
+    case 1:
+    case "CENSORSHIP_AUTHORITY_GOVERNANCE":
+      return CensorshipAuthority.CENSORSHIP_AUTHORITY_GOVERNANCE;
+    case 2:
+    case "CENSORSHIP_AUTHORITY_FOUNDATION":
+      return CensorshipAuthority.CENSORSHIP_AUTHORITY_FOUNDATION;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return CensorshipAuthority.UNRECOGNIZED;
+  }
+}
+
+export function censorshipAuthorityToJSON(object: CensorshipAuthority): string {
+  switch (object) {
+    case CensorshipAuthority.CENSORSHIP_AUTHORITY_UNSPECIFIED:
+      return "CENSORSHIP_AUTHORITY_UNSPECIFIED";
+    case CensorshipAuthority.CENSORSHIP_AUTHORITY_GOVERNANCE:
+      return "CENSORSHIP_AUTHORITY_GOVERNANCE";
+    case CensorshipAuthority.CENSORSHIP_AUTHORITY_FOUNDATION:
+      return "CENSORSHIP_AUTHORITY_FOUNDATION";
+    case CensorshipAuthority.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
 /** VoteOption enumerates the valid vote options for a given proposal. */
 export enum VoteOption {
   /** VOTE_OPTION_UNSPECIFIED - VOTE_OPTION_UNSPECIFIED defines a no-op vote option. */
@@ -198,7 +240,11 @@ export function proposalExecutorResultToJSON(
 /** Params defines the parameters for the foundation module. */
 export interface Params {
   foundationTax: string;
-  censoredMsgTypeUrls: string[];
+}
+
+export interface Censorship {
+  msgTypeUrl: string;
+  authority: CensorshipAuthority;
 }
 
 /** Member represents a foundation member with an account address and metadata. */
@@ -375,8 +421,19 @@ export interface Pool {
   treasury: DecCoin[];
 }
 
+/** FoundationExecProposal is x/gov proposal to trigger the x/foundation messages on behalf of x/gov. */
+export interface FoundationExecProposal {
+  title: string;
+  description: string;
+  /**
+   * x/foundation messages to execute
+   * all the signers must be x/gov authority.
+   */
+  messages: Any[];
+}
+
 function createBaseParams(): Params {
-  return { foundationTax: "", censoredMsgTypeUrls: [] };
+  return { foundationTax: "" };
 }
 
 export const Params = {
@@ -386,9 +443,6 @@ export const Params = {
   ): _m0.Writer {
     if (message.foundationTax !== "") {
       writer.uint32(10).string(message.foundationTax);
-    }
-    for (const v of message.censoredMsgTypeUrls) {
-      writer.uint32(18).string(v!);
     }
     return writer;
   },
@@ -403,9 +457,6 @@ export const Params = {
         case 1:
           message.foundationTax = reader.string();
           break;
-        case 2:
-          message.censoredMsgTypeUrls.push(reader.string());
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -419,9 +470,6 @@ export const Params = {
       foundationTax: isSet(object.foundationTax)
         ? String(object.foundationTax)
         : "",
-      censoredMsgTypeUrls: Array.isArray(object?.censoredMsgTypeUrls)
-        ? object.censoredMsgTypeUrls.map((e: any) => String(e))
-        : [],
     };
   },
 
@@ -429,19 +477,78 @@ export const Params = {
     const obj: any = {};
     message.foundationTax !== undefined &&
       (obj.foundationTax = message.foundationTax);
-    if (message.censoredMsgTypeUrls) {
-      obj.censoredMsgTypeUrls = message.censoredMsgTypeUrls.map((e) => e);
-    } else {
-      obj.censoredMsgTypeUrls = [];
-    }
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<Params>, I>>(object: I): Params {
     const message = createBaseParams();
     message.foundationTax = object.foundationTax ?? "";
-    message.censoredMsgTypeUrls =
-      object.censoredMsgTypeUrls?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseCensorship(): Censorship {
+  return { msgTypeUrl: "", authority: 0 };
+}
+
+export const Censorship = {
+  encode(
+    message: Censorship,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.msgTypeUrl !== "") {
+      writer.uint32(10).string(message.msgTypeUrl);
+    }
+    if (message.authority !== 0) {
+      writer.uint32(16).int32(message.authority);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): Censorship {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCensorship();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.msgTypeUrl = reader.string();
+          break;
+        case 2:
+          message.authority = reader.int32() as any;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Censorship {
+    return {
+      msgTypeUrl: isSet(object.msgTypeUrl) ? String(object.msgTypeUrl) : "",
+      authority: isSet(object.authority)
+        ? censorshipAuthorityFromJSON(object.authority)
+        : 0,
+    };
+  },
+
+  toJSON(message: Censorship): unknown {
+    const obj: any = {};
+    message.msgTypeUrl !== undefined && (obj.msgTypeUrl = message.msgTypeUrl);
+    message.authority !== undefined &&
+      (obj.authority = censorshipAuthorityToJSON(message.authority));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<Censorship>, I>>(
+    object: I
+  ): Censorship {
+    const message = createBaseCensorship();
+    message.msgTypeUrl = object.msgTypeUrl ?? "";
+    message.authority = object.authority ?? 0;
     return message;
   },
 };
@@ -1438,6 +1545,90 @@ export const Pool = {
     const message = createBasePool();
     message.treasury =
       object.treasury?.map((e) => DecCoin.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseFoundationExecProposal(): FoundationExecProposal {
+  return { title: "", description: "", messages: [] };
+}
+
+export const FoundationExecProposal = {
+  encode(
+    message: FoundationExecProposal,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.title !== "") {
+      writer.uint32(10).string(message.title);
+    }
+    if (message.description !== "") {
+      writer.uint32(18).string(message.description);
+    }
+    for (const v of message.messages) {
+      Any.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): FoundationExecProposal {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFoundationExecProposal();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.title = reader.string();
+          break;
+        case 2:
+          message.description = reader.string();
+          break;
+        case 3:
+          message.messages.push(Any.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): FoundationExecProposal {
+    return {
+      title: isSet(object.title) ? String(object.title) : "",
+      description: isSet(object.description) ? String(object.description) : "",
+      messages: Array.isArray(object?.messages)
+        ? object.messages.map((e: any) => Any.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: FoundationExecProposal): unknown {
+    const obj: any = {};
+    message.title !== undefined && (obj.title = message.title);
+    message.description !== undefined &&
+      (obj.description = message.description);
+    if (message.messages) {
+      obj.messages = message.messages.map((e) =>
+        e ? Any.toJSON(e) : undefined
+      );
+    } else {
+      obj.messages = [];
+    }
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<FoundationExecProposal>, I>>(
+    object: I
+  ): FoundationExecProposal {
+    const message = createBaseFoundationExecProposal();
+    message.title = object.title ?? "";
+    message.description = object.description ?? "";
+    message.messages = object.messages?.map((e) => Any.fromPartial(e)) || [];
     return message;
   },
 };

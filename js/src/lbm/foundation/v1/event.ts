@@ -4,6 +4,7 @@ import {
   Proposal,
   Vote,
   ProposalExecutorResult,
+  Censorship,
   MemberRequest,
   proposalExecutorResultFromJSON,
   proposalExecutorResultToJSON,
@@ -73,6 +74,11 @@ export interface EventExec {
 export interface EventLeaveFoundation {
   /** address is the account address of the foundation member. */
   address: string;
+}
+
+/** EventUpdateCensorship is emitted when a censorship information updated. */
+export interface EventUpdateCensorship {
+  censorship?: Censorship;
 }
 
 /** EventGrant is emitted on Msg/Grant */
@@ -737,6 +743,71 @@ export const EventLeaveFoundation = {
   ): EventLeaveFoundation {
     const message = createBaseEventLeaveFoundation();
     message.address = object.address ?? "";
+    return message;
+  },
+};
+
+function createBaseEventUpdateCensorship(): EventUpdateCensorship {
+  return { censorship: undefined };
+}
+
+export const EventUpdateCensorship = {
+  encode(
+    message: EventUpdateCensorship,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.censorship !== undefined) {
+      Censorship.encode(message.censorship, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): EventUpdateCensorship {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEventUpdateCensorship();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.censorship = Censorship.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EventUpdateCensorship {
+    return {
+      censorship: isSet(object.censorship)
+        ? Censorship.fromJSON(object.censorship)
+        : undefined,
+    };
+  },
+
+  toJSON(message: EventUpdateCensorship): unknown {
+    const obj: any = {};
+    message.censorship !== undefined &&
+      (obj.censorship = message.censorship
+        ? Censorship.toJSON(message.censorship)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EventUpdateCensorship>, I>>(
+    object: I
+  ): EventUpdateCensorship {
+    const message = createBaseEventUpdateCensorship();
+    message.censorship =
+      object.censorship !== undefined && object.censorship !== null
+        ? Censorship.fromPartial(object.censorship)
+        : undefined;
     return message;
   },
 };

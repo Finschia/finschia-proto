@@ -6,6 +6,7 @@ import {
   Member,
   Proposal,
   Vote,
+  Censorship,
 } from "./foundation";
 import { Any } from "../../../google/protobuf/any";
 import Long from "long";
@@ -31,6 +32,7 @@ export interface GenesisState {
   authorizations: GrantAuthorization[];
   /** pool */
   pool?: Pool;
+  censorships: Censorship[];
 }
 
 /** GrantAuthorization defines authorization grant to grantee via route. */
@@ -49,6 +51,7 @@ function createBaseGenesisState(): GenesisState {
     votes: [],
     authorizations: [],
     pool: undefined,
+    censorships: [],
   };
 }
 
@@ -83,6 +86,9 @@ export const GenesisState = {
     }
     if (message.pool !== undefined) {
       Pool.encode(message.pool, writer.uint32(66).fork()).ldelim();
+    }
+    for (const v of message.censorships) {
+      Censorship.encode(v!, writer.uint32(82).fork()).ldelim();
     }
     return writer;
   },
@@ -120,6 +126,9 @@ export const GenesisState = {
         case 8:
           message.pool = Pool.decode(reader, reader.uint32());
           break;
+        case 10:
+          message.censorships.push(Censorship.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -150,6 +159,9 @@ export const GenesisState = {
         ? object.authorizations.map((e: any) => GrantAuthorization.fromJSON(e))
         : [],
       pool: isSet(object.pool) ? Pool.fromJSON(object.pool) : undefined,
+      censorships: Array.isArray(object?.censorships)
+        ? object.censorships.map((e: any) => Censorship.fromJSON(e))
+        : [],
     };
   },
 
@@ -193,6 +205,13 @@ export const GenesisState = {
     }
     message.pool !== undefined &&
       (obj.pool = message.pool ? Pool.toJSON(message.pool) : undefined);
+    if (message.censorships) {
+      obj.censorships = message.censorships.map((e) =>
+        e ? Censorship.toJSON(e) : undefined
+      );
+    } else {
+      obj.censorships = [];
+    }
     return obj;
   },
 
@@ -224,6 +243,8 @@ export const GenesisState = {
       object.pool !== undefined && object.pool !== null
         ? Pool.fromPartial(object.pool)
         : undefined;
+    message.censorships =
+      object.censorships?.map((e) => Censorship.fromPartial(e)) || [];
     return message;
   },
 };

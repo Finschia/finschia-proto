@@ -220,7 +220,7 @@ export interface MsgModify {
   owner: string;
   /**
    * changes to apply.
-   * possible attribute keys are: name, img_uri, meta
+   * possible attribute keys are: name, uri, img_uri (deprecated), meta
    */
   changes: Attribute[];
 }
