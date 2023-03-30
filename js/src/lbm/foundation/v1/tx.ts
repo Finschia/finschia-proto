@@ -2,6 +2,7 @@
 import {
   Params,
   VoteOption,
+  Censorship,
   MemberRequest,
   voteOptionFromJSON,
   voteOptionToJSON,
@@ -192,6 +193,17 @@ export interface MsgLeaveFoundation {
 
 /** MsgLeaveFoundationResponse is the Msg/LeaveFoundation response type. */
 export interface MsgLeaveFoundationResponse {}
+
+/** MsgUpdateCensorship is the Msg/UpdateCensorship request type. */
+export interface MsgUpdateCensorship {
+  /** authority over the target censorship. */
+  authority: string;
+  /** new censorship information */
+  censorship?: Censorship;
+}
+
+/** MsgUpdateCensorshipResponse is the Msg/UpdateCensorship response type. */
+export interface MsgUpdateCensorshipResponse {}
 
 /**
  * MsgGrant is the Msg/Grant request type.
@@ -1449,6 +1461,124 @@ export const MsgLeaveFoundationResponse = {
   },
 };
 
+function createBaseMsgUpdateCensorship(): MsgUpdateCensorship {
+  return { authority: "", censorship: undefined };
+}
+
+export const MsgUpdateCensorship = {
+  encode(
+    message: MsgUpdateCensorship,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.authority !== "") {
+      writer.uint32(10).string(message.authority);
+    }
+    if (message.censorship !== undefined) {
+      Censorship.encode(message.censorship, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgUpdateCensorship {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgUpdateCensorship();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.authority = reader.string();
+          break;
+        case 2:
+          message.censorship = Censorship.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgUpdateCensorship {
+    return {
+      authority: isSet(object.authority) ? String(object.authority) : "",
+      censorship: isSet(object.censorship)
+        ? Censorship.fromJSON(object.censorship)
+        : undefined,
+    };
+  },
+
+  toJSON(message: MsgUpdateCensorship): unknown {
+    const obj: any = {};
+    message.authority !== undefined && (obj.authority = message.authority);
+    message.censorship !== undefined &&
+      (obj.censorship = message.censorship
+        ? Censorship.toJSON(message.censorship)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgUpdateCensorship>, I>>(
+    object: I
+  ): MsgUpdateCensorship {
+    const message = createBaseMsgUpdateCensorship();
+    message.authority = object.authority ?? "";
+    message.censorship =
+      object.censorship !== undefined && object.censorship !== null
+        ? Censorship.fromPartial(object.censorship)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseMsgUpdateCensorshipResponse(): MsgUpdateCensorshipResponse {
+  return {};
+}
+
+export const MsgUpdateCensorshipResponse = {
+  encode(
+    _: MsgUpdateCensorshipResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): MsgUpdateCensorshipResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgUpdateCensorshipResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgUpdateCensorshipResponse {
+    return {};
+  },
+
+  toJSON(_: MsgUpdateCensorshipResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgUpdateCensorshipResponse>, I>>(
+    _: I
+  ): MsgUpdateCensorshipResponse {
+    const message = createBaseMsgUpdateCensorshipResponse();
+    return message;
+  },
+};
+
 function createBaseMsgGrant(): MsgGrant {
   return { authority: "", grantee: "", authorization: undefined };
 }
@@ -1722,6 +1852,10 @@ export interface Msg {
   LeaveFoundation(
     request: MsgLeaveFoundation
   ): Promise<MsgLeaveFoundationResponse>;
+  /** UpdateCensorship updates censorship information. */
+  UpdateCensorship(
+    request: MsgUpdateCensorship
+  ): Promise<MsgUpdateCensorshipResponse>;
   /**
    * Grant grants the provided authorization to the grantee with authority of
    * the foundation. If there is already a grant for the given
@@ -1749,6 +1883,7 @@ export class MsgClientImpl implements Msg {
     this.Vote = this.Vote.bind(this);
     this.Exec = this.Exec.bind(this);
     this.LeaveFoundation = this.LeaveFoundation.bind(this);
+    this.UpdateCensorship = this.UpdateCensorship.bind(this);
     this.Grant = this.Grant.bind(this);
     this.Revoke = this.Revoke.bind(this);
   }
@@ -1867,6 +2002,20 @@ export class MsgClientImpl implements Msg {
     );
     return promise.then((data) =>
       MsgLeaveFoundationResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  UpdateCensorship(
+    request: MsgUpdateCensorship
+  ): Promise<MsgUpdateCensorshipResponse> {
+    const data = MsgUpdateCensorship.encode(request).finish();
+    const promise = this.rpc.request(
+      "lbm.foundation.v1.Msg",
+      "UpdateCensorship",
+      data
+    );
+    return promise.then((data) =>
+      MsgUpdateCensorshipResponse.decode(new _m0.Reader(data))
     );
   }
 

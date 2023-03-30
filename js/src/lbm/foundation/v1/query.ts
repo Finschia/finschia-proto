@@ -6,6 +6,7 @@ import {
   Proposal,
   Vote,
   TallyResult,
+  Censorship,
 } from "./foundation";
 import {
   PageRequest,
@@ -140,6 +141,20 @@ export interface QueryTallyResultRequest {
 export interface QueryTallyResultResponse {
   /** tally defines the requested tally. */
   tally?: TallyResult;
+}
+
+/** QueryCensorshipsRequest is the request type for the Query/Censorships RPC method. */
+export interface QueryCensorshipsRequest {
+  /** pagination defines an optional pagination for the request. */
+  pagination?: PageRequest;
+}
+
+/** QueryCensorshipsResponse is the response type for the Query/Censorships RPC method. */
+export interface QueryCensorshipsResponse {
+  /** authorizations is a list of grants granted for grantee. */
+  censorships: Censorship[];
+  /** pagination defines the pagination in the response. */
+  pagination?: PageResponse;
 }
 
 /** QueryGrantsRequest is the request type for the Query/Grants RPC method. */
@@ -1435,6 +1450,157 @@ export const QueryTallyResultResponse = {
   },
 };
 
+function createBaseQueryCensorshipsRequest(): QueryCensorshipsRequest {
+  return { pagination: undefined };
+}
+
+export const QueryCensorshipsRequest = {
+  encode(
+    message: QueryCensorshipsRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryCensorshipsRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryCensorshipsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryCensorshipsRequest {
+    return {
+      pagination: isSet(object.pagination)
+        ? PageRequest.fromJSON(object.pagination)
+        : undefined,
+    };
+  },
+
+  toJSON(message: QueryCensorshipsRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageRequest.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryCensorshipsRequest>, I>>(
+    object: I
+  ): QueryCensorshipsRequest {
+    const message = createBaseQueryCensorshipsRequest();
+    message.pagination =
+      object.pagination !== undefined && object.pagination !== null
+        ? PageRequest.fromPartial(object.pagination)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryCensorshipsResponse(): QueryCensorshipsResponse {
+  return { censorships: [], pagination: undefined };
+}
+
+export const QueryCensorshipsResponse = {
+  encode(
+    message: QueryCensorshipsResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    for (const v of message.censorships) {
+      Censorship.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(
+        message.pagination,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryCensorshipsResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryCensorshipsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.censorships.push(Censorship.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryCensorshipsResponse {
+    return {
+      censorships: Array.isArray(object?.censorships)
+        ? object.censorships.map((e: any) => Censorship.fromJSON(e))
+        : [],
+      pagination: isSet(object.pagination)
+        ? PageResponse.fromJSON(object.pagination)
+        : undefined,
+    };
+  },
+
+  toJSON(message: QueryCensorshipsResponse): unknown {
+    const obj: any = {};
+    if (message.censorships) {
+      obj.censorships = message.censorships.map((e) =>
+        e ? Censorship.toJSON(e) : undefined
+      );
+    } else {
+      obj.censorships = [];
+    }
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageResponse.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryCensorshipsResponse>, I>>(
+    object: I
+  ): QueryCensorshipsResponse {
+    const message = createBaseQueryCensorshipsResponse();
+    message.censorships =
+      object.censorships?.map((e) => Censorship.fromPartial(e)) || [];
+    message.pagination =
+      object.pagination !== undefined && object.pagination !== null
+        ? PageResponse.fromPartial(object.pagination)
+        : undefined;
+    return message;
+  },
+};
+
 function createBaseQueryGrantsRequest(): QueryGrantsRequest {
   return { grantee: "", msgTypeUrl: "", pagination: undefined };
 }
@@ -1624,6 +1790,10 @@ export interface Query {
   TallyResult(
     request: QueryTallyResultRequest
   ): Promise<QueryTallyResultResponse>;
+  /** Censorships queries the censorship informations. */
+  Censorships(
+    request: QueryCensorshipsRequest
+  ): Promise<QueryCensorshipsResponse>;
   /** Returns list of authorizations, granted to the grantee. */
   Grants(request: QueryGrantsRequest): Promise<QueryGrantsResponse>;
 }
@@ -1642,6 +1812,7 @@ export class QueryClientImpl implements Query {
     this.Vote = this.Vote.bind(this);
     this.Votes = this.Votes.bind(this);
     this.TallyResult = this.TallyResult.bind(this);
+    this.Censorships = this.Censorships.bind(this);
     this.Grants = this.Grants.bind(this);
   }
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
@@ -1749,6 +1920,20 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryTallyResultResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  Censorships(
+    request: QueryCensorshipsRequest
+  ): Promise<QueryCensorshipsResponse> {
+    const data = QueryCensorshipsRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "lbm.foundation.v1.Query",
+      "Censorships",
+      data
+    );
+    return promise.then((data) =>
+      QueryCensorshipsResponse.decode(new _m0.Reader(data))
     );
   }
 

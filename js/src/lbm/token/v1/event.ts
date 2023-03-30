@@ -112,6 +112,7 @@ export enum AttributeKey {
   ATTRIBUTE_KEY_OWNER = 5,
   ATTRIBUTE_KEY_AMOUNT = 6,
   ATTRIBUTE_KEY_DECIMALS = 7,
+  /** ATTRIBUTE_KEY_IMG_URI - deprecated: use ATTRIBUTE_KEY_URI */
   ATTRIBUTE_KEY_IMG_URI = 8,
   ATTRIBUTE_KEY_MINTABLE = 9,
   ATTRIBUTE_KEY_FROM = 10,
@@ -119,6 +120,7 @@ export enum AttributeKey {
   ATTRIBUTE_KEY_PERM = 12,
   ATTRIBUTE_KEY_APPROVER = 13,
   ATTRIBUTE_KEY_PROXY = 14,
+  ATTRIBUTE_KEY_URI = 15,
   UNRECOGNIZED = -1,
 }
 
@@ -169,6 +171,9 @@ export function attributeKeyFromJSON(object: any): AttributeKey {
     case 14:
     case "ATTRIBUTE_KEY_PROXY":
       return AttributeKey.ATTRIBUTE_KEY_PROXY;
+    case 15:
+    case "ATTRIBUTE_KEY_URI":
+      return AttributeKey.ATTRIBUTE_KEY_URI;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -208,6 +213,8 @@ export function attributeKeyToJSON(object: AttributeKey): string {
       return "ATTRIBUTE_KEY_APPROVER";
     case AttributeKey.ATTRIBUTE_KEY_PROXY:
       return "ATTRIBUTE_KEY_PROXY";
+    case AttributeKey.ATTRIBUTE_KEY_URI:
+      return "ATTRIBUTE_KEY_URI";
     case AttributeKey.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -364,6 +371,7 @@ export interface EventModified {
   /**
    * changes on the metadata of the class.
    * possible attribute keys are same as those of MsgModify.
+   * deprecated "img_uri" has been replaced by "uri" in the events.
    */
   changes: Attribute[];
 }

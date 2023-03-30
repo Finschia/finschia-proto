@@ -348,7 +348,7 @@ export interface MsgModify {
   tokenIndex: string;
   /**
    * changes to apply.
-   * possible attribute keys on modifying collection: name, base_img_uri, meta.
+   * possible attribute keys on modifying collection: name, uri, base_img_uri (deprecated), meta.
    * possible attribute keys on modifying token type and token: name, meta.
    */
   changes: Attribute[];
