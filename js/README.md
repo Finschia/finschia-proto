@@ -1,4 +1,4 @@
-# finschia-proto for javascript
+# lbmjs-types
 
 ## Maintenance
 
@@ -35,7 +35,7 @@ yarn install
 
 ```shell
 # Update git submodule
-yarn submodule_update
+yarn lbmsdk_update
 
 # Generate .ts files into ./src
 yarn codegen
