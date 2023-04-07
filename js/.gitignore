@@ -1,0 +1,21 @@
+/node_modules/
+
+/build/
+/package
+
+/proofs.*
+/confio
+/cosmos
+/cosmos_proto
+/cosmwasm
+/gogoproto
+/google
+/ibc
+/lbm
+/ostracon
+/tendermint
+
+
+# yarn
+/.yarn/unplugged/
+/.yarn/install-state.gz
