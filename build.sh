@@ -3,9 +3,7 @@ set -o errexit -o nounset -o pipefail
 command -v shellcheck >/dev/null && shellcheck "$0"
 
 echo "module update"
-git submodule init
-git submodule update
-git submodule update --remote --merge
+git submodule update --init --remote
 
 echo "build js types"
 cd ./js
