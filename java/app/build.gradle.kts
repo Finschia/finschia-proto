@@ -94,38 +94,3 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().all {
         freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
 }
-
-tasks.register("updateSubmodule") {
-    exec {
-        commandLine("git", "submodule", "update", "--init", "--remote")
-    }
-}
-
-tasks.register("checkoutSubModules") {
-    var subModules = mapOf(
-        // {moduleName} to {version}
-        "lbm-sdk" to "v0.47.0-alpha1",
-        "ibc-go" to "v3.3.2",
-        "wasmd" to "v0.1.0"
-    )
-    for ((name, version) in subModules.entries) {
-        var submoduleProjectDir = "../../repositories/" + name
-        println("Updating submodule $name to version $version in directory $submoduleProjectDir")
-        var result = exec {
-            workingDir = File(submoduleProjectDir)
-            commandLine("git", "checkout", version)
-        }
-        if (result.exitValue != 0) {
-            throw GradleException("Failed to update submodule $name to version $version")
-        }
-    }
-}
-
-tasks.named("build") {
-    dependsOn("checkoutSubModules")
-}
-
-tasks.named("checkoutSubModules") {
-    dependsOn("updateSubmodule")
-}
-
