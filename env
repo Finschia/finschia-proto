@@ -1,0 +1,4 @@
+# Choose from https://github.com/line/finschia/releases
+LBM_SDK_VERSION="v0.47.0-rc4"
+WASMD_VERSION="514953c0b244dd297511f395106077aed5f2e7d7"
+IBC_GO_VERSION="v3.3.2"
