@@ -9,10 +9,10 @@ import Long from "long";
 import { ProofSpec } from "../../../../proofs";
 import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = "ibc.lightclients.ostracon.v1";
+export const protobufPackage = "ibc.lightclients.tendermint.v1";
 
 /**
- * ClientState from Ostracon tracks the current validator set, latest height,
+ * ClientState from Tendermint tracks the current validator set, latest height,
  * and a possible frozen height.
  */
 export interface ClientState {
@@ -57,7 +57,7 @@ export interface ClientState {
   allowUpdateAfterMisbehaviour: boolean;
 }
 
-/** ConsensusState defines the consensus state from Ostracon. */
+/** ConsensusState defines the consensus state from Tendermint. */
 export interface ConsensusState {
   /**
    * timestamp that corresponds to the block height in which the ConsensusState
@@ -74,20 +74,15 @@ export interface ConsensusState {
  * that implements Misbehaviour interface expected by ICS-02
  */
 export interface Misbehaviour {
-  /**
-   * ClientID is deprecated
-   *
-   * @deprecated
-   */
   clientId: string;
   header1?: Header;
   header2?: Header;
 }
 
 /**
- * Header defines the Ostracon client consensus Header.
+ * Header defines the Tendermint client consensus Header.
  * It encapsulates all the information necessary to update from a trusted
- * Ostracon ConsensusState. The inclusion of TrustedHeight and
+ * Tendermint ConsensusState. The inclusion of TrustedHeight and
  * TrustedValidators allows this update to process correctly, so long as the
  * ConsensusState for the TrustedHeight exists, this removes race conditions
  * among relayers The SignedHeader and ValidatorSet are the new untrusted update
