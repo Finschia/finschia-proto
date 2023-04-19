@@ -10,116 +10,13 @@ import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.token.v1";
 
-/**
- * Deprecated: use typed events.
- *
- * EventType enumerates the valid event types on x/token.
- */
-export enum EventType {
-  EVENT_TYPE_UNSPECIFIED = 0,
-  EVENT_TYPE_ISSUE = 1,
-  EVENT_TYPE_MINT = 2,
-  EVENT_TYPE_BURN = 3,
-  EVENT_TYPE_BURN_FROM = 4,
-  EVENT_TYPE_MODIFY_TOKEN = 5,
-  EVENT_TYPE_TRANSFER = 6,
-  EVENT_TYPE_TRANSFER_FROM = 7,
-  EVENT_TYPE_GRANT_PERM = 8,
-  EVENT_TYPE_REVOKE_PERM = 9,
-  EVENT_TYPE_APPROVE_TOKEN = 10,
-  UNRECOGNIZED = -1,
-}
-
-export function eventTypeFromJSON(object: any): EventType {
-  switch (object) {
-    case 0:
-    case "EVENT_TYPE_UNSPECIFIED":
-      return EventType.EVENT_TYPE_UNSPECIFIED;
-    case 1:
-    case "EVENT_TYPE_ISSUE":
-      return EventType.EVENT_TYPE_ISSUE;
-    case 2:
-    case "EVENT_TYPE_MINT":
-      return EventType.EVENT_TYPE_MINT;
-    case 3:
-    case "EVENT_TYPE_BURN":
-      return EventType.EVENT_TYPE_BURN;
-    case 4:
-    case "EVENT_TYPE_BURN_FROM":
-      return EventType.EVENT_TYPE_BURN_FROM;
-    case 5:
-    case "EVENT_TYPE_MODIFY_TOKEN":
-      return EventType.EVENT_TYPE_MODIFY_TOKEN;
-    case 6:
-    case "EVENT_TYPE_TRANSFER":
-      return EventType.EVENT_TYPE_TRANSFER;
-    case 7:
-    case "EVENT_TYPE_TRANSFER_FROM":
-      return EventType.EVENT_TYPE_TRANSFER_FROM;
-    case 8:
-    case "EVENT_TYPE_GRANT_PERM":
-      return EventType.EVENT_TYPE_GRANT_PERM;
-    case 9:
-    case "EVENT_TYPE_REVOKE_PERM":
-      return EventType.EVENT_TYPE_REVOKE_PERM;
-    case 10:
-    case "EVENT_TYPE_APPROVE_TOKEN":
-      return EventType.EVENT_TYPE_APPROVE_TOKEN;
-    case -1:
-    case "UNRECOGNIZED":
-    default:
-      return EventType.UNRECOGNIZED;
-  }
-}
-
-export function eventTypeToJSON(object: EventType): string {
-  switch (object) {
-    case EventType.EVENT_TYPE_UNSPECIFIED:
-      return "EVENT_TYPE_UNSPECIFIED";
-    case EventType.EVENT_TYPE_ISSUE:
-      return "EVENT_TYPE_ISSUE";
-    case EventType.EVENT_TYPE_MINT:
-      return "EVENT_TYPE_MINT";
-    case EventType.EVENT_TYPE_BURN:
-      return "EVENT_TYPE_BURN";
-    case EventType.EVENT_TYPE_BURN_FROM:
-      return "EVENT_TYPE_BURN_FROM";
-    case EventType.EVENT_TYPE_MODIFY_TOKEN:
-      return "EVENT_TYPE_MODIFY_TOKEN";
-    case EventType.EVENT_TYPE_TRANSFER:
-      return "EVENT_TYPE_TRANSFER";
-    case EventType.EVENT_TYPE_TRANSFER_FROM:
-      return "EVENT_TYPE_TRANSFER_FROM";
-    case EventType.EVENT_TYPE_GRANT_PERM:
-      return "EVENT_TYPE_GRANT_PERM";
-    case EventType.EVENT_TYPE_REVOKE_PERM:
-      return "EVENT_TYPE_REVOKE_PERM";
-    case EventType.EVENT_TYPE_APPROVE_TOKEN:
-      return "EVENT_TYPE_APPROVE_TOKEN";
-    case EventType.UNRECOGNIZED:
-    default:
-      return "UNRECOGNIZED";
-  }
-}
-
 /** AttributeKey enumerates the valid attribute keys on x/token. */
 export enum AttributeKey {
   ATTRIBUTE_KEY_UNSPECIFIED = 0,
   ATTRIBUTE_KEY_NAME = 1,
-  ATTRIBUTE_KEY_SYMBOL = 2,
   ATTRIBUTE_KEY_META = 3,
-  ATTRIBUTE_KEY_CONTRACT_ID = 4,
-  ATTRIBUTE_KEY_OWNER = 5,
-  ATTRIBUTE_KEY_AMOUNT = 6,
-  ATTRIBUTE_KEY_DECIMALS = 7,
   /** ATTRIBUTE_KEY_IMG_URI - deprecated: use ATTRIBUTE_KEY_URI */
   ATTRIBUTE_KEY_IMG_URI = 8,
-  ATTRIBUTE_KEY_MINTABLE = 9,
-  ATTRIBUTE_KEY_FROM = 10,
-  ATTRIBUTE_KEY_TO = 11,
-  ATTRIBUTE_KEY_PERM = 12,
-  ATTRIBUTE_KEY_APPROVER = 13,
-  ATTRIBUTE_KEY_PROXY = 14,
   ATTRIBUTE_KEY_URI = 15,
   UNRECOGNIZED = -1,
 }
@@ -132,45 +29,12 @@ export function attributeKeyFromJSON(object: any): AttributeKey {
     case 1:
     case "ATTRIBUTE_KEY_NAME":
       return AttributeKey.ATTRIBUTE_KEY_NAME;
-    case 2:
-    case "ATTRIBUTE_KEY_SYMBOL":
-      return AttributeKey.ATTRIBUTE_KEY_SYMBOL;
     case 3:
     case "ATTRIBUTE_KEY_META":
       return AttributeKey.ATTRIBUTE_KEY_META;
-    case 4:
-    case "ATTRIBUTE_KEY_CONTRACT_ID":
-      return AttributeKey.ATTRIBUTE_KEY_CONTRACT_ID;
-    case 5:
-    case "ATTRIBUTE_KEY_OWNER":
-      return AttributeKey.ATTRIBUTE_KEY_OWNER;
-    case 6:
-    case "ATTRIBUTE_KEY_AMOUNT":
-      return AttributeKey.ATTRIBUTE_KEY_AMOUNT;
-    case 7:
-    case "ATTRIBUTE_KEY_DECIMALS":
-      return AttributeKey.ATTRIBUTE_KEY_DECIMALS;
     case 8:
     case "ATTRIBUTE_KEY_IMG_URI":
       return AttributeKey.ATTRIBUTE_KEY_IMG_URI;
-    case 9:
-    case "ATTRIBUTE_KEY_MINTABLE":
-      return AttributeKey.ATTRIBUTE_KEY_MINTABLE;
-    case 10:
-    case "ATTRIBUTE_KEY_FROM":
-      return AttributeKey.ATTRIBUTE_KEY_FROM;
-    case 11:
-    case "ATTRIBUTE_KEY_TO":
-      return AttributeKey.ATTRIBUTE_KEY_TO;
-    case 12:
-    case "ATTRIBUTE_KEY_PERM":
-      return AttributeKey.ATTRIBUTE_KEY_PERM;
-    case 13:
-    case "ATTRIBUTE_KEY_APPROVER":
-      return AttributeKey.ATTRIBUTE_KEY_APPROVER;
-    case 14:
-    case "ATTRIBUTE_KEY_PROXY":
-      return AttributeKey.ATTRIBUTE_KEY_PROXY;
     case 15:
     case "ATTRIBUTE_KEY_URI":
       return AttributeKey.ATTRIBUTE_KEY_URI;
@@ -187,32 +51,10 @@ export function attributeKeyToJSON(object: AttributeKey): string {
       return "ATTRIBUTE_KEY_UNSPECIFIED";
     case AttributeKey.ATTRIBUTE_KEY_NAME:
       return "ATTRIBUTE_KEY_NAME";
-    case AttributeKey.ATTRIBUTE_KEY_SYMBOL:
-      return "ATTRIBUTE_KEY_SYMBOL";
     case AttributeKey.ATTRIBUTE_KEY_META:
       return "ATTRIBUTE_KEY_META";
-    case AttributeKey.ATTRIBUTE_KEY_CONTRACT_ID:
-      return "ATTRIBUTE_KEY_CONTRACT_ID";
-    case AttributeKey.ATTRIBUTE_KEY_OWNER:
-      return "ATTRIBUTE_KEY_OWNER";
-    case AttributeKey.ATTRIBUTE_KEY_AMOUNT:
-      return "ATTRIBUTE_KEY_AMOUNT";
-    case AttributeKey.ATTRIBUTE_KEY_DECIMALS:
-      return "ATTRIBUTE_KEY_DECIMALS";
     case AttributeKey.ATTRIBUTE_KEY_IMG_URI:
       return "ATTRIBUTE_KEY_IMG_URI";
-    case AttributeKey.ATTRIBUTE_KEY_MINTABLE:
-      return "ATTRIBUTE_KEY_MINTABLE";
-    case AttributeKey.ATTRIBUTE_KEY_FROM:
-      return "ATTRIBUTE_KEY_FROM";
-    case AttributeKey.ATTRIBUTE_KEY_TO:
-      return "ATTRIBUTE_KEY_TO";
-    case AttributeKey.ATTRIBUTE_KEY_PERM:
-      return "ATTRIBUTE_KEY_PERM";
-    case AttributeKey.ATTRIBUTE_KEY_APPROVER:
-      return "ATTRIBUTE_KEY_APPROVER";
-    case AttributeKey.ATTRIBUTE_KEY_PROXY:
-      return "ATTRIBUTE_KEY_PROXY";
     case AttributeKey.ATTRIBUTE_KEY_URI:
       return "ATTRIBUTE_KEY_URI";
     case AttributeKey.UNRECOGNIZED:

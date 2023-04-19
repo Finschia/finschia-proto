@@ -8,13 +8,19 @@ import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.wasm.v1";
 
-/** QueryInactiveContractsRequest is the request type for Query/InactiveContract RPC method. */
+/**
+ * QueryInactiveContractsRequest is the request type for Query/InactiveContract
+ * RPC method.
+ */
 export interface QueryInactiveContractsRequest {
   /** pagination defines an optional pagination for the request */
   pagination?: PageRequest;
 }
 
-/** QueryInactiveContractsResponse is the response type for the Query/InactiveContract RPC method. */
+/**
+ * QueryInactiveContractsResponse is the response type for the
+ * Query/InactiveContract RPC method.
+ */
 export interface QueryInactiveContractsResponse {
   /** addresses is the inactive address list */
   addresses: string[];
@@ -22,13 +28,19 @@ export interface QueryInactiveContractsResponse {
   pagination?: PageResponse;
 }
 
-/** QueryIsInactiveContractRequest is the request type for Query/IsInactiveContract RPC method. */
+/**
+ * QueryIsInactiveContractRequest is the request type for
+ * Query/IsInactiveContract RPC method.
+ */
 export interface QueryInactiveContractRequest {
   /** address is the address of the contract */
   address: string;
 }
 
-/** QueryInactiveContractsResponse is the response type for the Query/IsInactiveContract RPC method. */
+/**
+ * QueryInactiveContractsResponse is the response type for the
+ * Query/IsInactiveContract RPC method.
+ */
 export interface QueryInactiveContractResponse {
   /** inactivated is the result if the contract is inactive contract or not */
   inactivated: boolean;

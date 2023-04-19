@@ -219,6 +219,20 @@ export interface QueryRootResponse {
   root?: NFT;
 }
 
+/** QueryHasParentRequest is the request type for the Query/HasParent RPC method. */
+export interface QueryHasParentRequest {
+  /** contract id associated with the contract. */
+  contractId: string;
+  /** token id associated wit the non-fungible token. */
+  tokenId: string;
+}
+
+/** QueryHasParentResponse is the response type for the Query/HasParent RPC method. */
+export interface QueryHasParentResponse {
+  /** whether the token has its parent. */
+  hasParent: boolean;
+}
+
 /** QueryParentRequest is the request type for the Query/Parent RPC method. */
 export interface QueryParentRequest {
   /** contract id associated with the contract. */
@@ -229,10 +243,7 @@ export interface QueryParentRequest {
 
 /** QueryParentResponse is the response type for the Query/Parent RPC method. */
 export interface QueryParentResponse {
-  /**
-   * parent is the information of the parent token.
-   * if there is no parent for the token, it would return nil.
-   */
+  /** parent is the information of the parent token. */
   parent?: NFT;
 }
 
@@ -1961,6 +1972,129 @@ export const QueryRootResponse = {
   },
 };
 
+function createBaseQueryHasParentRequest(): QueryHasParentRequest {
+  return { contractId: "", tokenId: "" };
+}
+
+export const QueryHasParentRequest = {
+  encode(
+    message: QueryHasParentRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.contractId !== "") {
+      writer.uint32(10).string(message.contractId);
+    }
+    if (message.tokenId !== "") {
+      writer.uint32(18).string(message.tokenId);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryHasParentRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryHasParentRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.contractId = reader.string();
+          break;
+        case 2:
+          message.tokenId = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryHasParentRequest {
+    return {
+      contractId: isSet(object.contractId) ? String(object.contractId) : "",
+      tokenId: isSet(object.tokenId) ? String(object.tokenId) : "",
+    };
+  },
+
+  toJSON(message: QueryHasParentRequest): unknown {
+    const obj: any = {};
+    message.contractId !== undefined && (obj.contractId = message.contractId);
+    message.tokenId !== undefined && (obj.tokenId = message.tokenId);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryHasParentRequest>, I>>(
+    object: I
+  ): QueryHasParentRequest {
+    const message = createBaseQueryHasParentRequest();
+    message.contractId = object.contractId ?? "";
+    message.tokenId = object.tokenId ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryHasParentResponse(): QueryHasParentResponse {
+  return { hasParent: false };
+}
+
+export const QueryHasParentResponse = {
+  encode(
+    message: QueryHasParentResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.hasParent === true) {
+      writer.uint32(8).bool(message.hasParent);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryHasParentResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryHasParentResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.hasParent = reader.bool();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryHasParentResponse {
+    return {
+      hasParent: isSet(object.hasParent) ? Boolean(object.hasParent) : false,
+    };
+  },
+
+  toJSON(message: QueryHasParentResponse): unknown {
+    const obj: any = {};
+    message.hasParent !== undefined && (obj.hasParent = message.hasParent);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryHasParentResponse>, I>>(
+    object: I
+  ): QueryHasParentResponse {
+    const message = createBaseQueryHasParentResponse();
+    message.hasParent = object.hasParent ?? false;
+    return message;
+  },
+};
+
 function createBaseQueryParentRequest(): QueryParentRequest {
   return { contractId: "", tokenId: "" };
 }
@@ -2750,6 +2884,8 @@ export interface Query {
   Token(request: QueryTokenRequest): Promise<QueryTokenResponse>;
   /** Root queries the root of a given nft. */
   Root(request: QueryRootRequest): Promise<QueryRootResponse>;
+  /** HasParent queries whether a given nft has its parent. */
+  HasParent(request: QueryHasParentRequest): Promise<QueryHasParentResponse>;
   /** Parent queries the parent of a given nft. */
   Parent(request: QueryParentRequest): Promise<QueryParentResponse>;
   /** Children queries the children of a given nft. */
@@ -2785,6 +2921,7 @@ export class QueryClientImpl implements Query {
     this.TokenType = this.TokenType.bind(this);
     this.Token = this.Token.bind(this);
     this.Root = this.Root.bind(this);
+    this.HasParent = this.HasParent.bind(this);
     this.Parent = this.Parent.bind(this);
     this.Children = this.Children.bind(this);
     this.GranteeGrants = this.GranteeGrants.bind(this);
@@ -2940,6 +3077,18 @@ export class QueryClientImpl implements Query {
     const promise = this.rpc.request("lbm.collection.v1.Query", "Root", data);
     return promise.then((data) =>
       QueryRootResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  HasParent(request: QueryHasParentRequest): Promise<QueryHasParentResponse> {
+    const data = QueryHasParentRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "lbm.collection.v1.Query",
+      "HasParent",
+      data
+    );
+    return promise.then((data) =>
+      QueryHasParentResponse.decode(new _m0.Reader(data))
     );
   }
 

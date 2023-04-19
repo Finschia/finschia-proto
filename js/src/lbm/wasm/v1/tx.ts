@@ -6,7 +6,10 @@ import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.wasm.v1";
 
-/** MsgStoreCodeAndInstantiateContract submit Wasm code to the system and instantiate a contract using it. */
+/**
+ * MsgStoreCodeAndInstantiateContract submit Wasm code to the system and
+ * instantiate a contract using it.
+ */
 export interface MsgStoreCodeAndInstantiateContract {
   /** Sender is the that actor that signed the messages */
   sender: string;
@@ -23,7 +26,10 @@ export interface MsgStoreCodeAndInstantiateContract {
   funds: Coin[];
 }
 
-/** MsgStoreCodeAndInstantiateContractResponse returns store and instantiate result data. */
+/**
+ * MsgStoreCodeAndInstantiateContractResponse returns store and instantiate
+ * result data.
+ */
 export interface MsgStoreCodeAndInstantiateContractResponse {
   /** CodeID is the reference to the stored WASM code */
   codeId: Long;
@@ -267,9 +273,12 @@ export const MsgStoreCodeAndInstantiateContractResponse = {
   },
 };
 
-/** Msg defines the wasm Msg service for lbm-sdk. */
+/** Msg defines the wasm Msg service for finschia-sdk. */
 export interface Msg {
-  /** StoreCodeAndInstantiateContract upload code and instantiate a contract using it */
+  /**
+   * StoreCodeAndInstantiateContract upload code and instantiate a contract
+   * using it
+   */
   StoreCodeAndInstantiateContract(
     request: MsgStoreCodeAndInstantiateContract
   ): Promise<MsgStoreCodeAndInstantiateContractResponse>;
