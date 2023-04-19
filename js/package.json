@@ -20,7 +20,7 @@
     "tendermint",
     "*.md",
     "!wasmd/**/*.md",
-    "!lbm-sdk/**/*.md",
+    "!finschia-sdk/**/*.md",
     "!ibc-go/**/*.md"
   ],
   "publishConfig": {

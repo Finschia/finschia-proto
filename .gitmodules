@@ -1,9 +1,9 @@
 [submodule "ibc-go"]
 	path = repositories/ibc-go
-	url = https://github.com/line/ibc-go.git
+	url = https://github.com/Finschia/ibc-go.git
 [submodule "wasmd"]
 	path = repositories/wasmd
-	url = https://github.com/line/wasmd.git
+	url = https://github.com/Finschia/wasmd.git
 [submodule "finschia-sdk"]
 	path = repositories/finschia-sdk
 	url = https://github.com/Finschia/finschia-sdk.git

@@ -14,8 +14,8 @@ mkdir -p "$OUT_DIR"
 
 echo "Processing proto files ..."
 
-LBMSDK_DIR="../repositories/lbm-sdk/proto"
-LBMSDK_THIRD_PARTY_DIR="../repositories/lbm-sdk/third_party/proto"
+FINSCHIASDK_DIR="../repositories/finschia-sdk/proto"
+FINSCHIASDK_THIRD_PARTY_DIR="../repositories/finschia-sdk/third_party/proto"
 IBC_GO_DIR="../repositories/ibc-go/proto"
 WASMD_DIR="../repositories/wasmd/proto"
 
@@ -24,10 +24,10 @@ WASMD_DIR="../repositories/wasmd/proto"
 protoc \
  --plugin="$PLUGIN_PATH" \
  --ts_proto_yarn_2_out="${OUT_DIR}" \
- --proto_path="$LBMSDK_DIR" \
+ --proto_path="$FINSCHIASDK_DIR" \
  --proto_path="$IBC_GO_DIR" \
  --proto_path="$WASMD_DIR" \
- --proto_path="$LBMSDK_THIRD_PARTY_DIR" \
+ --proto_path="$FINSCHIASDK_THIRD_PARTY_DIR" \
  --ts_proto_yarn_2_opt="${TS_PROTO_OPTS}" \
- $(find ${LBMSDK_DIR} ${IBC_GO_DIR} ${WASMD_DIR} ${LBMSDK_THIRD_PARTY_DIR} -path -prune -o -name '*.proto' -print0 | xargs -0)
+ $(find ${FINSCHIASDK_DIR} ${IBC_GO_DIR} ${WASMD_DIR} ${FINSCHIASDK_THIRD_PARTY_DIR} -path -prune -o -name '*.proto' -print0 | xargs -0)
 
