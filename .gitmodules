@@ -1,10 +1,9 @@
-[submodule "lbm-sdk"]
-	path = repositories/lbm-sdk
-	url = https://github.com/line/lbm-sdk.git
-	branch = main
 [submodule "ibc-go"]
 	path = repositories/ibc-go
 	url = https://github.com/line/ibc-go.git
 [submodule "wasmd"]
 	path = repositories/wasmd
 	url = https://github.com/line/wasmd.git
+[submodule "finschia-sdk"]
+	path = repositories/finschia-sdk
+	url = https://github.com/Finschia/finschia-sdk.git
