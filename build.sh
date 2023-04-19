@@ -8,9 +8,9 @@ echo "module update"
 git submodule update --init --remote
 
 echo "checkout to desired version"
-echo "checkout to lbm-sdk $LBM_SDK_VERSION"
-cd ./repositories/lbm-sdk 
-git checkout "$LBM_SDK_VERSION"
+echo "checkout to finschia-sdk $FINSCHIA_SDK_VERSION"
+cd ./repositories/finschia-sdk 
+git checkout "$FINSCHIA_SDK_VERSION"
 
 echo "checkout to wasmd $WASMD_VERSION"
 cd ../wasmd

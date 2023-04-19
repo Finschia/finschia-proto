@@ -41,8 +41,8 @@ dependencies {
 sourceSets {
     main {
         proto {
-            srcDir ("../../repositories/lbm-sdk/proto")
-            srcDir ("../../repositories/lbm-sdk/third_party/proto")
+            srcDir ("../../repositories/finschia-sdk/proto")
+            srcDir ("../../repositories/finschia-sdk/third_party/proto")
             srcDir ("../../repositories/wasmd/proto")
             srcDir ("../../repositories/ibc-go/proto")
         }
