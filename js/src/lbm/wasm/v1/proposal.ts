@@ -4,7 +4,10 @@ import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.wasm.v1";
 
-/** DeactivateContractProposal gov proposal content type adds a contract to inactive list. */
+/**
+ * DeactivateContractProposal gov proposal content type adds a contract to
+ * inactive list.
+ */
 export interface DeactivateContractProposal {
   /** Title is a short summary */
   title: string;
@@ -14,7 +17,10 @@ export interface DeactivateContractProposal {
   contract: string;
 }
 
-/** ActivateContractProposal gov proposal content type deletes a contract from inactive list. */
+/**
+ * ActivateContractProposal gov proposal content type deletes a contract from
+ * inactive list.
+ */
 export interface ActivateContractProposal {
   /** Title is a short summary */
   title: string;

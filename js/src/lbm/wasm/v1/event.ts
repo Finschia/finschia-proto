@@ -4,13 +4,19 @@ import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.wasm.v1";
 
-/** EventDeactivateContractProposal is the event that is emitted when the contract is deactivate. */
+/**
+ * EventDeactivateContractProposal is the event that is emitted when the
+ * contract is deactivate.
+ */
 export interface EventDeactivateContractProposal {
   /** contract is the smart contract's address */
   contract: string;
 }
 
-/** EventActivateContractProposal is the event that is emitted when the contract is activates. */
+/**
+ * EventActivateContractProposal is the event that is emitted when the contract
+ * is activates.
+ */
 export interface EventActivateContractProposal {
   /** contract is the smart contract's address */
   contract: string;

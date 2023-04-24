@@ -15,7 +15,7 @@ export const protobufPackage = "lbm.tx.v1beta1";
  * GetBlockWithTxsRequest is the request type for the Service.GetBlockWithTxs
  * RPC method.
  *
- * Since: lbm-sdk 0.47.0
+ * Since: finschia-sdk 0.47.0
  */
 export interface GetBlockWithTxsRequest {
   /** height is the height of the block to query. */
@@ -27,7 +27,7 @@ export interface GetBlockWithTxsRequest {
 /**
  * GetBlockWithTxsResponse is the response type for the Service.GetBlockWithTxs method.
  *
- * Since: lbm-sdk 0.47.0
+ * Since: finschia-sdk 0.47.0
  */
 export interface GetBlockWithTxsResponse {
   /** txs are the transactions in the block. */
@@ -239,7 +239,7 @@ export interface Service {
   /**
    * GetBlockWithTxs fetches a block with decoded txs.
    *
-   * Since: lbm-sdk 0.47.0
+   * Since: finschia-sdk 0.47.0
    */
   GetBlockWithTxs(
     request: GetBlockWithTxsRequest
