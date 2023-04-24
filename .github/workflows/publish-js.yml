@@ -11,6 +11,8 @@ jobs:
   publish:
     name: Publish
     runs-on: ubuntu-latest
+    env:
+      working-directory: ./js
     steps:
       - uses: actions/checkout@v3
 
@@ -22,24 +24,22 @@ jobs:
       - run: if [ ! -x "$(command -v yarn)" ]; then npm install -g yarn; fi
 
       - name: Install dependencies
+        working-directory: ${{ env.working-directory }}
         run: |
-          cd js
           yarn cache clean --all
           yarn install
 
       - name: Build
-        run: |
-          cd js
-          yarn run build
+        working-directory: ${{ env.working-directory }}
+        run: yarn run build
 
       - name: Prepare publish
-        run: |
-          cd js
-          yarn prepare
+        working-directory: ${{ env.working-directory }}
+        run: yarn prepare
 
       - name: Check if tag and version match
+        working-directory: ${{ env.working-directory }}
         run: |
-          cd js
           if [ "$(git tag --points-at ${{ github.sha }})" == "v$(jq -r .version package.json)" ]; then
             echo "Tag and version match. Proceeding with publish."
           else
@@ -48,8 +48,7 @@ jobs:
           fi
 
       - name: Publish to NPM
-        run: |
-          cd js
-          npm publish
+        working-directory: ${{ env.working-directory }}
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
