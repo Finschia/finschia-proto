@@ -24,7 +24,7 @@ jobs:
 
       - name: Check new tag released
         run: |
-          NEW_TAG=$(git describe --tags --abbrev=0)
+          NEW_TAG=$(curl "https://api.github.com/repos/Finschia/finschia/tags" | jq -r '.[0].name')
           if [ ${{ env.CURRENT_TAG }} != $NEW_TAG ] && \
           [ "$(git branch -r | grep "auto-bump-up/${NEW_TAG}")" == "" ]; then \
             echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV; \
