@@ -37,5 +37,5 @@ jobs:
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.OSSRH_PASSPHRASE }}
           RELEASE_VERSION: ${{ github.ref_name }}
         run: |
-          echo $RELEASE_VERSION
+          cd java
           ./gradlew publish -DVERSION=$RELEASE_VERSION
