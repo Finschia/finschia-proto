@@ -110,7 +110,7 @@ tasks.javadoc {
 }
 
 publishing {
-    val groupIdVal = "io.github.finschia"
+    val groupIdVal = "network.finschia"
     val artifactIdVal = "finschia-proto"
     val versionVal: String? = System.getProperty("VERSION")
 
