@@ -1,7 +1,6 @@
 name: Create branch on new tag in finschia
 
 on:
-  push:
   schedule:
     # Every day
     - cron: "0 1 * * *"
