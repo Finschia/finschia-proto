@@ -1,6 +1,6 @@
 {
   "name": "@finschia/finschia-proto",
-  "version": "1.0.0-rc6",
+  "version": "1.0.0",
   "main": "index.js",
   "description": "JS and TS types relating to Protocol Buffers used by FINSCHIA",
   "contributors": [
