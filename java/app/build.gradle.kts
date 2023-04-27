@@ -109,21 +109,21 @@ tasks.javadoc {
     }
 }
 
-val groupIdVal = "io.github.finschia"
-val artifactIdVal = "finschia-proto"
-val versionVal: String? = System.getProperty("VERSION")
-
-val pomName = "finschia"
-val pomDesc = artifactIdVal
-val pomUrl = "https://github.com/Finschia/finschia-proto"
-val pomScmConnection = "scm:git:git://github.com/Finschia/finschia-proto.git"
-val pomDeveloperConnection = "scm:git:ssh://github.com/Finschia/finschia-proto.git"
-val pomScmUrl = "https://github.com/Finschia/finschia-proto"
-
-val ossrhUserName = System.getenv("OSSRH_USERNAME")
-val ossrhPassword = System.getenv("OSSRH_PW")
-
 publishing {
+    val groupIdVal = "io.github.finschia"
+    val artifactIdVal = "finschia-proto"
+    val versionVal: String? = System.getProperty("VERSION")
+
+    val pomName = "finschia"
+    val pomDesc = artifactIdVal
+    val pomUrl = "https://github.com/Finschia/finschia-proto"
+    val pomScmConnection = "scm:git:git://github.com/Finschia/finschia-proto.git"
+    val pomDeveloperConnection = "scm:git:ssh://github.com/Finschia/finschia-proto.git"
+    val pomScmUrl = "https://github.com/Finschia/finschia-proto"
+
+    val ossrhUserName = System.getenv("OSSRH_USERNAME")
+    val ossrhPassword = System.getenv("OSSRH_PW")
+
     publications {
         create<MavenPublication>("mavenJava") {
             groupId = groupIdVal
