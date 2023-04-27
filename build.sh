@@ -2,6 +2,7 @@
 set -o errexit -o nounset -o pipefail
 command -v shellcheck >/dev/null && shellcheck "$0"
 
+# shellcheck disable=SC1091
 source ./env
 
 echo "module update"
