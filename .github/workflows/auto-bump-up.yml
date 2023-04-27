@@ -55,7 +55,7 @@ jobs:
         if: env.NEW_TAG
         run: |
           echo '# Choose from https://github.com/Finschia/finschia/releases' | cat > env
-          echo FINSCHIA_SKD_VERSION=${{ env.FINSCHIA_SDK_VERSION }} | cat >> env
+          echo FINSCHIA_SDK_VERSION=${{ env.FINSCHIA_SDK_VERSION }} | cat >> env
           echo WASMD_VERSION=${{ env.WASMD_VERSION }} | cat >> env
           echo IBC_GO_VERSION=${{ env.IBC_GO_VERSION }} | cat >> env
 
@@ -81,3 +81,4 @@ jobs:
           branch: auto-bump-up/${{ env.NEW_TAG }}
           labels: automated pr
           title: bump up finschia ${{ env.NEW_TAG }} into main
+          base: main

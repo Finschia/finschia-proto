@@ -14,6 +14,9 @@ plugins {
 
     id("com.google.protobuf")
     id("distribution")
+
+    `maven-publish`
+    signing
 }
 
 repositories {
@@ -93,4 +96,81 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().all {
     kotlinOptions {
         freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
+}
+
+java{
+    withJavadocJar()
+    withSourcesJar()
+}
+
+tasks.javadoc {
+    if (JavaVersion.current().isJava8Compatible) {
+        (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
+    }
+}
+
+publishing {
+    val groupIdVal = "io.github.finschia"
+    val artifactIdVal = "finschia-proto"
+    val versionVal: String? = System.getProperty("VERSION")
+
+    val pomName = "finschia"
+    val pomDesc = artifactIdVal
+    val pomUrl = "https://github.com/Finschia/finschia-proto"
+    val pomScmConnection = "scm:git:git://github.com/Finschia/finschia-proto.git"
+    val pomDeveloperConnection = "scm:git:ssh://github.com/Finschia/finschia-proto.git"
+    val pomScmUrl = "https://github.com/Finschia/finschia-proto"
+
+    val ossrhUserName = System.getenv("OSSRH_USERNAME")
+    val ossrhPassword = System.getenv("OSSRH_PW")
+
+    publications {
+        create<MavenPublication>("mavenJava") {
+            groupId = groupIdVal
+            artifactId = artifactIdVal
+            version = versionVal?.substring(1) // without v
+ 
+            from(components["java"])
+            pom {
+                name.set(pomName)
+                description.set(pomDesc)
+                url.set(pomUrl)
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0")
+                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("dev")
+                        name.set("dev")
+                        email.set("dev@finschia.org")
+                    }
+                }
+                scm {
+                    connection.set(pomScmConnection)
+                    developerConnection.set(pomDeveloperConnection)
+                    url.set(pomScmUrl)
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = "OSSRH"
+            url = uri("https://s01.oss.sonatype.org/content/repositories/releases/")
+            credentials {
+                username = ossrhUserName
+                password = ossrhPassword
+            }
+        }
+    }
+}
+
+signing {
+    val signingKey: String? by project
+    val signingPassword: String? by project
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign(publishing.publications["mavenJava"])
 }
