@@ -81,3 +81,4 @@ jobs:
           branch: auto-bump-up/${{ env.NEW_TAG }}
           labels: automated pr
           title: bump up finschia ${{ env.NEW_TAG }} into main
+          base: main
