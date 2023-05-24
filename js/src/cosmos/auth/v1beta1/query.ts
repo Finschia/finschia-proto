@@ -60,6 +60,23 @@ export interface QueryModuleAccountByNameResponse {
   account?: Any;
 }
 
+/**
+ * QueryNextAccountNumberRequest is the request type for the Query/NextAccountNumber.
+ *
+ * @deprecated
+ */
+export interface QueryNextAccountNumberRequest {}
+
+/**
+ * QueryNextAccountNumberResponse is the response for the Query/NextAccountNumber.
+ *
+ * @deprecated
+ */
+export interface QueryNextAccountNumberResponse {
+  /** The next account number is the next value of global account number. */
+  nextAccountNumber: Long;
+}
+
 function createBaseQueryAccountsRequest(): QueryAccountsRequest {
   return { pagination: undefined };
 }
@@ -545,6 +562,119 @@ export const QueryModuleAccountByNameResponse = {
   },
 };
 
+function createBaseQueryNextAccountNumberRequest(): QueryNextAccountNumberRequest {
+  return {};
+}
+
+export const QueryNextAccountNumberRequest = {
+  encode(
+    _: QueryNextAccountNumberRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryNextAccountNumberRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryNextAccountNumberRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): QueryNextAccountNumberRequest {
+    return {};
+  },
+
+  toJSON(_: QueryNextAccountNumberRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryNextAccountNumberRequest>, I>>(
+    _: I
+  ): QueryNextAccountNumberRequest {
+    const message = createBaseQueryNextAccountNumberRequest();
+    return message;
+  },
+};
+
+function createBaseQueryNextAccountNumberResponse(): QueryNextAccountNumberResponse {
+  return { nextAccountNumber: Long.UZERO };
+}
+
+export const QueryNextAccountNumberResponse = {
+  encode(
+    message: QueryNextAccountNumberResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (!message.nextAccountNumber.isZero()) {
+      writer.uint32(8).uint64(message.nextAccountNumber);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryNextAccountNumberResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryNextAccountNumberResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.nextAccountNumber = reader.uint64() as Long;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryNextAccountNumberResponse {
+    return {
+      nextAccountNumber: isSet(object.nextAccountNumber)
+        ? Long.fromValue(object.nextAccountNumber)
+        : Long.UZERO,
+    };
+  },
+
+  toJSON(message: QueryNextAccountNumberResponse): unknown {
+    const obj: any = {};
+    message.nextAccountNumber !== undefined &&
+      (obj.nextAccountNumber = (
+        message.nextAccountNumber || Long.UZERO
+      ).toString());
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryNextAccountNumberResponse>, I>>(
+    object: I
+  ): QueryNextAccountNumberResponse {
+    const message = createBaseQueryNextAccountNumberResponse();
+    message.nextAccountNumber =
+      object.nextAccountNumber !== undefined &&
+      object.nextAccountNumber !== null
+        ? Long.fromValue(object.nextAccountNumber)
+        : Long.UZERO;
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /**
@@ -561,6 +691,16 @@ export interface Query {
   ModuleAccountByName(
     request: QueryModuleAccountByNameRequest
   ): Promise<QueryModuleAccountByNameResponse>;
+  /**
+   * NextAccountNumber queries the global account number.
+   * Please be careful use this rpc. This rpc can be disappear whenever.
+   * And backward compatibility is not guaranteed.
+   *
+   * @deprecated
+   */
+  NextAccountNumber(
+    request: QueryNextAccountNumberRequest
+  ): Promise<QueryNextAccountNumberResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -571,6 +711,7 @@ export class QueryClientImpl implements Query {
     this.Account = this.Account.bind(this);
     this.Params = this.Params.bind(this);
     this.ModuleAccountByName = this.ModuleAccountByName.bind(this);
+    this.NextAccountNumber = this.NextAccountNumber.bind(this);
   }
   Accounts(request: QueryAccountsRequest): Promise<QueryAccountsResponse> {
     const data = QueryAccountsRequest.encode(request).finish();
@@ -619,6 +760,20 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryModuleAccountByNameResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  NextAccountNumber(
+    request: QueryNextAccountNumberRequest
+  ): Promise<QueryNextAccountNumberResponse> {
+    const data = QueryNextAccountNumberRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "cosmos.auth.v1beta1.Query",
+      "NextAccountNumber",
+      data
+    );
+    return promise.then((data) =>
+      QueryNextAccountNumberResponse.decode(new _m0.Reader(data))
     );
   }
 }

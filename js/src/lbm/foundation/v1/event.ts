@@ -1,6 +1,6 @@
 /* eslint-disable */
+import { Any } from "../../../google/protobuf/any";
 import {
-  Params,
   Proposal,
   Vote,
   ProposalExecutorResult,
@@ -9,17 +9,11 @@ import {
   proposalExecutorResultFromJSON,
   proposalExecutorResultToJSON,
 } from "./foundation";
-import { Any } from "../../../google/protobuf/any";
 import Long from "long";
 import { Coin } from "../../../cosmos/base/v1beta1/coin";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.foundation.v1";
-
-/** EventUpdateParams is emitted after updating foundation parameters. */
-export interface EventUpdateParams {
-  params?: Params;
-}
 
 /** EventFundTreasury is an event emitted when one funds the treasury. */
 export interface EventFundTreasury {
@@ -96,64 +90,6 @@ export interface EventRevoke {
   /** message type url for which an autorization is revoked. */
   msgTypeUrl: string;
 }
-
-function createBaseEventUpdateParams(): EventUpdateParams {
-  return { params: undefined };
-}
-
-export const EventUpdateParams = {
-  encode(
-    message: EventUpdateParams,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.params !== undefined) {
-      Params.encode(message.params, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): EventUpdateParams {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventUpdateParams();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.params = Params.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): EventUpdateParams {
-    return {
-      params: isSet(object.params) ? Params.fromJSON(object.params) : undefined,
-    };
-  },
-
-  toJSON(message: EventUpdateParams): unknown {
-    const obj: any = {};
-    message.params !== undefined &&
-      (obj.params = message.params ? Params.toJSON(message.params) : undefined);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<EventUpdateParams>, I>>(
-    object: I
-  ): EventUpdateParams {
-    const message = createBaseEventUpdateParams();
-    message.params =
-      object.params !== undefined && object.params !== null
-        ? Params.fromPartial(object.params)
-        : undefined;
-    return message;
-  },
-};
 
 function createBaseEventFundTreasury(): EventFundTreasury {
   return { from: "", amount: [] };
