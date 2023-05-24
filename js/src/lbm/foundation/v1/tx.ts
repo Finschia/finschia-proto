@@ -1,13 +1,12 @@
 /* eslint-disable */
+import { Any } from "../../../google/protobuf/any";
 import {
-  Params,
   VoteOption,
   Censorship,
   MemberRequest,
   voteOptionFromJSON,
   voteOptionToJSON,
 } from "./foundation";
-import { Any } from "../../../google/protobuf/any";
 import Long from "long";
 import { Coin } from "../../../cosmos/base/v1beta1/coin";
 import * as _m0 from "protobufjs/minimal";
@@ -57,21 +56,6 @@ export function execToJSON(object: Exec): string {
       return "UNRECOGNIZED";
   }
 }
-
-/** MsgUpdateParams is the Msg/UpdateParams request type. */
-export interface MsgUpdateParams {
-  /** authority is the address of the privileged account. */
-  authority: string;
-  /**
-   * params defines the x/foundation parameters to update.
-   *
-   * NOTE: All parameters must be supplied.
-   */
-  params?: Params;
-}
-
-/** MsgUpdateParamsResponse is the Msg/UpdateParams response type. */
-export interface MsgUpdateParamsResponse {}
 
 /** MsgFundTreasury is the Msg/FundTreasury request type. */
 export interface MsgFundTreasury {
@@ -229,120 +213,6 @@ export interface MsgRevoke {
 
 /** MsgRevokeResponse is the Msg/MsgRevokeResponse response type. */
 export interface MsgRevokeResponse {}
-
-function createBaseMsgUpdateParams(): MsgUpdateParams {
-  return { authority: "", params: undefined };
-}
-
-export const MsgUpdateParams = {
-  encode(
-    message: MsgUpdateParams,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.authority !== "") {
-      writer.uint32(10).string(message.authority);
-    }
-    if (message.params !== undefined) {
-      Params.encode(message.params, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgUpdateParams {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgUpdateParams();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.authority = reader.string();
-          break;
-        case 2:
-          message.params = Params.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MsgUpdateParams {
-    return {
-      authority: isSet(object.authority) ? String(object.authority) : "",
-      params: isSet(object.params) ? Params.fromJSON(object.params) : undefined,
-    };
-  },
-
-  toJSON(message: MsgUpdateParams): unknown {
-    const obj: any = {};
-    message.authority !== undefined && (obj.authority = message.authority);
-    message.params !== undefined &&
-      (obj.params = message.params ? Params.toJSON(message.params) : undefined);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgUpdateParams>, I>>(
-    object: I
-  ): MsgUpdateParams {
-    const message = createBaseMsgUpdateParams();
-    message.authority = object.authority ?? "";
-    message.params =
-      object.params !== undefined && object.params !== null
-        ? Params.fromPartial(object.params)
-        : undefined;
-    return message;
-  },
-};
-
-function createBaseMsgUpdateParamsResponse(): MsgUpdateParamsResponse {
-  return {};
-}
-
-export const MsgUpdateParamsResponse = {
-  encode(
-    _: MsgUpdateParamsResponse,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): MsgUpdateParamsResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgUpdateParamsResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(_: any): MsgUpdateParamsResponse {
-    return {};
-  },
-
-  toJSON(_: MsgUpdateParamsResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgUpdateParamsResponse>, I>>(
-    _: I
-  ): MsgUpdateParamsResponse {
-    const message = createBaseMsgUpdateParamsResponse();
-    return message;
-  },
-};
 
 function createBaseMsgFundTreasury(): MsgFundTreasury {
   return { from: "", amount: [] };
@@ -1819,11 +1689,6 @@ export const MsgRevokeResponse = {
 
 /** Msg defines the foundation Msg service. */
 export interface Msg {
-  /**
-   * UpdateParams defines an operation for updating the x/foundation module
-   * parameters.
-   */
-  UpdateParams(request: MsgUpdateParams): Promise<MsgUpdateParamsResponse>;
   /** FundTreasury defines a method to fund the treasury. */
   FundTreasury(request: MsgFundTreasury): Promise<MsgFundTreasuryResponse>;
   /** WithdrawFromTreasury defines a method to withdraw coins from the treasury. */
@@ -1873,7 +1738,6 @@ export class MsgClientImpl implements Msg {
   private readonly rpc: Rpc;
   constructor(rpc: Rpc) {
     this.rpc = rpc;
-    this.UpdateParams = this.UpdateParams.bind(this);
     this.FundTreasury = this.FundTreasury.bind(this);
     this.WithdrawFromTreasury = this.WithdrawFromTreasury.bind(this);
     this.UpdateMembers = this.UpdateMembers.bind(this);
@@ -1887,18 +1751,6 @@ export class MsgClientImpl implements Msg {
     this.Grant = this.Grant.bind(this);
     this.Revoke = this.Revoke.bind(this);
   }
-  UpdateParams(request: MsgUpdateParams): Promise<MsgUpdateParamsResponse> {
-    const data = MsgUpdateParams.encode(request).finish();
-    const promise = this.rpc.request(
-      "lbm.foundation.v1.Msg",
-      "UpdateParams",
-      data
-    );
-    return promise.then((data) =>
-      MsgUpdateParamsResponse.decode(new _m0.Reader(data))
-    );
-  }
-
   FundTreasury(request: MsgFundTreasury): Promise<MsgFundTreasuryResponse> {
     const data = MsgFundTreasury.encode(request).finish();
     const promise = this.rpc.request(
