@@ -71,6 +71,17 @@ jobs:
           chmod +x ./build.sh
           ./build.sh
 
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install Dependencies
+        run: npm install -g prettier
+  
+      - name: Lint Markdown
+        run: prettier --write README.md
+
       - name: Create Pull Request
         if: env.NEW_TAG
         uses: peter-evans/create-pull-request@v4
