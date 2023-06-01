@@ -54,6 +54,7 @@ jobs:
         if: env.NEW_TAG
         run: |
           echo '# Choose from https://github.com/Finschia/finschia/releases' | cat > env
+          echo FINSCHIA_VERSION=${{ env.NEW_TAG }} | cat >> env
           echo FINSCHIA_SDK_VERSION=${{ env.FINSCHIA_SDK_VERSION }} | cat >> env
           echo WASMD_VERSION=${{ env.WASMD_VERSION }} | cat >> env
           echo IBC_GO_VERSION=${{ env.IBC_GO_VERSION }} | cat >> env

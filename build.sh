@@ -32,6 +32,9 @@ yarn build
 # Prepare publishing
 yarn prepare
 
+# Change version to latest
+npm version "$(echo "$FINSCHIA_VERSION" | sed 's/^v//')"
+
 echo "build java types"
 cd ../java
 # Generate .class and zip
