@@ -23,6 +23,8 @@ IBC_GO_VERSION="v3.3.3"
 
 ## Version of each module
 
+<!-- This paragraph should be placed at the end of this md file. Because the version line is automatically added to the last line by CI -->
+
 finschia-proto version follows [Finschia/finschia](https://github.com/Finschia/finschia) version. Also the versions of submodules as well.
 
 | finschia-proto | [Finschia/finschia-sdk](https://github.com/Finschia/finschia-sdk)        | [Finschia/wasmd](https://github.com/Finschia/wasmd)     | [Finschia/ibc-go](https://github.com/Finschia/ibc-go)                                                                               | [Finschia/finschia](https://github.com/Finschia/finschia)          |
