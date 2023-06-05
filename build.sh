@@ -40,4 +40,6 @@ cd ../java
 # Generate .class and zip
 ./gradlew build
 
-echo "| $FINSCHIA_VERSION | [$FINSCHIA_SDK_VERSION](https://github.com/Finschia/finschia-sdk/tree/$FINSCHIA_SDK_VERSION) | [$WASMD_VERSION](https://github.com/Finschia/wasmd/tree/$WASMD_VERSION) | [$IBC_GO_VERSION](https://github.com/Finschia/ibc-go/tree/$IBC_GO_VERSION) | [$FINSCHIA_VERSION](https://github.com/Finschia/finschia/tree/$FINSCHIA_VERSION) |"
+# Write new version info to README.md
+cd ..
+echo "| $FINSCHIA_VERSION | [$FINSCHIA_SDK_VERSION](https://github.com/Finschia/finschia-sdk/tree/$FINSCHIA_SDK_VERSION) | [$WASMD_VERSION](https://github.com/Finschia/wasmd/tree/$WASMD_VERSION) | [$IBC_GO_VERSION](https://github.com/Finschia/ibc-go/tree/$IBC_GO_VERSION) | [$FINSCHIA_VERSION](https://github.com/Finschia/finschia/tree/$FINSCHIA_VERSION) |" >> README.md
