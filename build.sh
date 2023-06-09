@@ -33,6 +33,7 @@ yarn build
 yarn prepare
 
 # Change version to latest
+# shellcheck disable=SC2001
 npm version "$(echo "$FINSCHIA_VERSION" | sed 's/^v//')"
 
 echo "build java types"
