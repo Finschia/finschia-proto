@@ -35,7 +35,7 @@ jobs:
         run: |
           FINSCHIA_SDK_VERSION=$(grep 'github.com/Finschia/finschia-sdk' go.mod | awk '{print $2}' | awk -F '-' '{print $NF}')
           WASMD_VERSION=$(grep 'github.com/Finschia/wasmd' go.mod | awk '{print $2}' | awk -F '-' '{print $NF}')
-          IBC_GO_VERSION=$(grep 'github.com/Finschia/ibc-go' go.mod | awk '{print $2}' | awk -F '-' '{print $NF}')
+          IBC_GO_VERSION=$(grep 'github.com/cosmos/ibc-go' go.mod | grep -v '=>' | awk '{print $2}' | awk -F '-' '{print $NF}')
           echo "FINSCHIA_SDK_VERSION=$FINSCHIA_SDK_VERSION" >> $GITHUB_ENV
           echo "WASMD_VERSION=$WASMD_VERSION" >> $GITHUB_ENV
           echo "IBC_GO_VERSION=$IBC_GO_VERSION" >> $GITHUB_ENV
