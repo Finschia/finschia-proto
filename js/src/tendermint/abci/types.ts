@@ -265,6 +265,13 @@ export interface ResponseCheckTx {
   gasUsed: Long;
   events: Event[];
   codespace: string;
+  sender: string;
+  priority: Long;
+  /**
+   * mempool_error is set by Tendermint.
+   * ABCI applictions creating a ResponseCheckTX should not set mempool_error.
+   */
+  mempoolError: string;
 }
 
 export interface ResponseDeliverTx {
@@ -3062,6 +3069,9 @@ function createBaseResponseCheckTx(): ResponseCheckTx {
     gasUsed: Long.ZERO,
     events: [],
     codespace: "",
+    sender: "",
+    priority: Long.ZERO,
+    mempoolError: "",
   };
 }
 
@@ -3093,6 +3103,15 @@ export const ResponseCheckTx = {
     }
     if (message.codespace !== "") {
       writer.uint32(66).string(message.codespace);
+    }
+    if (message.sender !== "") {
+      writer.uint32(74).string(message.sender);
+    }
+    if (!message.priority.isZero()) {
+      writer.uint32(80).int64(message.priority);
+    }
+    if (message.mempoolError !== "") {
+      writer.uint32(90).string(message.mempoolError);
     }
     return writer;
   },
@@ -3128,6 +3147,15 @@ export const ResponseCheckTx = {
         case 8:
           message.codespace = reader.string();
           break;
+        case 9:
+          message.sender = reader.string();
+          break;
+        case 10:
+          message.priority = reader.int64() as Long;
+          break;
+        case 11:
+          message.mempoolError = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -3154,6 +3182,13 @@ export const ResponseCheckTx = {
         ? object.events.map((e: any) => Event.fromJSON(e))
         : [],
       codespace: isSet(object.codespace) ? String(object.codespace) : "",
+      sender: isSet(object.sender) ? String(object.sender) : "",
+      priority: isSet(object.priority)
+        ? Long.fromValue(object.priority)
+        : Long.ZERO,
+      mempoolError: isSet(object.mempoolError)
+        ? String(object.mempoolError)
+        : "",
     };
   },
 
@@ -3176,6 +3211,11 @@ export const ResponseCheckTx = {
       obj.events = [];
     }
     message.codespace !== undefined && (obj.codespace = message.codespace);
+    message.sender !== undefined && (obj.sender = message.sender);
+    message.priority !== undefined &&
+      (obj.priority = (message.priority || Long.ZERO).toString());
+    message.mempoolError !== undefined &&
+      (obj.mempoolError = message.mempoolError);
     return obj;
   },
 
@@ -3197,6 +3237,12 @@ export const ResponseCheckTx = {
         : Long.ZERO;
     message.events = object.events?.map((e) => Event.fromPartial(e)) || [];
     message.codespace = object.codespace ?? "";
+    message.sender = object.sender ?? "";
+    message.priority =
+      object.priority !== undefined && object.priority !== null
+        ? Long.fromValue(object.priority)
+        : Long.ZERO;
+    message.mempoolError = object.mempoolError ?? "";
     return message;
   },
 };
