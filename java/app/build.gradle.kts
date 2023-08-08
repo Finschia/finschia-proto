@@ -35,9 +35,9 @@ sourceSets {
     main {
         proto {
             srcDir ("../../repositories/finschia-sdk/proto")
-            srcDir ("../../repositories/finschia-sdk/third_party/proto")
             srcDir ("../../repositories/wasmd/proto")
             srcDir ("../../repositories/ibc-go/proto")
+            srcDir("../third_party/proto")
         }
     }
 }
