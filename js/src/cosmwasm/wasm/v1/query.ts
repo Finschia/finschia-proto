@@ -50,6 +50,7 @@ export interface QueryContractHistoryRequest {
  * Query/ContractHistory RPC method
  */
 export interface QueryContractHistoryResponse {
+  /** return in the order of timestamps according to when the contract was updated */
   entries: ContractCodeHistoryEntry[];
   /** pagination defines the pagination in the response. */
   pagination?: PageResponse;
@@ -71,7 +72,10 @@ export interface QueryContractsByCodeRequest {
  * Query/ContractsByCode RPC method
  */
 export interface QueryContractsByCodeResponse {
-  /** contracts are a set of contract addresses */
+  /**
+   * contracts are a set of contract addresses.
+   * return in the order of timestamps according to instantiation or migration
+   */
   contracts: string[];
   /** pagination defines the pagination in the response. */
   pagination?: PageResponse;
@@ -93,6 +97,7 @@ export interface QueryAllContractStateRequest {
  * Query/AllContractState RPC method
  */
 export interface QueryAllContractStateResponse {
+  /** return in alphabetical order of the state's keys */
   models: Model[];
   /** pagination defines the pagination in the response. */
   pagination?: PageResponse;
@@ -166,6 +171,7 @@ export interface QueryCodesRequest {
 
 /** QueryCodesResponse is the response type for the Query/Codes RPC method */
 export interface QueryCodesResponse {
+  /** return in the order of code_id */
   codeInfos: CodeInfoResponse[];
   /** pagination defines the pagination in the response. */
   pagination?: PageResponse;
@@ -185,6 +191,7 @@ export interface QueryPinnedCodesRequest {
  * Query/PinnedCodes RPC method
  */
 export interface QueryPinnedCodesResponse {
+  /** return in the order of code_id */
   codeIds: Long[];
   /** pagination defines the pagination in the response. */
   pagination?: PageResponse;
