@@ -22,7 +22,7 @@ export interface QueryInactiveContractsRequest {
  * Query/InactiveContract RPC method.
  */
 export interface QueryInactiveContractsResponse {
-  /** addresses is the inactive address list */
+  /** addresses is the inactive address list of strings, in ascending order of byte format */
   addresses: string[];
   /** pagination defines the pagination in the response */
   pagination?: PageResponse;
