@@ -69,7 +69,7 @@ jobs:
         if: env.NEW_TAG
         run: |
           chmod +x ./build.sh
-          ./build.sh
+          bash -xe build.sh
 
       - name: Install Node.js
         uses: actions/setup-node@v2
