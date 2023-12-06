@@ -2,7 +2,6 @@ name: Create branch on new tag in finschia
 
 on:
   pull_request:
-  push: 
 
 jobs:
   create-bump-up-PR:
