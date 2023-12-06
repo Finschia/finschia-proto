@@ -36,10 +36,10 @@ yarn prepare
 # shellcheck disable=SC2001
 npm version "$(echo "$FINSCHIA_VERSION" | sed 's/^v//')"
 
-echo "build java types"
-cd ../java
-# Generate .class and zip
-./gradlew build
+# echo "build java types"
+# cd ../java
+# # Generate .class and zip
+# ./gradlew build
 
 # Write new version info to README.md
 cd ..
