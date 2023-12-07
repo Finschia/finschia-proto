@@ -40,10 +40,11 @@ echo "build java types"
 cd ../java
 # Generate .class and zip
 ./gradlew build --warning-mode all
+echo "AAaaaaaa"
 
-# Write new version info to README.md
+# # Write new version info to README.md
 cd ..
-table_end_line=$(grep -n -m 1 "| finschia-proto |" README.md | cut -d ":" -f 1)
+table_end_line=$(grep -n -m 1 "\-\-\-\-|\-\-\-\-" README.md | cut -d ":" -f 1)
 content="| $FINSCHIA_VERSION | [$FINSCHIA_SDK_VERSION](https://github.com/Finschia/finschia-sdk/tree/$FINSCHIA_SDK_VERSION) | [$WASMD_VERSION](https://github.com/Finschia/wasmd/tree/$WASMD_VERSION) | [$IBC_GO_VERSION](https://github.com/Finschia/ibc-go/tree/$IBC_GO_VERSION) | [$FINSCHIA_VERSION](https://github.com/Finschia/finschia/tree/$FINSCHIA_VERSION) |"
 
 # Insert the new row
