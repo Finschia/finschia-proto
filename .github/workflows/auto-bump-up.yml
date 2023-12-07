@@ -61,11 +61,11 @@ jobs:
         if: env.NEW_TAG
         uses: arduino/setup-protoc@v2
 
-      - name: run build
-        if: env.NEW_TAG
-        run: |
-          chmod +x ./build.sh
-          ./build.sh
+      # - name: run build
+      #   if: env.NEW_TAG
+      #   run: |
+      #     chmod +x ./build.sh
+      #     ./build.sh
 
       - name: Install Node.js
         uses: actions/setup-node@v4
