@@ -1,9 +1,7 @@
 name: Create branch on new tag in finschia
 
 on:
-  schedule:
-    # Every day
-    - cron: "0 1 * * *"
+  pull_request:
 
 jobs:
   create-bump-up-PR:
@@ -61,9 +59,7 @@ jobs:
 
       - name: Install protoc
         if: env.NEW_TAG
-        uses: arduino/setup-protoc@v1
-        with:
-          version: "3.14.0"
+        uses: arduino/setup-protoc@v2
 
       - name: run build
         if: env.NEW_TAG
@@ -72,24 +68,24 @@ jobs:
           ./build.sh
 
       - name: Install Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: 14
+          node-version: 16
 
       - name: Install Dependencies
         run: npm install -g prettier
 
-      - name: Lint Markdown
-        run: prettier --write README.md
+      # - name: Lint Markdown
+      #   run: prettier --write README.md
 
-      - name: Create Pull Request
-        if: env.NEW_TAG
-        uses: peter-evans/create-pull-request@v4
-        with:
-          commit-message: Automated bump up ${{ env.NEW_TAG }}
-          committer: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
-          author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
-          branch: auto-bump-up/${{ env.NEW_TAG }}
-          labels: automated pr
-          title: bump up finschia ${{ env.NEW_TAG }} into main
-          base: main
+      # - name: Create Pull Request
+      #   if: env.NEW_TAG
+      #   uses: peter-evans/create-pull-request@v4
+      #   with:
+      #     commit-message: Automated bump up ${{ env.NEW_TAG }}
+      #     committer: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+      #     author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+      #     branch: auto-bump-up/${{ env.NEW_TAG }}
+      #     labels: automated pr
+      #     title: bump up finschia ${{ env.NEW_TAG }} into main
+      #     base: main
