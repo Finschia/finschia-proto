@@ -40,7 +40,6 @@ echo "build java types"
 cd ../java
 # Generate .class and zip
 ./gradlew build --warning-mode all
-echo "AAaaaaaa"
 
 # # Write new version info to README.md
 cd ..
