@@ -108,10 +108,18 @@ export function legacyPermissionToJSON(object: LegacyPermission): string {
   }
 }
 
-/** Params defines the parameters for the token module. */
+/**
+ * Params defines the parameters for the token module.
+ *
+ * @deprecated
+ */
 export interface Params {}
 
-/** Contract defines token information. */
+/**
+ * Contract defines token information.
+ *
+ * @deprecated
+ */
 export interface Contract {
   /** id defines the unique identifier of the contract. */
   id: string;
@@ -129,13 +137,21 @@ export interface Contract {
   mintable: boolean;
 }
 
-/** Attribute defines a key and value of the attribute. */
+/**
+ * Attribute defines a key and value of the attribute.
+ *
+ * @deprecated
+ */
 export interface Attribute {
   key: string;
   value: string;
 }
 
-/** Authorization defines an authorization given to the operator on tokens of the holder. */
+/**
+ * Authorization defines an authorization given to the operator on tokens of the holder.
+ *
+ * @deprecated
+ */
 export interface Authorization {
   /** address of the token holder which approves the authorization. */
   holder: string;
@@ -143,7 +159,11 @@ export interface Authorization {
   operator: string;
 }
 
-/** Grant defines permission given to a grantee. */
+/**
+ * Grant defines permission given to a grantee.
+ *
+ * @deprecated
+ */
 export interface Grant {
   /** address of the grantee. */
   grantee: string;

@@ -9,6 +9,8 @@ export const protobufPackage = "lbm.token.v1";
  * MsgSend defines the Msg/Send request type.
  *
  * Signer: `from`
+ *
+ * @deprecated
  */
 export interface MsgSend {
   /** contract id associated with the token class. */
@@ -21,13 +23,19 @@ export interface MsgSend {
   amount: string;
 }
 
-/** MsgSendResponse defines the Msg/Send response type. */
+/**
+ * MsgSendResponse defines the Msg/Send response type.
+ *
+ * @deprecated
+ */
 export interface MsgSendResponse {}
 
 /**
  * MsgOperatorSend defines the Msg/OperatorSend request type.
  *
  * Signer: `operator`
+ *
+ * @deprecated
  */
 export interface MsgOperatorSend {
   /** contract id associated with the token class. */
@@ -42,7 +50,11 @@ export interface MsgOperatorSend {
   amount: string;
 }
 
-/** MsgOperatorSendResponse defines the Msg/OperatorSend response type. */
+/**
+ * MsgOperatorSendResponse defines the Msg/OperatorSend response type.
+ *
+ * @deprecated
+ */
 export interface MsgOperatorSendResponse {}
 
 /**
@@ -51,6 +63,8 @@ export interface MsgOperatorSendResponse {}
  * Signer: `holder`
  *
  * Since: 0.46.0 (finschia)
+ *
+ * @deprecated
  */
 export interface MsgRevokeOperator {
   /** contract id associated with the token class. */
@@ -65,6 +79,8 @@ export interface MsgRevokeOperator {
  * MsgRevokeOperatorResponse defines the Msg/RevokeOperator response type.
  *
  * Since: 0.46.0 (finschia)
+ *
+ * @deprecated
  */
 export interface MsgRevokeOperatorResponse {}
 
@@ -72,6 +88,8 @@ export interface MsgRevokeOperatorResponse {}
  * MsgAuthorizeOperator defines the Msg/AuthorizeOperator request type.
  *
  * Signer: `holder`
+ *
+ * @deprecated
  */
 export interface MsgAuthorizeOperator {
   /** contract id associated with the token class. */
@@ -82,13 +100,19 @@ export interface MsgAuthorizeOperator {
   operator: string;
 }
 
-/** MsgAuthorizeOperatorResponse defines the Msg/AuthorizeOperator response type. */
+/**
+ * MsgAuthorizeOperatorResponse defines the Msg/AuthorizeOperator response type.
+ *
+ * @deprecated
+ */
 export interface MsgAuthorizeOperatorResponse {}
 
 /**
  * MsgIssue defines the Msg/Issue request type.
  *
  * Signer: `owner`
+ *
+ * @deprecated
  */
 export interface MsgIssue {
   /** name defines the human-readable name of the token class. mandatory (not ERC20 compliant). */
@@ -111,7 +135,11 @@ export interface MsgIssue {
   amount: string;
 }
 
-/** MsgIssueResponse defines the Msg/Issue response type. */
+/**
+ * MsgIssueResponse defines the Msg/Issue response type.
+ *
+ * @deprecated
+ */
 export interface MsgIssueResponse {
   /** id of the new contract. */
   contractId: string;
@@ -121,6 +149,8 @@ export interface MsgIssueResponse {
  * MsgGrantPermission defines the Msg/GrantPermission request type.
  *
  * Signer: `granter`
+ *
+ * @deprecated
  */
 export interface MsgGrantPermission {
   /** contract id associated with the token class. */
@@ -133,13 +163,19 @@ export interface MsgGrantPermission {
   permission: string;
 }
 
-/** MsgGrantPermissionResponse defines the Msg/GrantPermission response type. */
+/**
+ * MsgGrantPermissionResponse defines the Msg/GrantPermission response type.
+ *
+ * @deprecated
+ */
 export interface MsgGrantPermissionResponse {}
 
 /**
  * MsgRevokePermission defines the Msg/RevokePermission request type.
  *
  * Signer: `grantee`
+ *
+ * @deprecated
  */
 export interface MsgRevokePermission {
   /** contract id associated with the token class. */
@@ -150,13 +186,19 @@ export interface MsgRevokePermission {
   permission: string;
 }
 
-/** MsgRevokePermissionResponse defines the Msg/RevokePermission response type. */
+/**
+ * MsgRevokePermissionResponse defines the Msg/RevokePermission response type.
+ *
+ * @deprecated
+ */
 export interface MsgRevokePermissionResponse {}
 
 /**
  * MsgMint defines the Msg/Mint request type.
  *
  * Signer: `from`
+ *
+ * @deprecated
  */
 export interface MsgMint {
   /** contract id associated with the token class. */
@@ -169,13 +211,19 @@ export interface MsgMint {
   amount: string;
 }
 
-/** MsgMintResponse defines the Msg/Mint response type. */
+/**
+ * MsgMintResponse defines the Msg/Mint response type.
+ *
+ * @deprecated
+ */
 export interface MsgMintResponse {}
 
 /**
  * MsgBurn defines the Msg/Burn request type.
  *
  * Signer: `from`
+ *
+ * @deprecated
  */
 export interface MsgBurn {
   /** contract id associated with the token class. */
@@ -186,13 +234,19 @@ export interface MsgBurn {
   amount: string;
 }
 
-/** MsgBurnResponse defines the Msg/Burn response type. */
+/**
+ * MsgBurnResponse defines the Msg/Burn response type.
+ *
+ * @deprecated
+ */
 export interface MsgBurnResponse {}
 
 /**
  * MsgOperatorBurn defines the Msg/OperatorBurn request type.
  *
  * Signer: `operator`
+ *
+ * @deprecated
  */
 export interface MsgOperatorBurn {
   /** contract id associated with the token class. */
@@ -205,13 +259,19 @@ export interface MsgOperatorBurn {
   amount: string;
 }
 
-/** MsgOperatorBurnResponse defines the Msg/OperatorBurn response type. */
+/**
+ * MsgOperatorBurnResponse defines the Msg/OperatorBurn response type.
+ *
+ * @deprecated
+ */
 export interface MsgOperatorBurnResponse {}
 
 /**
  * MsgModify defines the Msg/Modify request type.
  *
  * Signer: `owner`
+ *
+ * @deprecated
  */
 export interface MsgModify {
   /** contract id associated with the contract. */
@@ -225,7 +285,11 @@ export interface MsgModify {
   changes: Attribute[];
 }
 
-/** MsgModifyResponse defines the Msg/Modify response type. */
+/**
+ * MsgModifyResponse defines the Msg/Modify response type.
+ *
+ * @deprecated
+ */
 export interface MsgModifyResponse {}
 
 function createBaseMsgSend(): MsgSend {
@@ -1655,7 +1719,11 @@ export const MsgModifyResponse = {
   },
 };
 
-/** Msg defines the token Msg service. */
+/**
+ * Msg defines the token Msg service.
+ *
+ * @deprecated
+ */
 export interface Msg {
   /**
    * Send defines a method to send tokens from one account to another account.

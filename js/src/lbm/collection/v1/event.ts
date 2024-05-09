@@ -133,6 +133,8 @@ export interface EventCreatedContract {
  * EventCreatedFTClass is emitted when a new fungible token class is created.
  *
  * Since: 0.46.0 (finschia)
+ *
+ * @deprecated
  */
 export interface EventCreatedFTClass {
   /** contract id associated with the contract. */
@@ -208,6 +210,8 @@ export interface EventRenounced {
  * EventMintedFT is emitted when fungible tokens are minted.
  *
  * Since: 0.46.0 (finschia)
+ *
+ * @deprecated
  */
 export interface EventMintedFT {
   /** contract id associated with the contract. */
@@ -317,6 +321,8 @@ export interface EventModifiedNFT {
  * EventAttached is emitted when a token is attached to another.
  *
  * Since: 0.46.0 (finschia)
+ *
+ * @deprecated
  */
 export interface EventAttached {
   /** contract id associated with the contract. */
@@ -335,6 +341,8 @@ export interface EventAttached {
  * EventDetached is emitted when a token is detached from its parent.
  *
  * Since: 0.46.0 (finschia)
+ *
+ * @deprecated
  */
 export interface EventDetached {
   /** contract id associated with the contract. */
@@ -353,6 +361,8 @@ export interface EventDetached {
  * EventOwnerChanged is emitted when the owner of token is changed by operation applied to its ancestor.
  *
  * Since: 0.46.0 (finschia)
+ *
+ * @deprecated
  */
 export interface EventOwnerChanged {
   /** contract id associated with the contract. */
@@ -369,6 +379,8 @@ export interface EventOwnerChanged {
  * EventRootChanged is emitted when the root of token is changed by operation applied to its ancestor.
  *
  * Since: 0.46.0 (finschia)
+ *
+ * @deprecated
  */
 export interface EventRootChanged {
   /** contract id associated with the contract. */

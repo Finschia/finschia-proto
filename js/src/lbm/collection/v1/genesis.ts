@@ -29,7 +29,11 @@ export interface GenesisState {
   balances: ContractBalances[];
   /** nfts is an array containing the nfts. */
   nfts: ContractNFTs[];
-  /** parents represents the parents of (non-fungible) tokens. */
+  /**
+   * parents represents the parents of (non-fungible) tokens.
+   *
+   * @deprecated
+   */
   parents: ContractTokenRelations[];
   /** grants defines the grant information. */
   grants: ContractGrants[];
@@ -110,7 +114,11 @@ export interface ContractGrants {
 export interface NextClassIDs {
   /** contract id associated with the contract. */
   contractId: string;
-  /** id for the fungible tokens. */
+  /**
+   * id for the fungible tokens.
+   *
+   * @deprecated
+   */
   fungible: string;
   /** id for the non-fungible tokens. */
   nonFungible: string;
@@ -130,7 +138,11 @@ export interface NextTokenID {
   id: string;
 }
 
-/** ContractTokenRelations defines token relations belong to a contract. */
+/**
+ * ContractTokenRelations defines token relations belong to a contract.
+ *
+ * @deprecated
+ */
 export interface ContractTokenRelations {
   /** contract id associated with the contract. */
   contractId: string;
@@ -138,7 +150,11 @@ export interface ContractTokenRelations {
   relations: TokenRelation[];
 }
 
-/** TokenRelation defines relations between two tokens. */
+/**
+ * TokenRelation defines relations between two tokens.
+ *
+ * @deprecated
+ */
 export interface TokenRelation {
   /** self */
   self: string;

@@ -5,7 +5,11 @@ import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.token.v1";
 
-/** GenesisState defines the token module's genesis state. */
+/**
+ * GenesisState defines the token module's genesis state.
+ *
+ * @deprecated
+ */
 export interface GenesisState {
   /** params defines all the paramaters of the module. */
   params?: Params;
@@ -27,7 +31,11 @@ export interface GenesisState {
   burns: ContractCoin[];
 }
 
-/** ClassGenesisState defines the classs keeper's genesis state. */
+/**
+ * ClassGenesisState defines the classs keeper's genesis state.
+ *
+ * @deprecated
+ */
 export interface ClassGenesisState {
   /** nonce is the next class nonce to issue. */
   nonce: string;
@@ -38,6 +46,8 @@ export interface ClassGenesisState {
 /**
  * ContractBalances defines balances belong to a contract.
  * genesis state.
+ *
+ * @deprecated
  */
 export interface ContractBalances {
   /** contract id associated with the token class. */
@@ -46,7 +56,11 @@ export interface ContractBalances {
   balances: Balance[];
 }
 
-/** Balance defines a balance of an address. */
+/**
+ * Balance defines a balance of an address.
+ *
+ * @deprecated
+ */
 export interface Balance {
   /** address of the holder. */
   address: string;
@@ -54,7 +68,11 @@ export interface Balance {
   amount: string;
 }
 
-/** ContractAuthorizations defines authorizations belong to a contract. */
+/**
+ * ContractAuthorizations defines authorizations belong to a contract.
+ *
+ * @deprecated
+ */
 export interface ContractAuthorizations {
   /** contract id associated with the token class. */
   contractId: string;
@@ -62,7 +80,11 @@ export interface ContractAuthorizations {
   authorizations: Authorization[];
 }
 
-/** ContractGrant defines grants belong to a contract. */
+/**
+ * ContractGrant defines grants belong to a contract.
+ *
+ * @deprecated
+ */
 export interface ContractGrants {
   /** contract id associated with the token class. */
   contractId: string;
@@ -70,6 +92,7 @@ export interface ContractGrants {
   grants: Grant[];
 }
 
+/** @deprecated */
 export interface ContractCoin {
   /** contract id associated with the token class. */
   contractId: string;
