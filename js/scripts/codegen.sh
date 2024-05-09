@@ -8,7 +8,7 @@ OUT_DIR="./src"
 # On mac, install coreutils to use realpath. `brew install coretuils`
 PLUGIN_PATH="$(realpath ./bin)/protoc-gen-ts_proto_yarn_2"
 
-TS_PROTO_OPTS="esModuleInterop=true,forceLong=long,useOptionals=true,useDate=false"
+TS_PROTO_OPTS="esModuleInterop=true,forceLong=long,useOptionals=messages,useDate=false"
 
 mkdir -p "$OUT_DIR"
 
