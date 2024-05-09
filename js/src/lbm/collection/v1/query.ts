@@ -44,7 +44,11 @@ export interface QueryAllBalancesResponse {
   pagination?: PageResponse;
 }
 
-/** QueryFTSupplyRequest is the request type for the Query/FTSupply RPC method. */
+/**
+ * QueryFTSupplyRequest is the request type for the Query/FTSupply RPC method.
+ *
+ * @deprecated
+ */
 export interface QueryFTSupplyRequest {
   /** contract id associated with the contract. */
   contractId: string;
@@ -52,13 +56,21 @@ export interface QueryFTSupplyRequest {
   tokenId: string;
 }
 
-/** QueryFTSupplyResponse is the response type for the Query/FTSupply RPC method. */
+/**
+ * QueryFTSupplyResponse is the response type for the Query/FTSupply RPC method.
+ *
+ * @deprecated
+ */
 export interface QueryFTSupplyResponse {
   /** supply is the supply of the tokens. */
   supply: string;
 }
 
-/** QueryFTMintedRequest is the request type for the Query/FTMinted RPC method. */
+/**
+ * QueryFTMintedRequest is the request type for the Query/FTMinted RPC method.
+ *
+ * @deprecated
+ */
 export interface QueryFTMintedRequest {
   /** contract id associated with the contract. */
   contractId: string;
@@ -66,13 +78,21 @@ export interface QueryFTMintedRequest {
   tokenId: string;
 }
 
-/** QueryFTMintedResponse is the response type for the Query/FTMinted RPC method. */
+/**
+ * QueryFTMintedResponse is the response type for the Query/FTMinted RPC method.
+ *
+ * @deprecated
+ */
 export interface QueryFTMintedResponse {
   /** minted is the amount of the minted tokens. */
   minted: string;
 }
 
-/** QueryFTBurntRequest is the request type for the Query/FTBurnt RPC method. */
+/**
+ * QueryFTBurntRequest is the request type for the Query/FTBurnt RPC method.
+ *
+ * @deprecated
+ */
 export interface QueryFTBurntRequest {
   /** contract id associated with the contract. */
   contractId: string;
@@ -80,7 +100,11 @@ export interface QueryFTBurntRequest {
   tokenId: string;
 }
 
-/** QueryFTBurntResponse is the response type for the Query/FTBurnt RPC method. */
+/**
+ * QueryFTBurntResponse is the response type for the Query/FTBurnt RPC method.
+ *
+ * @deprecated
+ */
 export interface QueryFTBurntResponse {
   /** burnt is the amount of the burnt tokens. */
   burnt: string;
@@ -202,7 +226,11 @@ export interface QueryTokenResponse {
   token?: Any;
 }
 
-/** QueryRootRequest is the request type for the Query/Root RPC method. */
+/**
+ * QueryRootRequest is the request type for the Query/Root RPC method.
+ *
+ * @deprecated
+ */
 export interface QueryRootRequest {
   /** contract id associated with the contract. */
   contractId: string;
@@ -210,7 +238,11 @@ export interface QueryRootRequest {
   tokenId: string;
 }
 
-/** QueryRootResponse is the response type for the Query/Root RPC method. */
+/**
+ * QueryRootResponse is the response type for the Query/Root RPC method.
+ *
+ * @deprecated
+ */
 export interface QueryRootResponse {
   /**
    * root is the information of the root token.
@@ -219,7 +251,11 @@ export interface QueryRootResponse {
   root?: NFT;
 }
 
-/** QueryHasParentRequest is the request type for the Query/HasParent RPC method. */
+/**
+ * QueryHasParentRequest is the request type for the Query/HasParent RPC method.
+ *
+ * @deprecated
+ */
 export interface QueryHasParentRequest {
   /** contract id associated with the contract. */
   contractId: string;
@@ -227,13 +263,21 @@ export interface QueryHasParentRequest {
   tokenId: string;
 }
 
-/** QueryHasParentResponse is the response type for the Query/HasParent RPC method. */
+/**
+ * QueryHasParentResponse is the response type for the Query/HasParent RPC method.
+ *
+ * @deprecated
+ */
 export interface QueryHasParentResponse {
   /** whether the token has its parent. */
   hasParent: boolean;
 }
 
-/** QueryParentRequest is the request type for the Query/Parent RPC method. */
+/**
+ * QueryParentRequest is the request type for the Query/Parent RPC method.
+ *
+ * @deprecated
+ */
 export interface QueryParentRequest {
   /** contract id associated with the contract. */
   contractId: string;
@@ -241,13 +285,21 @@ export interface QueryParentRequest {
   tokenId: string;
 }
 
-/** QueryParentResponse is the response type for the Query/Parent RPC method. */
+/**
+ * QueryParentResponse is the response type for the Query/Parent RPC method.
+ *
+ * @deprecated
+ */
 export interface QueryParentResponse {
   /** parent is the information of the parent token. */
   parent?: NFT;
 }
 
-/** QueryChildrenRequest is the request type for the Query/Children RPC method. */
+/**
+ * QueryChildrenRequest is the request type for the Query/Children RPC method.
+ *
+ * @deprecated
+ */
 export interface QueryChildrenRequest {
   /** contract id associated with the contract. */
   contractId: string;
@@ -257,7 +309,11 @@ export interface QueryChildrenRequest {
   pagination?: PageRequest;
 }
 
-/** QueryChildrenResponse is the response type for the Query/Children RPC method. */
+/**
+ * QueryChildrenResponse is the response type for the Query/Children RPC method.
+ *
+ * @deprecated
+ */
 export interface QueryChildrenResponse {
   /** children is the information of the child tokens. */
   children: NFT[];
@@ -2856,11 +2912,23 @@ export interface Query {
   AllBalances(
     request: QueryAllBalancesRequest
   ): Promise<QueryAllBalancesResponse>;
-  /** FTSupply queries the number of tokens from a given contract id and token id. */
+  /**
+   * FTSupply queries the number of tokens from a given contract id and token id.
+   *
+   * @deprecated
+   */
   FTSupply(request: QueryFTSupplyRequest): Promise<QueryFTSupplyResponse>;
-  /** FTMinted queries the number of minted tokens from a given contract id and token id. */
+  /**
+   * FTMinted queries the number of minted tokens from a given contract id and token id.
+   *
+   * @deprecated
+   */
   FTMinted(request: QueryFTMintedRequest): Promise<QueryFTMintedResponse>;
-  /** FTBurnt queries the number of burnt tokens from a given contract id and token id. */
+  /**
+   * FTBurnt queries the number of burnt tokens from a given contract id and token id.
+   *
+   * @deprecated
+   */
   FTBurnt(request: QueryFTBurntRequest): Promise<QueryFTBurntResponse>;
   /** NFTSupply queries the number of tokens from a given contract id and token type. */
   NFTSupply(request: QueryNFTSupplyRequest): Promise<QueryNFTSupplyResponse>;
@@ -2882,13 +2950,29 @@ export interface Query {
   TokenType(request: QueryTokenTypeRequest): Promise<QueryTokenTypeResponse>;
   /** Token queries a metadata of a token from its token id. */
   Token(request: QueryTokenRequest): Promise<QueryTokenResponse>;
-  /** Root queries the root of a given nft. */
+  /**
+   * Root queries the root of a given nft.
+   *
+   * @deprecated
+   */
   Root(request: QueryRootRequest): Promise<QueryRootResponse>;
-  /** HasParent queries whether a given nft has its parent. */
+  /**
+   * HasParent queries whether a given nft has its parent.
+   *
+   * @deprecated
+   */
   HasParent(request: QueryHasParentRequest): Promise<QueryHasParentResponse>;
-  /** Parent queries the parent of a given nft. */
+  /**
+   * Parent queries the parent of a given nft.
+   *
+   * @deprecated
+   */
   Parent(request: QueryParentRequest): Promise<QueryParentResponse>;
-  /** Children queries the children of a given nft. */
+  /**
+   * Children queries the children of a given nft.
+   *
+   * @deprecated
+   */
   Children(request: QueryChildrenRequest): Promise<QueryChildrenResponse>;
   /** GranteeGrants queries all permissions on a given grantee. */
   GranteeGrants(

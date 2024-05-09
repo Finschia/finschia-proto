@@ -5,7 +5,11 @@ import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.collection.v1";
 
-/** MsgSendFT is the Msg/SendFT request type. */
+/**
+ * MsgSendFT is the Msg/SendFT request type.
+ *
+ * @deprecated
+ */
 export interface MsgSendFT {
   /** contract id associated with the contract. */
   contractId: string;
@@ -20,10 +24,18 @@ export interface MsgSendFT {
   amount: Coin[];
 }
 
-/** MsgSendFTResponse is the Msg/SendFT response type. */
+/**
+ * MsgSendFTResponse is the Msg/SendFT response type.
+ *
+ * @deprecated
+ */
 export interface MsgSendFTResponse {}
 
-/** MsgOperatorSendFT is the Msg/OperatorSendFT request type. */
+/**
+ * MsgOperatorSendFT is the Msg/OperatorSendFT request type.
+ *
+ * @deprecated
+ */
 export interface MsgOperatorSendFT {
   /** contract id associated with the contract. */
   contractId: string;
@@ -40,7 +52,11 @@ export interface MsgOperatorSendFT {
   amount: Coin[];
 }
 
-/** MsgOperatorSendFTResponse is the Msg/OperatorSendFT response type. */
+/**
+ * MsgOperatorSendFTResponse is the Msg/OperatorSendFT response type.
+ *
+ * @deprecated
+ */
 export interface MsgOperatorSendFTResponse {}
 
 /** MsgSendNFT is the Msg/SendNFT request type. */
@@ -127,6 +143,8 @@ export interface MsgCreateContractResponse {
  * MsgIssueFT is the Msg/IssueFT request type.
  *
  * Signer: `owner`
+ *
+ * @deprecated
  */
 export interface MsgIssueFT {
   /** contract id associated with the contract. */
@@ -151,7 +169,11 @@ export interface MsgIssueFT {
   amount: string;
 }
 
-/** MsgIssueFTResponse is the Msg/IssueFT response type. */
+/**
+ * MsgIssueFTResponse is the Msg/IssueFT response type.
+ *
+ * @deprecated
+ */
 export interface MsgIssueFTResponse {
   /** id of the token. */
   tokenId: string;
@@ -186,6 +208,8 @@ export interface MsgIssueNFTResponse {
  * MsgMintFT is the Msg/MintFT request type.
  *
  * Signer: `from`
+ *
+ * @deprecated
  */
 export interface MsgMintFT {
   /** contract id associated with the contract. */
@@ -201,7 +225,11 @@ export interface MsgMintFT {
   amount: Coin[];
 }
 
-/** MsgMintFTResponse is the Msg/MintFT response type. */
+/**
+ * MsgMintFTResponse is the Msg/MintFT response type.
+ *
+ * @deprecated
+ */
 export interface MsgMintFTResponse {}
 
 /**
@@ -246,7 +274,11 @@ export interface MintNFTParam {
   meta: string;
 }
 
-/** MsgBurnFT is the Msg/BurnFT request type. */
+/**
+ * MsgBurnFT is the Msg/BurnFT request type.
+ *
+ * @deprecated
+ */
 export interface MsgBurnFT {
   /** contract id associated with the contract. */
   contractId: string;
@@ -262,10 +294,18 @@ export interface MsgBurnFT {
   amount: Coin[];
 }
 
-/** MsgBurnFTResponse is the Msg/BurnFT response type. */
+/**
+ * MsgBurnFTResponse is the Msg/BurnFT response type.
+ *
+ * @deprecated
+ */
 export interface MsgBurnFTResponse {}
 
-/** MsgOperatorBurnFT is the Msg/OperatorBurnFT request type. */
+/**
+ * MsgOperatorBurnFT is the Msg/OperatorBurnFT request type.
+ *
+ * @deprecated
+ */
 export interface MsgOperatorBurnFT {
   /** contract id associated with the contract. */
   contractId: string;
@@ -284,7 +324,11 @@ export interface MsgOperatorBurnFT {
   amount: Coin[];
 }
 
-/** MsgOperatorBurnFTResponse is the Msg/OperatorBurnFT response type. */
+/**
+ * MsgOperatorBurnFTResponse is the Msg/OperatorBurnFT response type.
+ *
+ * @deprecated
+ */
 export interface MsgOperatorBurnFTResponse {}
 
 /** MsgBurnNFT is the Msg/BurnNFT request type. */
@@ -389,6 +433,8 @@ export interface MsgRevokePermissionResponse {}
  * MsgAttach is the Msg/Attach request type.
  *
  * Signer: `from`
+ *
+ * @deprecated
  */
 export interface MsgAttach {
   /** contract id associated with the contract. */
@@ -401,13 +447,19 @@ export interface MsgAttach {
   toTokenId: string;
 }
 
-/** MsgAttachResponse is the Msg/Attach response type. */
+/**
+ * MsgAttachResponse is the Msg/Attach response type.
+ *
+ * @deprecated
+ */
 export interface MsgAttachResponse {}
 
 /**
  * MsgDetach is the Msg/Detach request type.
  *
  * Signer: `from`
+ *
+ * @deprecated
  */
 export interface MsgDetach {
   /** contract id associated with the contract. */
@@ -418,10 +470,18 @@ export interface MsgDetach {
   tokenId: string;
 }
 
-/** MsgDetachResponse is the Msg/Detach response type. */
+/**
+ * MsgDetachResponse is the Msg/Detach response type.
+ *
+ * @deprecated
+ */
 export interface MsgDetachResponse {}
 
-/** MsgOperatorAttach is the Msg/OperatorAttach request type. */
+/**
+ * MsgOperatorAttach is the Msg/OperatorAttach request type.
+ *
+ * @deprecated
+ */
 export interface MsgOperatorAttach {
   /** contract id associated with the contract. */
   contractId: string;
@@ -435,10 +495,18 @@ export interface MsgOperatorAttach {
   toTokenId: string;
 }
 
-/** MsgOperatorAttachResponse is the Msg/OperatorAttach response type. */
+/**
+ * MsgOperatorAttachResponse is the Msg/OperatorAttach response type.
+ *
+ * @deprecated
+ */
 export interface MsgOperatorAttachResponse {}
 
-/** MsgOperatorDetach is the Msg/OperatorDetach request type. */
+/**
+ * MsgOperatorDetach is the Msg/OperatorDetach request type.
+ *
+ * @deprecated
+ */
 export interface MsgOperatorDetach {
   /** contract id associated with the contract. */
   contractId: string;
@@ -450,7 +518,11 @@ export interface MsgOperatorDetach {
   tokenId: string;
 }
 
-/** MsgOperatorDetachResponse is the Msg/OperatorDetach response type. */
+/**
+ * MsgOperatorDetachResponse is the Msg/OperatorDetach response type.
+ *
+ * @deprecated
+ */
 export interface MsgOperatorDetachResponse {}
 
 function createBaseMsgSendFT(): MsgSendFT {
@@ -3470,6 +3542,8 @@ export interface Msg {
    * Fires:
    * - EventSent
    * - transfer_ft (deprecated, not typed)
+   *
+   * @deprecated
    */
   SendFT(request: MsgSendFT): Promise<MsgSendFTResponse>;
   /**
@@ -3477,6 +3551,8 @@ export interface Msg {
    * Fires:
    * - EventSent
    * - transfer_ft_from (deprecated, not typed)
+   *
+   * @deprecated
    */
   OperatorSendFT(
     request: MsgOperatorSendFT
@@ -3534,6 +3610,8 @@ export interface Msg {
    * - EventMintedFT
    * - issue_ft (deprecated, not typed)
    * Note: it does not grant any permissions to its issuer.
+   *
+   * @deprecated
    */
   IssueFT(request: MsgIssueFT): Promise<MsgIssueFTResponse>;
   /**
@@ -3549,6 +3627,8 @@ export interface Msg {
    * Fires:
    * - EventMintedFT
    * - mint_ft (deprecated, not typed)
+   *
+   * @deprecated
    */
   MintFT(request: MsgMintFT): Promise<MsgMintFTResponse>;
   /**
@@ -3565,6 +3645,8 @@ export interface Msg {
    * - burn_ft (deprecated, not typed)
    * - burn_nft (deprecated, not typed)
    * - operation_burn_nft (deprecated, not typed)
+   *
+   * @deprecated
    */
   BurnFT(request: MsgBurnFT): Promise<MsgBurnFTResponse>;
   /**
@@ -3574,6 +3656,8 @@ export interface Msg {
    * - burn_ft_from (deprecated, not typed)
    * - burn_nft_from (deprecated, not typed)
    * - operation_burn_nft (deprecated, not typed)
+   *
+   * @deprecated
    */
   OperatorBurnFT(
     request: MsgOperatorBurnFT
@@ -3633,6 +3717,8 @@ export interface Msg {
    * - EventAttach
    * - attach (deprecated, not typed)
    * - operation_root_changed (deprecated, not typed)
+   *
+   * @deprecated
    */
   Attach(request: MsgAttach): Promise<MsgAttachResponse>;
   /**
@@ -3641,6 +3727,8 @@ export interface Msg {
    * - EventDetach
    * - detach (deprecated, not typed)
    * - operation_root_changed (deprecated, not typed)
+   *
+   * @deprecated
    */
   Detach(request: MsgDetach): Promise<MsgDetachResponse>;
   /**
@@ -3649,6 +3737,8 @@ export interface Msg {
    * - EventAttach
    * - attach_from (deprecated, not typed)
    * - operation_root_changed (deprecated, not typed)
+   *
+   * @deprecated
    */
   OperatorAttach(
     request: MsgOperatorAttach
@@ -3659,6 +3749,8 @@ export interface Msg {
    * - EventDetach
    * - detach_from (deprecated, not typed)
    * - operation_root_changed (deprecated, not typed)
+   *
+   * @deprecated
    */
   OperatorDetach(
     request: MsgOperatorDetach

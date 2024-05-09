@@ -9,7 +9,11 @@ import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.token.v1";
 
-/** QueryBalanceRequest is the request type for the Query/Balance RPC method */
+/**
+ * QueryBalanceRequest is the request type for the Query/Balance RPC method
+ *
+ * @deprecated
+ */
 export interface QueryBalanceRequest {
   /** contract id associated with the contract. */
   contractId: string;
@@ -17,60 +21,100 @@ export interface QueryBalanceRequest {
   address: string;
 }
 
-/** QueryBalanceResponse is the response type for the Query/Balance RPC method */
+/**
+ * QueryBalanceResponse is the response type for the Query/Balance RPC method
+ *
+ * @deprecated
+ */
 export interface QueryBalanceResponse {
   /** the balance of the tokens. */
   amount: string;
 }
 
-/** QuerySupplyRequest is the request type for the Query/Supply RPC method */
+/**
+ * QuerySupplyRequest is the request type for the Query/Supply RPC method
+ *
+ * @deprecated
+ */
 export interface QuerySupplyRequest {
   /** contract id associated with the contract. */
   contractId: string;
 }
 
-/** QuerySupplyResponse is the response type for the Query/Supply RPC method */
+/**
+ * QuerySupplyResponse is the response type for the Query/Supply RPC method
+ *
+ * @deprecated
+ */
 export interface QuerySupplyResponse {
   /** the supply of the tokens. */
   amount: string;
 }
 
-/** QueryMintedRequest is the request type for the Query/Minted RPC method */
+/**
+ * QueryMintedRequest is the request type for the Query/Minted RPC method
+ *
+ * @deprecated
+ */
 export interface QueryMintedRequest {
   /** contract id associated with the contract. */
   contractId: string;
 }
 
-/** QueryMintedResponse is the response type for the Query/Minted RPC method */
+/**
+ * QueryMintedResponse is the response type for the Query/Minted RPC method
+ *
+ * @deprecated
+ */
 export interface QueryMintedResponse {
   /** the amount of the minted tokens. */
   amount: string;
 }
 
-/** QueryBurntRequest is the request type for the Query/Burnt RPC method */
+/**
+ * QueryBurntRequest is the request type for the Query/Burnt RPC method
+ *
+ * @deprecated
+ */
 export interface QueryBurntRequest {
   /** contract id associated with the contract. */
   contractId: string;
 }
 
-/** QueryBurntResponse is the response type for the Query/Burnt RPC method */
+/**
+ * QueryBurntResponse is the response type for the Query/Burnt RPC method
+ *
+ * @deprecated
+ */
 export interface QueryBurntResponse {
   /** the amount of the burnt tokens. */
   amount: string;
 }
 
-/** QueryContractRequest is the request type for the Query/Contract RPC method */
+/**
+ * QueryContractRequest is the request type for the Query/Contract RPC method
+ *
+ * @deprecated
+ */
 export interface QueryContractRequest {
   /** contract id associated with the contract. */
   contractId: string;
 }
 
-/** QueryContractResponse is the response type for the Query/Contract RPC method */
+/**
+ * QueryContractResponse is the response type for the Query/Contract RPC method
+ *
+ * @deprecated
+ */
 export interface QueryContractResponse {
   contract?: Contract;
 }
 
-/** QueryGranteeGrantsRequest is the request type for the Query/GranteeGrants RPC method */
+/**
+ * QueryGranteeGrantsRequest is the request type for the Query/GranteeGrants RPC method
+ *
+ * @deprecated
+ */
 export interface QueryGranteeGrantsRequest {
   /** contract id associated with the contract. */
   contractId: string;
@@ -80,7 +124,11 @@ export interface QueryGranteeGrantsRequest {
   pagination?: PageRequest;
 }
 
-/** QueryGranteeGrantsResponse is the response type for the Query/GranteeGrants RPC method */
+/**
+ * QueryGranteeGrantsResponse is the response type for the Query/GranteeGrants RPC method
+ *
+ * @deprecated
+ */
 export interface QueryGranteeGrantsResponse {
   /** all the grants on the grantee. */
   grants: Grant[];
@@ -88,7 +136,11 @@ export interface QueryGranteeGrantsResponse {
   pagination?: PageResponse;
 }
 
-/** QueryIsOperatorForRequest is the request type for the Query/IsOperatorFor RPC method */
+/**
+ * QueryIsOperatorForRequest is the request type for the Query/IsOperatorFor RPC method
+ *
+ * @deprecated
+ */
 export interface QueryIsOperatorForRequest {
   /** contract id associated with the contract. */
   contractId: string;
@@ -98,12 +150,20 @@ export interface QueryIsOperatorForRequest {
   holder: string;
 }
 
-/** QueryIsOperatorForResponse is the response type for the Query/IsOperatorFor RPC method */
+/**
+ * QueryIsOperatorForResponse is the response type for the Query/IsOperatorFor RPC method
+ *
+ * @deprecated
+ */
 export interface QueryIsOperatorForResponse {
   authorized: boolean;
 }
 
-/** QueryHoldersByOperatorRequest is the request type for the Query/HoldersByOperator RPC method */
+/**
+ * QueryHoldersByOperatorRequest is the request type for the Query/HoldersByOperator RPC method
+ *
+ * @deprecated
+ */
 export interface QueryHoldersByOperatorRequest {
   /** contract id associated with the contract. */
   contractId: string;
@@ -113,7 +173,11 @@ export interface QueryHoldersByOperatorRequest {
   pagination?: PageRequest;
 }
 
-/** QueryHoldersByOperatorResponse is the response type for the Query/HoldersByOperator RPC method */
+/**
+ * QueryHoldersByOperatorResponse is the response type for the Query/HoldersByOperator RPC method
+ *
+ * @deprecated
+ */
 export interface QueryHoldersByOperatorResponse {
   /** holder addresses */
   holders: string[];
@@ -1151,7 +1215,11 @@ export const QueryHoldersByOperatorResponse = {
   },
 };
 
-/** Query defines the gRPC querier service. */
+/**
+ * Query defines the gRPC querier service.
+ *
+ * @deprecated
+ */
 export interface Query {
   /** Balance queries the number of tokens of a given contract owned by the address. */
   Balance(request: QueryBalanceRequest): Promise<QueryBalanceResponse>;

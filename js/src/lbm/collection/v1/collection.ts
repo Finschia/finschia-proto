@@ -124,7 +124,9 @@ export function legacyPermissionToJSON(object: LegacyPermission): string {
 
 /** Params defines the parameters for the collection module. */
 export interface Params {
+  /** @deprecated */
   depthLimit: number;
+  /** @deprecated */
   widthLimit: number;
 }
 
@@ -144,6 +146,8 @@ export interface Contract {
  * FTClass defines the class of fungible token.
  *
  * Since: 0.46.0 (finschia)
+ *
+ * @deprecated
  */
 export interface FTClass {
   /**
@@ -212,9 +216,9 @@ export interface OwnerNFT {
 }
 
 /**
- * Deprecated: use FTClass
- *
  * FT defines the information of fungible token.
+ *
+ * @deprecated
  */
 export interface FT {
   /** contract id associated with the contract. */

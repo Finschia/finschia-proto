@@ -10,7 +10,11 @@ import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.token.v1";
 
-/** AttributeKey enumerates the valid attribute keys on x/token. */
+/**
+ * AttributeKey enumerates the valid attribute keys on x/token.
+ *
+ * @deprecated
+ */
 export enum AttributeKey {
   ATTRIBUTE_KEY_UNSPECIFIED = 0,
   ATTRIBUTE_KEY_NAME = 1,
@@ -67,6 +71,8 @@ export function attributeKeyToJSON(object: AttributeKey): string {
  * EventSent is emitted when tokens are transferred.
  *
  * Since: 0.46.0 (finschia)
+ *
+ * @deprecated
  */
 export interface EventSent {
   /** contract id associated with the contract. */
@@ -85,6 +91,8 @@ export interface EventSent {
  * EventAuthorizedOperator is emitted when a holder authorizes an operator to manipulate its tokens.
  *
  * Since: 0.46.0 (finschia)
+ *
+ * @deprecated
  */
 export interface EventAuthorizedOperator {
   /** contract id associated with the contract. */
@@ -99,6 +107,8 @@ export interface EventAuthorizedOperator {
  * EventRevokedOperator is emitted when an authorization is revoked.
  *
  * Since: 0.46.0 (finschia)
+ *
+ * @deprecated
  */
 export interface EventRevokedOperator {
   /** contract id associated with the contract. */
@@ -113,6 +123,8 @@ export interface EventRevokedOperator {
  * EventIssued is emitted when a new contract is created.
  *
  * Since: 0.46.0 (finschia)
+ *
+ * @deprecated
  */
 export interface EventIssued {
   /** address which created the contract. */
@@ -139,6 +151,8 @@ export interface EventIssued {
  * Info: `granter` would be empty if the permission is granted by an issuance.
  *
  * Since: 0.46.0 (finschia)
+ *
+ * @deprecated
  */
 export interface EventGranted {
   /** contract id associated with the contract. */
@@ -158,6 +172,8 @@ export interface EventGranted {
  * EventRenounced is emitted when a grantee renounces its permission.
  *
  * Since: 0.46.0 (finschia)
+ *
+ * @deprecated
  */
 export interface EventRenounced {
   /** contract id associated with the contract. */
@@ -172,6 +188,8 @@ export interface EventRenounced {
  * EventMinted is emitted when tokens are minted.
  *
  * Since: 0.46.0 (finschia)
+ *
+ * @deprecated
  */
 export interface EventMinted {
   /** contract id associated with the contract. */
@@ -188,6 +206,8 @@ export interface EventMinted {
  * EventBurned is emitted when tokens are burnt.
  *
  * Since: 0.46.0 (finschia)
+ *
+ * @deprecated
  */
 export interface EventBurned {
   /** contract id associated with the contract. */
@@ -204,6 +224,8 @@ export interface EventBurned {
  * EventModified is emitted when the information of a contract is modified.
  *
  * Since: 0.46.0 (finschia)
+ *
+ * @deprecated
  */
 export interface EventModified {
   /** contract id associated with the contract. */
