@@ -1,5 +1,7 @@
 /* eslint-disable */
 import { Coin } from "../../../cosmos/base/v1beta1/coin";
+import { Swap } from "./fswap";
+import { Metadata } from "../../../cosmos/bank/v1beta1/bank";
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
 
@@ -23,6 +25,15 @@ export interface MsgSwapAll {
 }
 
 export interface MsgSwapAllResponse {}
+
+export interface MsgSetSwap {
+  /** authority is the address of the privileged account. */
+  authority: string;
+  swap?: Swap;
+  toDenomMetadata?: Metadata;
+}
+
+export interface MsgSetSwapResponse {}
 
 function createBaseMsgSwap(): MsgSwap {
   return { fromAddress: "", fromCoinAmount: undefined, toDenom: "" };
@@ -264,9 +275,141 @@ export const MsgSwapAllResponse = {
   },
 };
 
+function createBaseMsgSetSwap(): MsgSetSwap {
+  return { authority: "", swap: undefined, toDenomMetadata: undefined };
+}
+
+export const MsgSetSwap = {
+  encode(
+    message: MsgSetSwap,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.authority !== "") {
+      writer.uint32(10).string(message.authority);
+    }
+    if (message.swap !== undefined) {
+      Swap.encode(message.swap, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.toDenomMetadata !== undefined) {
+      Metadata.encode(
+        message.toDenomMetadata,
+        writer.uint32(26).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgSetSwap {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgSetSwap();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.authority = reader.string();
+          break;
+        case 2:
+          message.swap = Swap.decode(reader, reader.uint32());
+          break;
+        case 3:
+          message.toDenomMetadata = Metadata.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgSetSwap {
+    return {
+      authority: isSet(object.authority) ? String(object.authority) : "",
+      swap: isSet(object.swap) ? Swap.fromJSON(object.swap) : undefined,
+      toDenomMetadata: isSet(object.toDenomMetadata)
+        ? Metadata.fromJSON(object.toDenomMetadata)
+        : undefined,
+    };
+  },
+
+  toJSON(message: MsgSetSwap): unknown {
+    const obj: any = {};
+    message.authority !== undefined && (obj.authority = message.authority);
+    message.swap !== undefined &&
+      (obj.swap = message.swap ? Swap.toJSON(message.swap) : undefined);
+    message.toDenomMetadata !== undefined &&
+      (obj.toDenomMetadata = message.toDenomMetadata
+        ? Metadata.toJSON(message.toDenomMetadata)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgSetSwap>, I>>(
+    object: I
+  ): MsgSetSwap {
+    const message = createBaseMsgSetSwap();
+    message.authority = object.authority ?? "";
+    message.swap =
+      object.swap !== undefined && object.swap !== null
+        ? Swap.fromPartial(object.swap)
+        : undefined;
+    message.toDenomMetadata =
+      object.toDenomMetadata !== undefined && object.toDenomMetadata !== null
+        ? Metadata.fromPartial(object.toDenomMetadata)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseMsgSetSwapResponse(): MsgSetSwapResponse {
+  return {};
+}
+
+export const MsgSetSwapResponse = {
+  encode(
+    _: MsgSetSwapResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgSetSwapResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgSetSwapResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgSetSwapResponse {
+    return {};
+  },
+
+  toJSON(_: MsgSetSwapResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgSetSwapResponse>, I>>(
+    _: I
+  ): MsgSetSwapResponse {
+    const message = createBaseMsgSetSwapResponse();
+    return message;
+  },
+};
+
 export interface Msg {
   Swap(request: MsgSwap): Promise<MsgSwapResponse>;
   SwapAll(request: MsgSwapAll): Promise<MsgSwapAllResponse>;
+  SetSwap(request: MsgSetSwap): Promise<MsgSetSwapResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -275,6 +418,7 @@ export class MsgClientImpl implements Msg {
     this.rpc = rpc;
     this.Swap = this.Swap.bind(this);
     this.SwapAll = this.SwapAll.bind(this);
+    this.SetSwap = this.SetSwap.bind(this);
   }
   Swap(request: MsgSwap): Promise<MsgSwapResponse> {
     const data = MsgSwap.encode(request).finish();
@@ -287,6 +431,14 @@ export class MsgClientImpl implements Msg {
     const promise = this.rpc.request("lbm.fswap.v1.Msg", "SwapAll", data);
     return promise.then((data) =>
       MsgSwapAllResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  SetSwap(request: MsgSetSwap): Promise<MsgSetSwapResponse> {
+    const data = MsgSetSwap.encode(request).finish();
+    const promise = this.rpc.request("lbm.fswap.v1.Msg", "SetSwap", data);
+    return promise.then((data) =>
+      MsgSetSwapResponse.decode(new _m0.Reader(data))
     );
   }
 }
