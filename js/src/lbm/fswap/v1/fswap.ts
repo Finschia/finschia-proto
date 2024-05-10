@@ -1,5 +1,4 @@
 /* eslint-disable */
-import { Metadata } from "../../../cosmos/bank/v1beta1/bank";
 import { Coin } from "../../../cosmos/base/v1beta1/coin";
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
@@ -15,14 +14,6 @@ export interface Swap {
 
 export interface SwapStats {
   swapCount: number;
-}
-
-/** From cosmos-sdk 0.46.0 they deprecated this way, but currently finschia-sdk based on 0.45.10 */
-export interface MakeSwapProposal {
-  title: string;
-  description: string;
-  swap?: Swap;
-  toDenomMetadata?: Metadata;
 }
 
 export interface Swapped {
@@ -160,108 +151,6 @@ export const SwapStats = {
   ): SwapStats {
     const message = createBaseSwapStats();
     message.swapCount = object.swapCount ?? 0;
-    return message;
-  },
-};
-
-function createBaseMakeSwapProposal(): MakeSwapProposal {
-  return {
-    title: "",
-    description: "",
-    swap: undefined,
-    toDenomMetadata: undefined,
-  };
-}
-
-export const MakeSwapProposal = {
-  encode(
-    message: MakeSwapProposal,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.title !== "") {
-      writer.uint32(10).string(message.title);
-    }
-    if (message.description !== "") {
-      writer.uint32(18).string(message.description);
-    }
-    if (message.swap !== undefined) {
-      Swap.encode(message.swap, writer.uint32(26).fork()).ldelim();
-    }
-    if (message.toDenomMetadata !== undefined) {
-      Metadata.encode(
-        message.toDenomMetadata,
-        writer.uint32(34).fork()
-      ).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MakeSwapProposal {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMakeSwapProposal();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.title = reader.string();
-          break;
-        case 2:
-          message.description = reader.string();
-          break;
-        case 3:
-          message.swap = Swap.decode(reader, reader.uint32());
-          break;
-        case 4:
-          message.toDenomMetadata = Metadata.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MakeSwapProposal {
-    return {
-      title: isSet(object.title) ? String(object.title) : "",
-      description: isSet(object.description) ? String(object.description) : "",
-      swap: isSet(object.swap) ? Swap.fromJSON(object.swap) : undefined,
-      toDenomMetadata: isSet(object.toDenomMetadata)
-        ? Metadata.fromJSON(object.toDenomMetadata)
-        : undefined,
-    };
-  },
-
-  toJSON(message: MakeSwapProposal): unknown {
-    const obj: any = {};
-    message.title !== undefined && (obj.title = message.title);
-    message.description !== undefined &&
-      (obj.description = message.description);
-    message.swap !== undefined &&
-      (obj.swap = message.swap ? Swap.toJSON(message.swap) : undefined);
-    message.toDenomMetadata !== undefined &&
-      (obj.toDenomMetadata = message.toDenomMetadata
-        ? Metadata.toJSON(message.toDenomMetadata)
-        : undefined);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MakeSwapProposal>, I>>(
-    object: I
-  ): MakeSwapProposal {
-    const message = createBaseMakeSwapProposal();
-    message.title = object.title ?? "";
-    message.description = object.description ?? "";
-    message.swap =
-      object.swap !== undefined && object.swap !== null
-        ? Swap.fromPartial(object.swap)
-        : undefined;
-    message.toDenomMetadata =
-      object.toDenomMetadata !== undefined && object.toDenomMetadata !== null
-        ? Metadata.fromPartial(object.toDenomMetadata)
-        : undefined;
     return message;
   },
 };
