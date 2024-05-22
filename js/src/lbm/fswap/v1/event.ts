@@ -16,7 +16,7 @@ export interface EventSwapCoins {
   toCoinAmount?: Coin;
 }
 
-export interface EventMakeSwap {
+export interface EventSetSwap {
   swap?: Swap;
 }
 
@@ -112,13 +112,13 @@ export const EventSwapCoins = {
   },
 };
 
-function createBaseEventMakeSwap(): EventMakeSwap {
+function createBaseEventSetSwap(): EventSetSwap {
   return { swap: undefined };
 }
 
-export const EventMakeSwap = {
+export const EventSetSwap = {
   encode(
-    message: EventMakeSwap,
+    message: EventSetSwap,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.swap !== undefined) {
@@ -127,10 +127,10 @@ export const EventMakeSwap = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): EventMakeSwap {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventSetSwap {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventMakeSwap();
+    const message = createBaseEventSetSwap();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -145,23 +145,23 @@ export const EventMakeSwap = {
     return message;
   },
 
-  fromJSON(object: any): EventMakeSwap {
+  fromJSON(object: any): EventSetSwap {
     return {
       swap: isSet(object.swap) ? Swap.fromJSON(object.swap) : undefined,
     };
   },
 
-  toJSON(message: EventMakeSwap): unknown {
+  toJSON(message: EventSetSwap): unknown {
     const obj: any = {};
     message.swap !== undefined &&
       (obj.swap = message.swap ? Swap.toJSON(message.swap) : undefined);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<EventMakeSwap>, I>>(
+  fromPartial<I extends Exact<DeepPartial<EventSetSwap>, I>>(
     object: I
-  ): EventMakeSwap {
-    const message = createBaseEventMakeSwap();
+  ): EventSetSwap {
+    const message = createBaseEventSetSwap();
     message.swap =
       object.swap !== undefined && object.swap !== null
         ? Swap.fromPartial(object.swap)

@@ -1,11 +1,11 @@
 /* eslint-disable */
 import { Coin } from "../../../cosmos/base/v1beta1/coin";
+import { Swap } from "./fswap";
 import {
   PageRequest,
   PageResponse,
 } from "../../../cosmos/base/query/v1beta1/pagination";
 import Long from "long";
-import { Swap } from "./fswap";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lbm.fswap.v1";
@@ -27,6 +27,15 @@ export interface QueryTotalSwappableToCoinAmountRequest {
 
 export interface QueryTotalSwappableToCoinAmountResponse {
   swappableAmount?: Coin;
+}
+
+export interface QuerySwapRequest {
+  fromDenom: string;
+  toDenom: string;
+}
+
+export interface QuerySwapResponse {
+  swap?: Swap;
 }
 
 export interface QuerySwapsRequest {
@@ -314,6 +323,127 @@ export const QueryTotalSwappableToCoinAmountResponse = {
   },
 };
 
+function createBaseQuerySwapRequest(): QuerySwapRequest {
+  return { fromDenom: "", toDenom: "" };
+}
+
+export const QuerySwapRequest = {
+  encode(
+    message: QuerySwapRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.fromDenom !== "") {
+      writer.uint32(10).string(message.fromDenom);
+    }
+    if (message.toDenom !== "") {
+      writer.uint32(18).string(message.toDenom);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QuerySwapRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQuerySwapRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.fromDenom = reader.string();
+          break;
+        case 2:
+          message.toDenom = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QuerySwapRequest {
+    return {
+      fromDenom: isSet(object.fromDenom) ? String(object.fromDenom) : "",
+      toDenom: isSet(object.toDenom) ? String(object.toDenom) : "",
+    };
+  },
+
+  toJSON(message: QuerySwapRequest): unknown {
+    const obj: any = {};
+    message.fromDenom !== undefined && (obj.fromDenom = message.fromDenom);
+    message.toDenom !== undefined && (obj.toDenom = message.toDenom);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QuerySwapRequest>, I>>(
+    object: I
+  ): QuerySwapRequest {
+    const message = createBaseQuerySwapRequest();
+    message.fromDenom = object.fromDenom ?? "";
+    message.toDenom = object.toDenom ?? "";
+    return message;
+  },
+};
+
+function createBaseQuerySwapResponse(): QuerySwapResponse {
+  return { swap: undefined };
+}
+
+export const QuerySwapResponse = {
+  encode(
+    message: QuerySwapResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.swap !== undefined) {
+      Swap.encode(message.swap, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QuerySwapResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQuerySwapResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.swap = Swap.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QuerySwapResponse {
+    return {
+      swap: isSet(object.swap) ? Swap.fromJSON(object.swap) : undefined,
+    };
+  },
+
+  toJSON(message: QuerySwapResponse): unknown {
+    const obj: any = {};
+    message.swap !== undefined &&
+      (obj.swap = message.swap ? Swap.toJSON(message.swap) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QuerySwapResponse>, I>>(
+    object: I
+  ): QuerySwapResponse {
+    const message = createBaseQuerySwapResponse();
+    message.swap =
+      object.swap !== undefined && object.swap !== null
+        ? Swap.fromPartial(object.swap)
+        : undefined;
+    return message;
+  },
+};
+
 function createBaseQuerySwapsRequest(): QuerySwapsRequest {
   return { pagination: undefined };
 }
@@ -466,6 +596,8 @@ export interface Query {
   TotalSwappableToCoinAmount(
     request: QueryTotalSwappableToCoinAmountRequest
   ): Promise<QueryTotalSwappableToCoinAmountResponse>;
+  /** Swap queries a swap */
+  Swap(request: QuerySwapRequest): Promise<QuerySwapResponse>;
   /** Swaps queries all the swap that registered */
   Swaps(request: QuerySwapsRequest): Promise<QuerySwapsResponse>;
 }
@@ -477,6 +609,7 @@ export class QueryClientImpl implements Query {
     this.Swapped = this.Swapped.bind(this);
     this.TotalSwappableToCoinAmount =
       this.TotalSwappableToCoinAmount.bind(this);
+    this.Swap = this.Swap.bind(this);
     this.Swaps = this.Swaps.bind(this);
   }
   Swapped(request: QuerySwappedRequest): Promise<QuerySwappedResponse> {
@@ -499,6 +632,14 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryTotalSwappableToCoinAmountResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  Swap(request: QuerySwapRequest): Promise<QuerySwapResponse> {
+    const data = QuerySwapRequest.encode(request).finish();
+    const promise = this.rpc.request("lbm.fswap.v1.Query", "Swap", data);
+    return promise.then((data) =>
+      QuerySwapResponse.decode(new _m0.Reader(data))
     );
   }
 
