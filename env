@@ -1,5 +1,5 @@
 # Choose from https://github.com/Finschia/finschia/releases
-FINSCHIA_VERSION=v4.0.0-rc4
-FINSCHIA_SDK_VERSION=v0.49.0-rc6
+FINSCHIA_VERSION=v4.0.0-rc5
+FINSCHIA_SDK_VERSION=v0.49.0-rc7
 WASMD_VERSION=v0.3.0
 IBC_GO_VERSION=v4.3.1
