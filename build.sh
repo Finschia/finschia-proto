@@ -10,7 +10,7 @@ git submodule update --init --remote
 
 echo "checkout to desired version"
 echo "checkout to finschia-sdk $FINSCHIA_SDK_VERSION"
-cd ./repositories/finschia-sdk 
+cd ./repositories/finschia-sdk
 git checkout "$FINSCHIA_SDK_VERSION"
 
 echo "checkout to wasmd $WASMD_VERSION"
@@ -50,3 +50,5 @@ content="| $FINSCHIA_VERSION | [$FINSCHIA_SDK_VERSION](https://github.com/Finsch
 sed -i "$((table_end_line+1))i\\
 $content
 " README.md
+
+echo "content: $content"
